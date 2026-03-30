@@ -1,0 +1,758 @@
+{
+  "datasets": [
+    {
+      "id": 1,
+      "doi": "10.48436/rdm-001",
+      "title": "Air Quality Measurements Bishkek 2024",
+      "description": "Hourly PM2.5, NO2, CO measurements from 12 stations across Bishkek city",
+      "creator": {
+        "name": "Research Team KSTU",
+        "orcid": "0000-0002-1234-5678"
+      },
+      "keywords": [
+        "air quality",
+        "Bishkek",
+        "PM2.5",
+        "environment",
+        "monitoring"
+      ],
+      "license": "CC-BY-4.0",
+      "access": "open",
+      "format": "text/csv",
+      "size": 48200,
+      "version": 3,
+      "created": "2024-03-15T09:00:00Z",
+      "updated": "2024-11-20T14:30:00Z",
+      "fair": {
+        "F": 98,
+        "A": 95,
+        "I": 87,
+        "R": 92
+      },
+      "downloads": 142,
+      "views": 891,
+      "status": "published",
+      "userId": 2
+    },
+    {
+      "id": 2,
+      "doi": "10.48436/rdm-002",
+      "title": "Soil Composition Analysis — Chui Valley",
+      "description": "Chemical composition of agricultural soils across 8 districts, 240 sample points",
+      "creator": {
+        "name": "Environmental Lab KSTU",
+        "orcid": "0000-0001-9876-5432"
+      },
+      "keywords": [
+        "soil",
+        "agriculture",
+        "chemistry",
+        "Chui Valley",
+        "Kyrgyzstan"
+      ],
+      "license": "CC-BY-NC-SA-4.0",
+      "access": "open",
+      "format": "application/json",
+      "size": 12500,
+      "version": 1,
+      "created": "2024-06-10T11:00:00Z",
+      "updated": "2024-06-10T11:00:00Z",
+      "fair": {
+        "F": 90,
+        "A": 88,
+        "I": 95,
+        "R": 85
+      },
+      "downloads": 67,
+      "views": 340,
+      "status": "published",
+      "userId": 2
+    },
+    {
+      "id": 3,
+      "doi": "10.48436/rdm-003",
+      "title": "Water Quality Dataset — Issyk-Kul Lake 2023–2024",
+      "description": "Temperature, pH, dissolved oxygen, turbidity monitoring at 24 stations",
+      "creator": {
+        "name": "Hydrology Dept KSTU",
+        "orcid": "0000-0003-1111-2222"
+      },
+      "keywords": [
+        "water",
+        "Issyk-Kul",
+        "hydrology",
+        "monitoring",
+        "lake"
+      ],
+      "license": "CC0-1.0",
+      "access": "open",
+      "format": "application/vnd.ms-excel",
+      "size": 87600,
+      "version": 2,
+      "created": "2024-01-05T08:00:00Z",
+      "updated": "2024-09-01T12:00:00Z",
+      "fair": {
+        "F": 100,
+        "A": 100,
+        "I": 78,
+        "R": 95
+      },
+      "downloads": 204,
+      "views": 1421,
+      "status": "published",
+      "userId": 1
+    },
+    {
+      "id": 4,
+      "doi": "10.48436/rdm-004",
+      "title": "Mountain Glacier Mass Balance 2020–2024",
+      "description": "Annual mass balance measurements for 15 glaciers in Tian-Shan range",
+      "creator": {
+        "name": "Glaciology Lab KSTU",
+        "orcid": "0000-0004-5555-6666"
+      },
+      "keywords": [
+        "glaciers",
+        "Tian-Shan",
+        "climate change",
+        "mass balance"
+      ],
+      "license": "CC-BY-4.0",
+      "access": "open",
+      "format": "text/csv",
+      "size": 24300,
+      "version": 1,
+      "created": "2024-10-01T10:00:00Z",
+      "updated": "2026-03-24T05:49:12.340Z",
+      "fair": {
+        "F": 88,
+        "A": 92,
+        "I": 80,
+        "R": 88
+      },
+      "downloads": 31,
+      "views": 210,
+      "status": "published",
+      "userId": 2
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "name": "Admin KSTU",
+      "email": "admin@kstu.kg",
+      "role": "admin",
+      "passwordHash": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+      "active": true,
+      "created": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": 2,
+      "name": "Researcher A",
+      "email": "researcher@kstu.kg",
+      "role": "researcher",
+      "passwordHash": "9b8769a4a742959a2d0298c36fb70623f2dfacda8436237df08d8dfd5b37374c",
+      "active": true,
+      "created": "2024-03-01T00:00:00Z"
+    }
+  ],
+  "sessions": {
+    "8b9d053d39b6807eb7d161d3d0dffd1d96b97aaf4959974fb65f2cc74e1076fd": {
+      "userId": 2,
+      "exp": 1774359804913,
+      "role": "researcher"
+    },
+    "f46cad48bfe561b22e5db6ef6a125dcd4854fb3e9eeaa2b8f8e1c005d1bec79c": {
+      "userId": 1,
+      "exp": 1774359921547,
+      "role": "admin"
+    },
+    "533f0f050e69bda83e17d531a537417e4fedcfa636a631b3caf9d47fa0312937": {
+      "userId": 1,
+      "exp": 1774359921548,
+      "role": "admin"
+    },
+    "7b4370efae3da65ed2e38e29be668c23f15f3aa8607a87e1a2ce27e4a1e8ab19": {
+      "userId": 3,
+      "exp": 1774359978739,
+      "role": "admin"
+    },
+    "a4cda114c94444ca54382d428e5d2e86e9fb5cfb0e65c5d64c7b9e4e4d81425f": {
+      "userId": 1,
+      "exp": 1774360058270,
+      "role": "admin"
+    }
+  },
+  "logs": [
+    {
+      "ts": "2026-03-24T05:50:47.656Z",
+      "method": "GET",
+      "path": "/api/datasets",
+      "status": 200,
+      "ms": 1,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:50:47.655Z",
+      "method": "GET",
+      "path": "/api/stats",
+      "status": 200,
+      "ms": 0,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:50:45.819Z",
+      "method": "GET",
+      "path": "/api/datasets/5",
+      "status": 200,
+      "ms": 2,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:50:43.918Z",
+      "method": "GET",
+      "path": "/api/datasets",
+      "status": 200,
+      "ms": 0,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:50:43.917Z",
+      "method": "GET",
+      "path": "/api/stats",
+      "status": 200,
+      "ms": 0,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:50:41.453Z",
+      "method": "GET",
+      "path": "/api/datasets/5",
+      "status": 200,
+      "ms": 1,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:50:18.720Z",
+      "method": "GET",
+      "path": "/api/datasets",
+      "status": 200,
+      "ms": 0,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:50:18.720Z",
+      "method": "GET",
+      "path": "/api/stats",
+      "status": 200,
+      "ms": 1,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:50:16.156Z",
+      "method": "GET",
+      "path": "/api/datasets",
+      "status": 200,
+      "ms": 0,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:50:16.156Z",
+      "method": "GET",
+      "path": "/api/stats",
+      "status": 200,
+      "ms": 1,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:49:19.471Z",
+      "method": "GET",
+      "path": "/api/datasets/5/download",
+      "status": 200,
+      "ms": 1,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:49:12.342Z",
+      "method": "GET",
+      "path": "/admin/api/datasets",
+      "status": 200,
+      "ms": 0,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:49:12.340Z",
+      "method": "POST",
+      "path": "/admin/api/datasets/4/publish",
+      "status": 200,
+      "ms": 1,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:49:06.517Z",
+      "method": "GET",
+      "path": "/api/datasets",
+      "status": 200,
+      "ms": 0,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:49:06.517Z",
+      "method": "GET",
+      "path": "/api/stats",
+      "status": 200,
+      "ms": 0,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:49:03.075Z",
+      "method": "GET",
+      "path": "/admin/api/datasets",
+      "status": 200,
+      "ms": 0,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:49:03.072Z",
+      "method": "POST",
+      "path": "/admin/api/datasets/5/publish",
+      "status": 200,
+      "ms": 1,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:48:57.466Z",
+      "method": "GET",
+      "path": "/api/datasets",
+      "status": 200,
+      "ms": 0,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:48:57.466Z",
+      "method": "GET",
+      "path": "/api/stats",
+      "status": 200,
+      "ms": 0,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:48:51.952Z",
+      "method": "GET",
+      "path": "/api/datasets",
+      "status": 200,
+      "ms": 0,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:48:51.951Z",
+      "method": "GET",
+      "path": "/api/stats",
+      "status": 200,
+      "ms": 0,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:48:48.047Z",
+      "method": "GET",
+      "path": "/admin/api/datasets",
+      "status": 200,
+      "ms": 0,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:48:48.039Z",
+      "method": "POST",
+      "path": "/api/datasets",
+      "status": 201,
+      "ms": 2,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:48:16.451Z",
+      "method": "GET",
+      "path": "/api/datasets",
+      "status": 200,
+      "ms": 0,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:48:16.450Z",
+      "method": "GET",
+      "path": "/api/stats",
+      "status": 200,
+      "ms": 0,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:47:44.161Z",
+      "method": "GET",
+      "path": "/admin/api/datasets",
+      "status": 200,
+      "ms": 0,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:47:42.999Z",
+      "method": "GET",
+      "path": "/admin/api/users",
+      "status": 200,
+      "ms": 1,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:47:42.995Z",
+      "method": "DELETE",
+      "path": "/admin/api/users/3",
+      "status": 200,
+      "ms": 1,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:47:38.289Z",
+      "method": "GET",
+      "path": "/admin/api/logs",
+      "status": 200,
+      "ms": 0,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:47:38.282Z",
+      "method": "GET",
+      "path": "/admin/api/datasets",
+      "status": 200,
+      "ms": 0,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:47:38.278Z",
+      "method": "GET",
+      "path": "/admin/api/stats",
+      "status": 200,
+      "ms": 0,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:47:38.271Z",
+      "method": "POST",
+      "path": "/admin/api/login",
+      "status": 200,
+      "ms": 2,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:47:30.780Z",
+      "method": "POST",
+      "path": "/admin/api/login",
+      "status": 401,
+      "ms": 0,
+      "userId": 3
+    },
+    {
+      "ts": "2026-03-24T05:47:26.463Z",
+      "method": "GET",
+      "path": "/admin/api/users",
+      "status": 200,
+      "ms": 1,
+      "userId": 3
+    },
+    {
+      "ts": "2026-03-24T05:47:26.460Z",
+      "method": "PUT",
+      "path": "/admin/api/users/1",
+      "status": 200,
+      "ms": 2,
+      "userId": 3
+    },
+    {
+      "ts": "2026-03-24T05:47:14.180Z",
+      "method": "GET",
+      "path": "/admin/api/users",
+      "status": 200,
+      "ms": 1,
+      "userId": 3
+    },
+    {
+      "ts": "2026-03-24T05:46:46.055Z",
+      "method": "GET",
+      "path": "/api/datasets",
+      "status": 200,
+      "ms": 2,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:46:43.978Z",
+      "method": "GET",
+      "path": "/api/datasets",
+      "status": 200,
+      "ms": 1,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:46:42.388Z",
+      "method": "GET",
+      "path": "/api/datasets",
+      "status": 200,
+      "ms": 1,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:46:23.508Z",
+      "method": "GET",
+      "path": "/api/datasets",
+      "status": 200,
+      "ms": 0,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:46:23.508Z",
+      "method": "GET",
+      "path": "/api/stats",
+      "status": 200,
+      "ms": 0,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:46:18.765Z",
+      "method": "GET",
+      "path": "/admin/api/logs",
+      "status": 200,
+      "ms": 0,
+      "userId": 3
+    },
+    {
+      "ts": "2026-03-24T05:46:18.760Z",
+      "method": "GET",
+      "path": "/admin/api/datasets",
+      "status": 200,
+      "ms": 1,
+      "userId": 3
+    },
+    {
+      "ts": "2026-03-24T05:46:18.748Z",
+      "method": "GET",
+      "path": "/admin/api/stats",
+      "status": 200,
+      "ms": 1,
+      "userId": 3
+    },
+    {
+      "ts": "2026-03-24T05:46:18.741Z",
+      "method": "POST",
+      "path": "/admin/api/login",
+      "status": 200,
+      "ms": 2,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:46:16.004Z",
+      "method": "POST",
+      "path": "/admin/api/login",
+      "status": 401,
+      "ms": 0,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:46:07.570Z",
+      "method": "POST",
+      "path": "/admin/api/login",
+      "status": 401,
+      "ms": 0,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:46:03.863Z",
+      "method": "GET",
+      "path": "/admin/api/logs",
+      "status": 200,
+      "ms": 1,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:46:00.698Z",
+      "method": "GET",
+      "path": "/admin/api/users",
+      "status": 200,
+      "ms": 0,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:46:00.695Z",
+      "method": "POST",
+      "path": "/admin/api/users",
+      "status": 201,
+      "ms": 1,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:45:41.251Z",
+      "method": "GET",
+      "path": "/admin/api/users",
+      "status": 200,
+      "ms": 1,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:45:36.121Z",
+      "method": "GET",
+      "path": "/admin/api/users",
+      "status": 200,
+      "ms": 1,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:45:36.112Z",
+      "method": "PUT",
+      "path": "/admin/api/users/1",
+      "status": 200,
+      "ms": 1,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:45:26.101Z",
+      "method": "GET",
+      "path": "/admin/api/users",
+      "status": 200,
+      "ms": 0,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:45:21.611Z",
+      "method": "GET",
+      "path": "/admin/api/logs",
+      "status": 200,
+      "ms": 0,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:45:21.611Z",
+      "method": "GET",
+      "path": "/admin/api/logs",
+      "status": 200,
+      "ms": 1,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:45:21.609Z",
+      "method": "GET",
+      "path": "/admin/api/datasets",
+      "status": 200,
+      "ms": 1,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:45:21.608Z",
+      "method": "GET",
+      "path": "/admin/api/datasets",
+      "status": 200,
+      "ms": 2,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:45:21.606Z",
+      "method": "GET",
+      "path": "/admin/api/stats",
+      "status": 200,
+      "ms": 1,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:45:21.554Z",
+      "method": "GET",
+      "path": "/admin/api/stats",
+      "status": 200,
+      "ms": 2,
+      "userId": 1
+    },
+    {
+      "ts": "2026-03-24T05:45:21.550Z",
+      "method": "POST",
+      "path": "/admin/api/login",
+      "status": 200,
+      "ms": 2,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:45:21.548Z",
+      "method": "POST",
+      "path": "/admin/api/login",
+      "status": 200,
+      "ms": 3,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:44:52.252Z",
+      "method": "GET",
+      "path": "/api/datasets/3/download",
+      "status": 200,
+      "ms": 2,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:44:50.764Z",
+      "method": "GET",
+      "path": "/api/datasets/3",
+      "status": 200,
+      "ms": 2,
+      "userId": 2
+    },
+    {
+      "ts": "2026-03-24T05:44:45.239Z",
+      "method": "GET",
+      "path": "/api/datasets",
+      "status": 200,
+      "ms": 1,
+      "userId": 2
+    },
+    {
+      "ts": "2026-03-24T05:44:30.603Z",
+      "method": "GET",
+      "path": "/api/stats",
+      "status": 200,
+      "ms": 1,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:43:37.195Z",
+      "method": "GET",
+      "path": "/api/datasets/1",
+      "status": 200,
+      "ms": 3,
+      "userId": 2
+    },
+    {
+      "ts": "2026-03-24T05:43:24.922Z",
+      "method": "GET",
+      "path": "/api/datasets",
+      "status": 200,
+      "ms": 0,
+      "userId": 2
+    },
+    {
+      "ts": "2026-03-24T05:43:24.914Z",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "ms": 2,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:43:13.400Z",
+      "method": "GET",
+      "path": "/api/datasets",
+      "status": 200,
+      "ms": 0,
+      "userId": null
+    },
+    {
+      "ts": "2026-03-24T05:43:13.399Z",
+      "method": "GET",
+      "path": "/api/stats",
+      "status": 200,
+      "ms": 0,
+      "userId": null
+    }
+  ],
+  "nextDs": 6,
+  "nextUser": 4
+}

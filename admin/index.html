@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>RDM Admin — Панель администратора</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#05060a;--bg1:#0a0c12;--bg2:#0f1118;--bg3:#151820;--bg4:#1b1e2a;
+  --line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--line3:rgba(255,255,255,.18);
+  --t1:#e8eaf2;--t2:#8486a0;--t3:#464860;
+  --acc:#4d9dff;--accbg:rgba(77,157,255,.1);--accbd:rgba(77,157,255,.25);
+  --green:#3ecb7f;--gbg:rgba(62,203,127,.1);--gbd:rgba(62,203,127,.22);
+  --amber:#f0a240;--ambg:rgba(240,162,64,.1);--ambd:rgba(240,162,64,.22);
+  --red:#ff5f5f;--rbg:rgba(255,95,95,.1);--rbd:rgba(255,95,95,.22);
+  --purple:#c47cff;--pbg:rgba(196,124,255,.1);--pbd:rgba(196,124,255,.22);
+  --sans:'Syne',sans-serif;--mono:'JetBrains Mono',monospace;
+  --r:10px;
+}
+html,body{height:100%}
+body{font-family:var(--sans);background:var(--bg);color:var(--t1);overflow-x:hidden;font-size:14px;line-height:1.5;display:flex;flex-direction:column}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:2px}
+
+/* ── LOGIN SCREEN ── */
+#loginScreen{display:flex;flex:1;align-items:center;justify-content:center;padding:24px;
+  background:radial-gradient(ellipse 70% 60% at 50% 40%,rgba(77,157,255,.06) 0%,transparent 60%)}
+.login-card{background:var(--bg2);border:1px solid var(--line2);border-radius:16px;padding:40px 36px;width:100%;max-width:400px}
+.lc-logo{display:flex;align-items:center;gap:10px;margin-bottom:32px}
+.lc-mark{width:36px;height:36px;border-radius:9px;background:var(--t1);display:grid;place-items:center}
+.lc-mark svg{width:18px;height:18px}
+.lc-name{font-size:15px;font-weight:700;letter-spacing:.04em}
+.lc-sub{font-size:11px;color:var(--t3);font-family:var(--mono);letter-spacing:.06em}
+.lc-title{font-size:22px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
+.lc-desc{font-size:13px;color:var(--t2);margin-bottom:28px}
+.lf-label{font-family:var(--mono);font-size:9px;color:var(--t3);letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:6px}
+.lf-input{width:100%;background:var(--bg3);border:1px solid var(--line);color:var(--t1);padding:11px 14px;border-radius:8px;font-family:var(--sans);font-size:14px;outline:none;transition:border .2s;margin-bottom:14px}
+.lf-input:focus{border-color:var(--acc)}
+.lf-input::placeholder{color:var(--t3)}
+.lf-btn{width:100%;background:var(--acc);color:#fff;border:none;padding:13px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--sans);letter-spacing:.03em;transition:opacity .2s;margin-top:4px}
+.lf-btn:hover{opacity:.88}
+.lf-error{font-size:12px;color:var(--red);margin-top:10px;font-family:var(--mono);text-align:center;min-height:18px}
+.lf-hint{font-size:11px;color:var(--t3);text-align:center;margin-top:16px;font-family:var(--mono);line-height:1.7}
+
+/* ── MAIN LAYOUT ── */
+#adminApp{display:none;height:100vh;flex-direction:row}
+#adminApp.show{display:flex}
+
+/* ── SIDEBAR ── */
+.sidebar{width:220px;flex-shrink:0;background:var(--bg1);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow-y:auto}
+.sb-logo{padding:20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.sb-mark{width:28px;height:28px;border-radius:7px;background:var(--t1);display:grid;place-items:center;flex-shrink:0}
+.sb-mark svg{width:14px;height:14px}
+.sb-name{font-size:12px;font-weight:700;letter-spacing:.04em}
+.sb-admin-badge{font-size:9px;font-family:var(--mono);padding:2px 7px;border-radius:3px;background:var(--rbg);color:var(--red);border:1px solid var(--rbd);letter-spacing:.05em;font-weight:500;display:inline-block;margin-top:2px}
+
+.sb-nav{flex:1;padding:12px 10px}
+.sb-section{font-family:var(--mono);font-size:9px;color:var(--t3);letter-spacing:.12em;text-transform:uppercase;padding:12px 8px 6px;margin-top:6px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:7px;cursor:pointer;transition:all .2s;margin-bottom:2px;color:var(--t2);font-size:13px;font-weight:500;letter-spacing:.01em}
+.sb-item:hover{background:var(--bg3);color:var(--t1)}
+.sb-item.active{background:var(--bg3);color:var(--t1)}
+.sb-item.active .sb-icon{color:var(--acc)}
+.sb-icon{font-size:14px;width:18px;text-align:center;flex-shrink:0}
+.sb-badge{margin-left:auto;font-family:var(--mono);font-size:9px;font-weight:500;padding:2px 6px;border-radius:3px;background:var(--accbg);color:var(--acc)}
+
+.sb-footer{padding:16px 10px;border-top:1px solid var(--line)}
+.sb-user{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;background:var(--bg3);margin-bottom:8px}
+.sb-avatar{width:26px;height:26px;border-radius:50%;background:var(--accbg);border:1px solid var(--accbd);display:grid;place-items:center;font-size:10px;color:var(--acc);font-weight:600;font-family:var(--mono);flex-shrink:0}
+.sb-uname{font-size:12px;font-weight:500;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-logout{background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px;transition:color .2s}
+.sb-logout:hover{color:var(--red)}
+.sb-pub-link{display:flex;align-items:center;gap:8px;font-size:11px;font-family:var(--mono);color:var(--t3);text-decoration:none;padding:6px 10px;border-radius:6px;border:1px solid var(--line);transition:all .2s}
+.sb-pub-link:hover{color:var(--t1);border-color:var(--line2)}
+
+/* ── MAIN CONTENT ── */
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+.topbar{height:52px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:var(--bg1);flex-shrink:0}
+.tb-title{font-size:15px;font-weight:700;letter-spacing:-.01em}
+.tb-right{display:flex;align-items:center;gap:12px}
+.tb-time{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:.04em}
+
+.page{padding:28px;display:none;flex-direction:column;gap:20px}
+.page.active{display:flex}
+
+/* ── CARDS ── */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.stat-card{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:20px;transition:background .2s}
+.stat-card:hover{background:var(--bg3)}
+.sc-lbl{font-family:var(--mono);font-size:9px;color:var(--t3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
+.sc-val{font-family:var(--mono);font-size:32px;font-weight:500;color:var(--t1);margin-bottom:4px}
+.sc-sub{font-size:11px;color:var(--t3)}
+.sc-trend{font-family:var(--mono);font-size:10px;margin-top:6px}
+.sc-trend.up{color:var(--green)}.sc-trend.neutral{color:var(--t3)}
+
+/* fair bars in stat */
+.fair-mini-bars{display:flex;flex-direction:column;gap:7px;margin-top:8px}
+.fmb-row{display:flex;align-items:center;gap:8px}
+.fmb-k{font-family:var(--mono);font-size:9px;font-weight:500;width:10px;flex-shrink:0}
+.fmb-k.F{color:var(--acc)}.fmb-k.A{color:var(--green)}.fmb-k.I{color:var(--amber)}.fmb-k.R{color:var(--purple)}
+.fmb-track{flex:1;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.fmb-fill{height:100%;border-radius:2px;transition:width 1.2s ease}
+.F .fmb-fill{background:var(--acc)}.A .fmb-fill{background:var(--green)}
+.I .fmb-fill{background:var(--amber)}.R .fmb-fill{background:var(--purple)}
+.fmb-n{font-family:var(--mono);font-size:9px;color:var(--t3);min-width:24px;text-align:right}
+
+/* ── TABLE ── */
+.tbl-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.tbl-title{font-size:15px;font-weight:700;letter-spacing:-.01em}
+.tbl-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tbl-search{background:var(--bg3);border:1px solid var(--line);color:var(--t1);padding:8px 12px;border-radius:7px;font-family:var(--sans);font-size:12px;outline:none;min-width:200px;transition:border .2s}
+.tbl-search:focus{border-color:var(--acc)}.tbl-search::placeholder{color:var(--t3)}
+.tbl-select{background:var(--bg3);border:1px solid var(--line);color:var(--t2);padding:8px 12px;border-radius:7px;font-family:var(--sans);font-size:12px;outline:none;cursor:pointer}
+.a-btn{font-size:12px;font-weight:600;padding:7px 14px;border-radius:7px;border:1px solid var(--line2);background:none;color:var(--t2);cursor:pointer;transition:all .2s;font-family:var(--sans)}
+.a-btn:hover{background:var(--bg3);color:var(--t1);border-color:var(--line3)}
+.a-btn.primary{background:var(--acc);color:#fff;border-color:transparent}
+.a-btn.primary:hover{opacity:.88}
+.a-btn.danger{border-color:var(--rbd);color:var(--red)}
+.a-btn.danger:hover{background:var(--rbg)}
+.a-btn.success{border-color:var(--gbd);color:var(--green)}
+.a-btn.success:hover{background:var(--gbg)}
+
+.tbl-wrap{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead{background:var(--bg3)}
+th{padding:11px 14px;text-align:left;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);font-weight:500;white-space:nowrap;border-bottom:1px solid var(--line)}
+td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg3)}
+.td-title{font-weight:500;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.td-doi{font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:.04em}
+.td-mono{font-family:var(--mono);font-size:11px;color:var(--t2)}
+.td-actions{display:flex;gap:5px;white-space:nowrap}
+
+.badge{font-family:var(--mono);font-size:9px;font-weight:500;padding:2px 8px;border-radius:3px;letter-spacing:.05em;white-space:nowrap}
+.badge.published{background:var(--gbg);color:var(--green);border:1px solid var(--gbd)}
+.badge.draft{background:var(--ambg);color:var(--amber);border:1px solid var(--ambd)}
+.badge.admin{background:var(--rbg);color:var(--red);border:1px solid var(--rbd)}
+.badge.researcher{background:var(--accbg);color:var(--acc);border:1px solid var(--accbd)}
+.badge.active{background:var(--gbg);color:var(--green);border:1px solid var(--gbd)}
+.badge.inactive{background:var(--bg4);color:var(--t3);border:1px solid var(--line)}
+
+.fair-cell{display:grid;grid-template-columns:1fr 1fr;gap:2px;width:72px}
+.fair-cell-item{border-radius:2px;padding:2px 4px;text-align:center;font-family:var(--mono);font-size:9px;font-weight:500}
+.fair-cell-item.F{background:var(--accbg);color:var(--acc)}.fair-cell-item.A{background:var(--gbg);color:var(--green)}
+.fair-cell-item.I{background:var(--ambg);color:var(--amber)}.fair-cell-item.R{background:var(--pbg);color:var(--purple)}
+
+.tbl-pagination{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-top:1px solid var(--line);background:var(--bg3)}
+.pag-info{font-family:var(--mono);font-size:10px;color:var(--t3);letter-spacing:.04em}
+.pag-btns{display:flex;gap:4px}
+.pag-btn{background:var(--bg2);border:1px solid var(--line);color:var(--t2);padding:5px 10px;border-radius:5px;cursor:pointer;font-family:var(--mono);font-size:10px;transition:all .2s}
+.pag-btn:hover,.pag-btn.on{background:var(--bg1);border-color:var(--acc);color:var(--acc)}
+
+/* ── EDIT DRAWER ── */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;display:none;backdrop-filter:blur(3px)}
+.drawer-overlay.open{display:block}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:440px;background:var(--bg2);border-left:1px solid var(--line2);z-index:301;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s cubic-bezier(.16,1,.3,1)}
+.drawer.open{transform:none}
+.drawer-head{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.drawer-title{font-size:15px;font-weight:700;letter-spacing:-.01em}
+.drawer-close{background:none;border:none;color:var(--t3);cursor:pointer;font-size:20px;line-height:1;transition:color .2s}
+.drawer-close:hover{color:var(--t1)}
+.drawer-body{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:14px}
+.drawer-footer{padding:16px 24px;border-top:1px solid var(--line);display:flex;gap:8px;flex-shrink:0}
+
+.df-label{font-family:var(--mono);font-size:9px;color:var(--t3);letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:5px}
+.df-input{width:100%;background:var(--bg3);border:1px solid var(--line);color:var(--t1);padding:10px 12px;border-radius:7px;font-family:var(--sans);font-size:13px;outline:none;transition:border .2s}
+.df-input:focus{border-color:var(--acc)}.df-input::placeholder{color:var(--t3)}
+.df-select{width:100%;background:var(--bg3);border:1px solid var(--line);color:var(--t2);padding:10px 12px;border-radius:7px;font-family:var(--sans);font-size:13px;outline:none;cursor:pointer}
+.df-textarea{width:100%;background:var(--bg3);border:1px solid var(--line);color:var(--t1);padding:10px 12px;border-radius:7px;font-family:var(--sans);font-size:13px;outline:none;resize:vertical;transition:border .2s}
+.df-textarea:focus{border-color:var(--acc)}
+.df-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* ── LOGS ── */
+.log-table{font-family:var(--mono);font-size:11px}
+.log-row{display:grid;grid-template-columns:160px 50px 200px 60px 60px 1fr;gap:0;border-bottom:1px solid var(--line);padding:8px 14px;transition:background .15s}
+.log-row:hover{background:var(--bg3)}
+.log-row.head{background:var(--bg3);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);position:sticky;top:0}
+.log-ts{color:var(--t3)}.log-method{}
+.log-method.GET{color:var(--green)}.log-method.POST{color:var(--acc)}.log-method.PUT{color:var(--amber)}.log-method.DELETE{color:var(--red)}
+.log-path{color:var(--t1)}.log-status{}.log-status.ok{color:var(--green)}.log-status.err{color:var(--red)}
+.log-ms{color:var(--t3)}.log-user{color:var(--purple)}
+
+/* ── CONFIRM ── */
+.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:400;display:none;align-items:center;justify-content:center;padding:24px}
+.confirm-overlay.open{display:flex}
+.confirm-box{background:var(--bg2);border:1px solid var(--rbd);border-radius:12px;padding:28px;max-width:360px;width:100%;text-align:center}
+.confirm-box h4{font-size:16px;font-weight:700;margin-bottom:8px}
+.confirm-box p{font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:24px}
+.confirm-btns{display:flex;gap:8px;justify-content:center}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;right:24px;z-index:500;display:flex;flex-direction:column;gap:8px}
+.toast-item{background:var(--bg3);border:1px solid var(--line2);border-radius:8px;padding:12px 16px;font-size:13px;display:flex;align-items:center;gap:10px;min-width:240px;animation:slideIn .3s ease}
+.toast-item.success{border-color:var(--gbd);color:var(--green)}
+.toast-item.error{border-color:var(--rbd);color:var(--red)}
+.toast-item.info{border-color:var(--accbd);color:var(--acc)}
+@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
+
+@media(max-width:900px){.stat-row{grid-template-columns:1fr 1fr}.sidebar{width:180px}}
+@media(max-width:700px){#adminApp{flex-direction:column}.sidebar{width:100%;max-height:56px;overflow:hidden;flex-direction:row}.sb-nav,.sb-footer{display:none}}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN ═══ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="lc-logo">
+      <div class="lc-mark"><svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" fill="#05060a"/><rect x="9" y="1" width="6" height="6" rx="1.5" fill="#05060a"/><rect x="1" y="9" width="6" height="6" rx="1.5" fill="#05060a"/><circle cx="12" cy="12" r="3" fill="#4d9dff"/></svg></div>
+      <div><div class="lc-name">RDM · КГТУ</div><div class="lc-admin-badge" style="font-size:9px;font-family:var(--mono);color:var(--red);letter-spacing:.06em">ADMIN PANEL</div></div>
+    </div>
+    <div class="lc-title">Вход для администратора</div>
+    <div class="lc-desc">Введите учётные данные администратора системы</div>
+    <label class="lf-label">Email</label>
+    <input class="lf-input" id="aEmail" type="email" value="admin@kstu.kg" placeholder="admin@kstu.kg">
+    <label class="lf-label">Пароль</label>
+    <input class="lf-input" id="aPass" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doAdminLogin()">
+    <button class="lf-btn" onclick="doAdminLogin()">Войти в панель</button>
+    <div class="lf-error" id="loginErr"></div>
+    <div class="lf-hint">admin@kstu.kg / admin123</div>
+  </div>
+</div>
+
+<!-- ═══ ADMIN APP ═══ -->
+<div id="adminApp">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-mark"><svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" fill="#05060a"/><rect x="9" y="1" width="6" height="6" rx="1.5" fill="#05060a"/><rect x="1" y="9" width="6" height="6" rx="1.5" fill="#05060a"/><circle cx="12" cy="12" r="3" fill="#4d9dff"/></svg></div>
+      <div><div class="sb-name">RDM Admin</div><div class="sb-admin-badge">ADMIN</div></div>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-section">Главное</div>
+      <div class="sb-item active" data-page="dashboard" onclick="showPage('dashboard')"><span class="sb-icon">◈</span> Дашборд</div>
+      <div class="sb-section">Данные</div>
+      <div class="sb-item" data-page="datasets" onclick="showPage('datasets')"><span class="sb-icon">⊞</span> Наборы данных<span class="sb-badge" id="sb-dsCount">–</span></div>
+      <div class="sb-section">Система</div>
+      <div class="sb-item" data-page="users" onclick="showPage('users')"><span class="sb-icon">◎</span> Пользователи<span class="sb-badge" id="sb-usrCount">–</span></div>
+      <div class="sb-item" data-page="logs" onclick="showPage('logs')"><span class="sb-icon">≡</span> Логи API</div>
+    </div>
+    <div class="sb-footer">
+      <div class="sb-user">
+        <div class="sb-avatar" id="sb-avatar">A</div>
+        <div class="sb-uname" id="sb-uname">Admin</div>
+        <button class="sb-logout" onclick="doLogout()" title="Выйти">↪</button>
+      </div>
+      <a class="sb-pub-link" href="/" target="_blank">⬡ Публичный сайт ↗</a>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="tb-title" id="topTitle">Дашборд</div>
+      <div class="tb-right">
+        <span class="tb-time" id="tbTime"></span>
+        <button class="a-btn" onclick="refreshCurrent()">↺ Обновить</button>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="stat-row">
+        <div class="stat-card"><div class="sc-lbl">Наборов данных</div><div class="sc-val" id="d-total">–</div><div class="sc-sub" id="d-pub-draft">– опубл. · – черновик</div><div class="sc-trend neutral" id="d-ds-trend">Всего</div></div>
+        <div class="stat-card"><div class="sc-lbl">Пользователей</div><div class="sc-val" id="d-users">–</div><div class="sc-sub" id="d-usr-roles">– исследователей</div><div class="sc-trend up" id="d-sess">– сессий активно</div></div>
+        <div class="stat-card"><div class="sc-lbl">Скачиваний / Просмотров</div><div class="sc-val" id="d-dl">–</div><div class="sc-sub" id="d-views">– просмотров</div><div class="sc-trend up">↑ Активность</div></div>
+        <div class="stat-card">
+          <div class="sc-lbl">FAIR-оценка системы</div>
+          <div class="fair-mini-bars" id="d-fair">
+            <div class="fmb-row F"><span class="fmb-k F">F</span><div class="fmb-track"><div class="fmb-fill" style="width:0%"></div></div><span class="fmb-n">–</span></div>
+            <div class="fmb-row A"><span class="fmb-k A">A</span><div class="fmb-track"><div class="fmb-fill" style="width:0%"></div></div><span class="fmb-n">–</span></div>
+            <div class="fmb-row I"><span class="fmb-k I">I</span><div class="fmb-track"><div class="fmb-fill" style="width:0%"></div></div><span class="fmb-n">–</span></div>
+            <div class="fmb-row R"><span class="fmb-k R">R</span><div class="fmb-track"><div class="fmb-fill" style="width:0%"></div></div><span class="fmb-n">–</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- Recent datasets -->
+      <div>
+        <div class="tbl-header"><div class="tbl-title">Последние наборы данных</div><button class="a-btn" onclick="showPage('datasets')">Все →</button></div>
+        <div class="tbl-wrap"><table><thead><tr><th>DOI</th><th>Название</th><th>FAIR</th><th>Статус</th><th>Скачиваний</th><th></th></tr></thead>
+        <tbody id="dash-recent"></tbody></table></div>
+      </div>
+      <!-- Recent logs -->
+      <div>
+        <div class="tbl-header"><div class="tbl-title">Последние запросы к API</div><button class="a-btn" onclick="showPage('logs')">Все →</button></div>
+        <div class="tbl-wrap" style="max-height:220px;overflow-y:auto">
+          <div class="log-table">
+            <div class="log-row head"><span>Время</span><span>Метод</span><span>Путь</span><span>Статус</span><span>ms</span><span>User</span></div>
+            <div id="dash-logs"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DATASETS -->
+    <div class="page" id="page-datasets">
+      <div class="tbl-header">
+        <div class="tbl-title">Наборы данных</div>
+        <div class="tbl-actions">
+          <input class="tbl-search" id="ds-search" placeholder="Поиск..." oninput="dsDebouncedSearch()">
+          <select class="tbl-select" id="ds-status-filter" onchange="loadAdminDatasets()">
+            <option value="">Все статусы</option>
+            <option value="published">Опубликовано</option>
+            <option value="draft">Черновики</option>
+          </select>
+          <button class="a-btn primary" onclick="openDsDrawer(null)">+ Создать</button>
+        </div>
+      </div>
+      <div class="tbl-wrap">
+        <table><thead><tr><th>DOI</th><th>Название</th><th>FAIR</th><th>Лицензия</th><th>Статус</th><th>↓</th><th></th></tr></thead>
+        <tbody id="ds-tbody"></tbody></table>
+        <div class="tbl-pagination"><span class="pag-info" id="ds-pag-info"></span><div class="pag-btns" id="ds-pag-btns"></div></div>
+      </div>
+    </div>
+
+    <!-- USERS -->
+    <div class="page" id="page-users">
+      <div class="tbl-header">
+        <div class="tbl-title">Пользователи</div>
+        <div class="tbl-actions">
+          <button class="a-btn primary" onclick="openUserDrawer(null)">+ Создать</button>
+        </div>
+      </div>
+      <div class="tbl-wrap">
+        <table><thead><tr><th>ID</th><th>Имя</th><th>Email</th><th>Роль</th><th>Статус</th><th>Дата</th><th></th></tr></thead>
+        <tbody id="usr-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- LOGS -->
+    <div class="page" id="page-logs">
+      <div class="tbl-header">
+        <div class="tbl-title">Логи API-запросов</div>
+        <div class="tbl-actions">
+          <select class="tbl-select" id="log-limit" onchange="loadLogs()">
+            <option value="50">50 записей</option>
+            <option value="100" selected>100 записей</option>
+            <option value="200">200 записей</option>
+          </select>
+          <button class="a-btn" onclick="loadLogs()">↺ Обновить</button>
+        </div>
+      </div>
+      <div class="tbl-wrap" style="overflow-y:auto;max-height:calc(100vh - 200px)">
+        <div class="log-table">
+          <div class="log-row head"><span>Время</span><span>Метод</span><span>Путь</span><span>Статус</span><span>ms</span><span>UserID</span></div>
+          <div id="logs-body"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DATASET DRAWER -->
+<div class="drawer-overlay" id="dsDO" onclick="if(event.target===this)closeDsDrawer()"></div>
+<div class="drawer" id="dsDrawer">
+  <div class="drawer-head"><span class="drawer-title" id="ds-drawer-title">Новый набор данных</span><button class="drawer-close" onclick="closeDsDrawer()">×</button></div>
+  <div class="drawer-body">
+    <input type="hidden" id="ds-id">
+    <div><label class="df-label">Название</label><input class="df-input" id="ds-title" placeholder="Название набора данных"></div>
+    <div><label class="df-label">Описание</label><textarea class="df-textarea" id="ds-desc" rows="3" placeholder="Подробное описание..."></textarea></div>
+    <div class="df-row">
+      <div><label class="df-label">Автор</label><input class="df-input" id="ds-creator" placeholder="Имя Фамилия"></div>
+      <div><label class="df-label">ORCID</label><input class="df-input" id="ds-orcid" placeholder="0000-0000-0000-0000"></div>
+    </div>
+    <div><label class="df-label">Ключевые слова</label><input class="df-input" id="ds-kw" placeholder="вода, озеро, pH (через запятую)"></div>
+    <div class="df-row">
+      <div><label class="df-label">Лицензия</label>
+        <select class="df-select" id="ds-license"><option value="CC-BY-4.0">CC-BY-4.0</option><option value="CC-BY-NC-SA-4.0">CC-BY-NC-SA-4.0</option><option value="CC0-1.0">CC0-1.0</option></select>
+      </div>
+      <div><label class="df-label">Доступ</label>
+        <select class="df-select" id="ds-access"><option value="open">Открытый</option><option value="restricted">Ограниченный</option></select>
+      </div>
+    </div>
+    <div class="df-row">
+      <div><label class="df-label">Формат</label><input class="df-input" id="ds-format" placeholder="text/csv"></div>
+      <div><label class="df-label">Статус</label>
+        <select class="df-select" id="ds-status"><option value="draft">Черновик</option><option value="published">Опубликовано</option></select>
+      </div>
+    </div>
+  </div>
+  <div class="drawer-footer">
+    <button class="a-btn primary" onclick="saveDsDrawer()">Сохранить</button>
+    <button class="a-btn" onclick="closeDsDrawer()">Отмена</button>
+    <button class="a-btn success" id="ds-publish-btn" onclick="publishDs()" style="display:none">✓ Опубликовать</button>
+  </div>
+</div>
+
+<!-- USER DRAWER -->
+<div class="drawer-overlay" id="usrDO" onclick="if(event.target===this)closeUserDrawer()"></div>
+<div class="drawer" id="usrDrawer">
+  <div class="drawer-head"><span class="drawer-title" id="usr-drawer-title">Новый пользователь</span><button class="drawer-close" onclick="closeUserDrawer()">×</button></div>
+  <div class="drawer-body">
+    <input type="hidden" id="usr-id">
+    <div class="df-row">
+      <div><label class="df-label">Имя</label><input class="df-input" id="usr-name" placeholder="Имя Фамилия"></div>
+      <div><label class="df-label">Email</label><input class="df-input" id="usr-email" type="email" placeholder="email@kstu.kg"></div>
+    </div>
+    <div class="df-row">
+      <div><label class="df-label">Пароль</label><input class="df-input" id="usr-pass" type="password" placeholder="Новый пароль (оставьте пустым)"></div>
+      <div><label class="df-label">Роль</label>
+        <select class="df-select" id="usr-role"><option value="researcher">Researcher</option><option value="admin">Admin</option></select>
+      </div>
+    </div>
+    <div><label class="df-label">Статус</label>
+      <select class="df-select" id="usr-active"><option value="true">Активен</option><option value="false">Заблокирован</option></select>
+    </div>
+  </div>
+  <div class="drawer-footer">
+    <button class="a-btn primary" onclick="saveUserDrawer()">Сохранить</button>
+    <button class="a-btn" onclick="closeUserDrawer()">Отмена</button>
+  </div>
+</div>
+
+<!-- CONFIRM -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <h4 id="confirmTitle">Подтверждение</h4>
+    <p id="confirmText">Вы уверены?</p>
+    <div class="confirm-btns">
+      <button class="a-btn danger" id="confirmOk">Удалить</button>
+      <button class="a-btn" onclick="document.getElementById('confirmOverlay').classList.remove('open')">Отмена</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toastArea"></div>
+
+<script>
+'use strict';
+const API = 'http://localhost:3000';
+let adminToken = null, adminUser = null;
+let dsPage = 1, dsQ = '', dsStatus = '';
+
+/* ── Helpers ──────────────────────────────────────────────────────────── */
+async function apiFetch(path, opts={}){
+  const h = {'Content-Type':'application/json'};
+  if(adminToken) h['Authorization'] = 'Bearer ' + adminToken;
+  try{
+    const r = await fetch(API+path, {...opts, headers:{...h,...(opts.headers||{})}});
+    return {ok:r.ok, status:r.status, data: await r.json()};
+  }catch(e){ return {ok:false, status:0, data:{error:'Server offline'}}; }
+}
+
+function toast(msg, type='info'){
+  const t = document.getElementById('toastArea');
+  const d = document.createElement('div');
+  d.className = 'toast-item '+type;
+  d.textContent = (type==='success'?'✓ ':type==='error'?'✗ ':'ℹ ') + msg;
+  t.appendChild(d);
+  setTimeout(()=>d.remove(), 3500);
+}
+
+function confirm(title, text, cb){
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmText').textContent  = text;
+  document.getElementById('confirmOk').onclick = ()=>{ document.getElementById('confirmOverlay').classList.remove('open'); cb(); };
+  document.getElementById('confirmOverlay').classList.add('open');
+}
+
+function fmtDate(iso){ return iso ? new Date(iso).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'}) : '–'; }
+function fmtTime(iso){ return iso ? iso.slice(11,19) : '–'; }
+
+/* ── Login ────────────────────────────────────────────────────────────── */
+async function doAdminLogin(){
+  const email = document.getElementById('aEmail').value;
+  const pass  = document.getElementById('aPass').value;
+  const {ok,data} = await apiFetch('/admin/api/login',{method:'POST',body:JSON.stringify({email,password:pass})});
+  if(ok){
+    adminToken = data.token; adminUser = data.user;
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminApp').classList.add('show');
+    document.getElementById('sb-avatar').textContent = adminUser.name[0].toUpperCase();
+    document.getElementById('sb-uname').textContent  = adminUser.name;
+    initApp();
+  } else {
+    document.getElementById('loginErr').textContent = data.error || 'Ошибка входа';
+  }
+}
+
+async function doLogout(){
+  await apiFetch('/admin/api/login',{method:'POST'}); // doesn't matter
+  adminToken=null; adminUser=null;
+  document.getElementById('adminApp').classList.remove('show');
+  document.getElementById('loginScreen').style.display = 'flex';
+}
+
+document.getElementById('aPass').addEventListener('keydown', e=>{ if(e.key==='Enter') doAdminLogin(); });
+
+/* ── Navigation ──────────────────────────────────────────────────────── */
+const pageTitles = {dashboard:'Дашборд',datasets:'Наборы данных',users:'Пользователи',logs:'Логи API'};
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelector(`.sb-item[data-page="${id}"]`).classList.add('active');
+  document.getElementById('topTitle').textContent = pageTitles[id]||id;
+  if(id==='dashboard') loadDashboard();
+  else if(id==='datasets') loadAdminDatasets();
+  else if(id==='users') loadUsers();
+  else if(id==='logs') loadLogs();
+}
+
+function refreshCurrent(){
+  const active = document.querySelector('.sb-item.active')?.dataset.page||'dashboard';
+  showPage(active);
+}
+
+/* ── Clock ───────────────────────────────────────────────────────────── */
+function updateTime(){ document.getElementById('tbTime').textContent = new Date().toLocaleTimeString('ru-RU'); }
+updateTime(); setInterval(updateTime, 1000);
+
+/* ── Dashboard ───────────────────────────────────────────────────────── */
+async function loadDashboard(){
+  const {data} = await apiFetch('/admin/api/stats');
+  if(!data.datasets) return;
+  document.getElementById('d-total').textContent = data.datasets.total;
+  document.getElementById('d-pub-draft').textContent = `${data.datasets.published} опубл. · ${data.datasets.draft} черновик`;
+  document.getElementById('d-users').textContent = data.users.total;
+  document.getElementById('d-usr-roles').textContent = `${data.users.total - data.users.admins} исследователей`;
+  document.getElementById('d-sess').textContent = `${data.sessions} сессий активно`;
+  document.getElementById('d-dl').textContent = data.downloads;
+  document.getElementById('d-views').textContent = data.views + ' просмотров';
+  document.getElementById('sb-dsCount').textContent = data.datasets.total;
+  document.getElementById('sb-usrCount').textContent = data.users.total;
+
+  // FAIR bars
+  const f = data.fair;
+  const rows = document.querySelectorAll('#d-fair .fmb-row');
+  const keys = ['F','A','I','R'];
+  rows.forEach((row,i)=>{
+    const k=keys[i];
+    setTimeout(()=>{ row.querySelector('.fmb-fill').style.width=f[k]+'%'; row.querySelector('.fmb-n').textContent=f[k]; },300+i*100);
+  });
+
+  // Recent datasets
+  const {data:ds} = await apiFetch('/admin/api/datasets?limit=5');
+  document.getElementById('dash-recent').innerHTML = (ds.items||[]).map(d=>`
+    <tr>
+      <td class="td-doi">${d.doi}</td>
+      <td class="td-title">${d.title}</td>
+      <td><div class="fair-cell">
+        <div class="fair-cell-item F">F ${d.fair.F}</div>
+        <div class="fair-cell-item A">A ${d.fair.A}</div>
+        <div class="fair-cell-item I">I ${d.fair.I}</div>
+        <div class="fair-cell-item R">R ${d.fair.R}</div>
+      </div></td>
+      <td><span class="badge ${d.status}">${d.status==='published'?'Опубл.':'Черновик'}</span></td>
+      <td class="td-mono">${d.downloads}</td>
+      <td><button class="a-btn" onclick="openDsDrawer(${JSON.stringify(d).replace(/"/g,'&quot;')})">Ред.</button></td>
+    </tr>`).join('');
+
+  // Recent logs
+  const {data:logs} = await apiFetch('/admin/api/logs?limit=20');
+  renderLogRows(document.getElementById('dash-logs'), (logs.logs||[]).slice(0,15));
+}
+
+/* ── Datasets CRUD ───────────────────────────────────────────────────── */
+let dsSearchTimer;
+function dsDebouncedSearch(){ clearTimeout(dsSearchTimer); dsSearchTimer=setTimeout(()=>{ dsQ=document.getElementById('ds-search').value; dsPage=1; loadAdminDatasets(); },350); }
+
+async function loadAdminDatasets(){
+  dsStatus = document.getElementById('ds-status-filter').value;
+  let url = `/admin/api/datasets?page=${dsPage}&limit=15`;
+  if(dsQ) url+='&q='+encodeURIComponent(dsQ);
+  if(dsStatus) url+='&status='+dsStatus;
+  const {data} = await apiFetch(url);
+  if(!data.items) return;
+
+  document.getElementById('ds-tbody').innerHTML = data.items.map(d=>`
+    <tr>
+      <td class="td-doi">${d.doi}</td>
+      <td><div class="td-title">${d.title}</div></td>
+      <td><div class="fair-cell">
+        <div class="fair-cell-item F">F ${d.fair.F}</div>
+        <div class="fair-cell-item A">A ${d.fair.A}</div>
+        <div class="fair-cell-item I">I ${d.fair.I}</div>
+        <div class="fair-cell-item R">R ${d.fair.R}</div>
+      </div></td>
+      <td class="td-mono">${d.license}</td>
+      <td><span class="badge ${d.status}">${d.status==='published'?'Опубл.':'Черновик'}</span></td>
+      <td class="td-mono">${d.downloads}</td>
+      <td><div class="td-actions">
+        <button class="a-btn" onclick='openDsDrawer(${JSON.stringify(d).replace(/'/g,"&#39;")})'>Ред.</button>
+        ${d.status==='draft'?`<button class="a-btn success" onclick="quickPublish(${d.id})">✓</button>`:''}
+        <button class="a-btn danger" onclick="deleteDs(${d.id},'${d.title.slice(0,30)}')">✕</button>
+      </div></td>
+    </tr>`).join('');
+
+  // pagination
+  document.getElementById('ds-pag-info').textContent = `${data.total} записей · стр. ${data.page}/${data.pages||1}`;
+  let pag='';
+  for(let i=1;i<=(data.pages||1);i++) pag+=`<button class="pag-btn${i===dsPage?' on':''}" onclick="dsGoPage(${i})">${i}</button>`;
+  document.getElementById('ds-pag-btns').innerHTML=pag;
+}
+
+function dsGoPage(n){ dsPage=n; loadAdminDatasets(); }
+
+function openDsDrawer(ds){
+  document.getElementById('ds-drawer-title').textContent = ds ? 'Редактировать набор данных' : 'Новый набор данных';
+  document.getElementById('ds-id').value       = ds?.id||'';
+  document.getElementById('ds-title').value    = ds?.title||'';
+  document.getElementById('ds-desc').value     = ds?.description||'';
+  document.getElementById('ds-creator').value  = ds?.creator?.name||'';
+  document.getElementById('ds-orcid').value    = ds?.creator?.orcid||'';
+  document.getElementById('ds-kw').value       = (ds?.keywords||[]).join(', ');
+  document.getElementById('ds-license').value  = ds?.license||'CC-BY-4.0';
+  document.getElementById('ds-access').value   = ds?.access||'open';
+  document.getElementById('ds-format').value   = ds?.format||'text/csv';
+  document.getElementById('ds-status').value   = ds?.status||'draft';
+  document.getElementById('ds-publish-btn').style.display = (ds&&ds.status==='draft') ? 'inline-block' : 'none';
+  document.getElementById('dsDO').classList.add('open');
+  document.getElementById('dsDrawer').classList.add('open');
+}
+
+function closeDsDrawer(){
+  document.getElementById('dsDO').classList.remove('open');
+  document.getElementById('dsDrawer').classList.remove('open');
+}
+
+async function saveDsDrawer(){
+  const id = document.getElementById('ds-id').value;
+  const body = {
+    title: document.getElementById('ds-title').value.trim(),
+    description: document.getElementById('ds-desc').value.trim(),
+    creator: { name: document.getElementById('ds-creator').value, orcid: document.getElementById('ds-orcid').value },
+    keywords: document.getElementById('ds-kw').value.split(',').map(s=>s.trim()).filter(Boolean),
+    license: document.getElementById('ds-license').value,
+    access: document.getElementById('ds-access').value,
+    format: document.getElementById('ds-format').value,
+    status: document.getElementById('ds-status').value,
+  };
+  let res;
+  if(id){ res = await apiFetch('/admin/api/datasets/'+id, {method:'PUT', body:JSON.stringify(body)}); }
+  else  { res = await apiFetch('/api/datasets', {method:'POST', body:JSON.stringify(body)}); }
+  if(res.ok){ toast(id?'Обновлено':'Создано','success'); closeDsDrawer(); loadAdminDatasets(); }
+  else toast(res.data.error||'Ошибка','error');
+}
+
+async function quickPublish(id){
+  const {ok,data} = await apiFetch(`/admin/api/datasets/${id}/publish`,{method:'POST'});
+  if(ok){ toast('Опубликовано: '+data.doi,'success'); loadAdminDatasets(); }
+  else toast(data.error||'Ошибка','error');
+}
+
+async function publishDs(){
+  const id = document.getElementById('ds-id').value;
+  if(!id) return;
+  await quickPublish(id); closeDsDrawer();
+}
+
+function deleteDs(id, title){
+  confirm('Удалить набор данных?', `«${title}» будет удалён безвозвратно.`, async()=>{
+    const {ok,data} = await apiFetch('/admin/api/datasets/'+id,{method:'DELETE'});
+    if(ok){ toast('Удалено','success'); loadAdminDatasets(); }
+    else toast(data.error||'Ошибка','error');
+  });
+}
+
+/* ── Users CRUD ──────────────────────────────────────────────────────── */
+async function loadUsers(){
+  const {data} = await apiFetch('/admin/api/users');
+  if(!Array.isArray(data)) return;
+  document.getElementById('usr-tbody').innerHTML = data.map(u=>`
+    <tr>
+      <td class="td-mono">${u.id}</td>
+      <td style="font-weight:500">${u.name}</td>
+      <td class="td-mono">${u.email}</td>
+      <td><span class="badge ${u.role}">${u.role}</span></td>
+      <td><span class="badge ${u.active?'active':'inactive'}">${u.active?'Активен':'Заблокирован'}</span></td>
+      <td class="td-mono">${fmtDate(u.created)}</td>
+      <td><div class="td-actions">
+        <button class="a-btn" onclick='openUserDrawer(${JSON.stringify(u).replace(/'/g,"&#39;")})'>Ред.</button>
+        ${u.id!==1?`<button class="a-btn danger" onclick="deleteUser(${u.id},'${u.name}')">✕</button>`:''}
+      </div></td>
+    </tr>`).join('');
+}
+
+function openUserDrawer(u){
+  document.getElementById('usr-drawer-title').textContent = u ? 'Редактировать пользователя' : 'Новый пользователь';
+  document.getElementById('usr-id').value     = u?.id||'';
+  document.getElementById('usr-name').value   = u?.name||'';
+  document.getElementById('usr-email').value  = u?.email||'';
+  document.getElementById('usr-pass').value   = '';
+  document.getElementById('usr-role').value   = u?.role||'researcher';
+  document.getElementById('usr-active').value = String(u?.active!==false);
+  document.getElementById('usrDO').classList.add('open');
+  document.getElementById('usrDrawer').classList.add('open');
+}
+
+function closeUserDrawer(){
+  document.getElementById('usrDO').classList.remove('open');
+  document.getElementById('usrDrawer').classList.remove('open');
+}
+
+async function saveUserDrawer(){
+  const id   = document.getElementById('usr-id').value;
+  const body = {
+    name:   document.getElementById('usr-name').value.trim(),
+    email:  document.getElementById('usr-email').value.trim(),
+    role:   document.getElementById('usr-role').value,
+    active: document.getElementById('usr-active').value === 'true',
+  };
+  const pass = document.getElementById('usr-pass').value;
+  if(pass) body.password = pass;
+  if(!id && !pass){ toast('Пароль обязателен','error'); return; }
+  let res;
+  if(id) res = await apiFetch('/admin/api/users/'+id, {method:'PUT', body:JSON.stringify(body)});
+  else   res = await apiFetch('/admin/api/users',     {method:'POST',body:JSON.stringify(body)});
+  if(res.ok){ toast(id?'Обновлено':'Пользователь создан','success'); closeUserDrawer(); loadUsers(); }
+  else toast(res.data.error||'Ошибка','error');
+}
+
+function deleteUser(id, name){
+  confirm('Удалить пользователя?', `«${name}» будет удалён.`, async()=>{
+    const {ok,data} = await apiFetch('/admin/api/users/'+id,{method:'DELETE'});
+    if(ok){ toast('Удалено','success'); loadUsers(); }
+    else toast(data.error||'Ошибка','error');
+  });
+}
+
+/* ── Logs ────────────────────────────────────────────────────────────── */
+async function loadLogs(){
+  const lim = document.getElementById('log-limit')?.value||100;
+  const {data} = await apiFetch('/admin/api/logs?limit='+lim);
+  renderLogRows(document.getElementById('logs-body'), data.logs||[]);
+}
+
+function renderLogRows(el, logs){
+  el.innerHTML = logs.map(l=>{
+    const ok = l.status>=200&&l.status<400;
+    return `<div class="log-row">
+      <span class="log-ts">${l.ts.slice(0,19).replace('T',' ')}</span>
+      <span class="log-method ${l.method}">${l.method}</span>
+      <span class="log-path">${l.path}</span>
+      <span class="log-status ${ok?'ok':'err'}">${l.status}</span>
+      <span class="log-ms">${l.ms}ms</span>
+      <span class="log-user">${l.userId||'–'}</span>
+    </div>`;
+  }).join('');
+}
+
+/* ── Init ────────────────────────────────────────────────────────────── */
+function initApp(){ loadDashboard(); }
+</script>
+</body>
+</html>
