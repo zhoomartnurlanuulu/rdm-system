@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>RDM КГТУ — ER-диаграмма БД</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f1117;color:#e2e8f0;padding:32px;min-height:100vh}
+h1{font-size:20px;font-weight:700;color:#fff;margin-bottom:4px}
+.sub{font-size:13px;color:#64748b;margin-bottom:32px}
+.diagram{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start}
+.table-box{background:#1a1d27;border:1px solid #2d3148;border-radius:10px;overflow:hidden;min-width:220px;flex:1}
+.table-box.primary{border-color:#4f46e5}
+.table-header{background:#2d3148;padding:10px 14px;font-size:12px;font-weight:700;letter-spacing:.06em;color:#a5b4fc;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.table-header.primary-h{background:#312e81;color:#c7d2fe}
+.pk{color:#fbbf24;font-size:10px}
+.fk{color:#34d399;font-size:10px}
+.field{display:flex;align-items:center;gap:8px;padding:7px 14px;border-bottom:1px solid #1e2333;font-size:12px}
+.field:last-child{border-bottom:none}
+.field-name{font-family:'Fira Code',monospace;color:#e2e8f0;flex:1}
+.field-type{font-size:11px;color:#64748b;font-family:monospace}
+.field-note{font-size:10px;color:#818cf8;margin-left:4px}
+.rel{background:#141720;border:1px dashed #2d3148;border-radius:8px;padding:12px 16px;font-size:12px;color:#64748b}
+.rel h3{font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #1e2333}
+.rel-item:last-child{border-bottom:none}
+.t1{color:#a5b4fc;font-weight:600}
+.t2{color:#6ee7b7;font-weight:600}
+.arrow{color:#475569}
+.cardinality{font-size:11px;color:#f59e0b}
+</style>
+</head>
+<body>
+<h1>ER-диаграмма базы данных RDM КГТУ</h1>
+<div class="sub">Логическая модель данных · SQLite (better-sqlite3) · 5 таблиц + FTS5 виртуальная таблица</div>
+
+<div class="diagram">
+
+  <div class="table-box primary">
+    <div class="table-header primary-h">🗂 users</div>
+    <div class="field"><span class="pk">PK</span><span class="field-name">id</span><span class="field-type">INTEGER</span></div>
+    <div class="field"><span class="field-name">name</span><span class="field-type">TEXT</span><span class="field-note">NOT NULL</span></div>
+    <div class="field"><span class="field-name">email</span><span class="field-type">TEXT</span><span class="field-note">UNIQUE</span></div>
+    <div class="field"><span class="field-name">password_hash</span><span class="field-type">TEXT</span><span class="field-note">SHA-256</span></div>
+    <div class="field"><span class="field-name">role</span><span class="field-type">TEXT</span><span class="field-note">admin|researcher</span></div>
+    <div class="field"><span class="field-name">active</span><span class="field-type">INTEGER</span><span class="field-note">0|1</span></div>
+    <div class="field"><span class="field-name">orcid</span><span class="field-type">TEXT</span></div>
+    <div class="field"><span class="field-name">created</span><span class="field-type">TEXT</span><span class="field-note">ISO 8601</span></div>
+  </div>
+
+  <div class="table-box primary">
+    <div class="table-header primary-h">📦 datasets</div>
+    <div class="field"><span class="pk">PK</span><span class="field-name">id</span><span class="field-type">INTEGER</span></div>
+    <div class="field"><span class="fk">FK</span><span class="field-name">user_id</span><span class="field-type">INTEGER</span><span class="field-note">→ users.id</span></div>
+    <div class="field"><span class="field-name">title</span><span class="field-type">TEXT</span><span class="field-note">NOT NULL</span></div>
+    <div class="field"><span class="field-name">description</span><span class="field-type">TEXT</span></div>
+    <div class="field"><span class="field-name">doi</span><span class="field-type">TEXT</span></div>
+    <div class="field"><span class="field-name">status</span><span class="field-type">TEXT</span><span class="field-note">draft|published|rejected</span></div>
+    <div class="field"><span class="field-name">access</span><span class="field-type">TEXT</span><span class="field-note">open|restricted</span></div>
+    <div class="field"><span class="field-name">license</span><span class="field-type">TEXT</span></div>
+    <div class="field"><span class="field-name">keywords</span><span class="field-type">TEXT</span><span class="field-note">JSON array</span></div>
+    <div class="field"><span class="field-name">creator</span><span class="field-type">TEXT</span><span class="field-note">JSON object</span></div>
+    <div class="field"><span class="field-name">fair_f/a/i/r</span><span class="field-type">INTEGER</span><span class="field-note">0–100</span></div>
+    <div class="field"><span class="field-name">downloads / views</span><span class="field-type">INTEGER</span></div>
+    <div class="field"><span class="field-name">embargo_until</span><span class="field-type">TEXT</span><span class="field-note">ISO date</span></div>
+    <div class="field"><span class="field-name">reject_comment</span><span class="field-type">TEXT</span></div>
+    <div class="field"><span class="field-name">related_ids</span><span class="field-type">TEXT</span><span class="field-note">JSON array</span></div>
+    <div class="field"><span class="field-name">file_path / file_name</span><span class="field-type">TEXT</span></div>
+    <div class="field"><span class="field-name">file_mime / file_size</span><span class="field-type">TEXT/INTEGER</span></div>
+    <div class="field"><span class="field-name">created / updated</span><span class="field-type">TEXT</span></div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:24px;flex:1;min-width:200px">
+    <div class="table-box">
+      <div class="table-header">🔐 sessions</div>
+      <div class="field"><span class="pk">PK</span><span class="field-name">token</span><span class="field-type">TEXT</span></div>
+      <div class="field"><span class="fk">FK</span><span class="field-name">user_id</span><span class="field-type">INTEGER</span></div>
+      <div class="field"><span class="field-name">exp</span><span class="field-type">INTEGER</span><span class="field-note">Unix ms</span></div>
+      <div class="field"><span class="field-name">role</span><span class="field-type">TEXT</span></div>
+      <div class="field"><span class="field-name">type</span><span class="field-type">TEXT</span><span class="field-note">access|refresh</span></div>
+    </div>
+
+    <div class="table-box">
+      <div class="table-header">🔑 api_keys</div>
+      <div class="field"><span class="pk">PK</span><span class="field-name">id</span><span class="field-type">INTEGER</span></div>
+      <div class="field"><span class="fk">FK</span><span class="field-name">user_id</span><span class="field-type">INTEGER</span></div>
+      <div class="field"><span class="field-name">key_hash</span><span class="field-type">TEXT</span><span class="field-note">SHA-256</span></div>
+      <div class="field"><span class="field-name">name</span><span class="field-type">TEXT</span></div>
+      <div class="field"><span class="field-name">created / last_used</span><span class="field-type">TEXT</span></div>
+      <div class="field"><span class="field-name">active</span><span class="field-type">INTEGER</span></div>
+    </div>
+
+    <div class="table-box">
+      <div class="table-header">📋 logs</div>
+      <div class="field"><span class="pk">PK</span><span class="field-name">id</span><span class="field-type">INTEGER</span></div>
+      <div class="field"><span class="field-name">ts</span><span class="field-type">TEXT</span><span class="field-note">Timestamp</span></div>
+      <div class="field"><span class="field-name">method / path</span><span class="field-type">TEXT</span></div>
+      <div class="field"><span class="field-name">status</span><span class="field-type">INTEGER</span></div>
+      <div class="field"><span class="field-name">ip / user_agent</span><span class="field-type">TEXT</span></div>
+    </div>
+
+    <div class="table-box" style="border-color:#065f46">
+      <div class="table-header" style="background:#064e3b;color:#6ee7b7">🔍 datasets_fts (FTS5)</div>
+      <div class="field"><span class="field-name">title</span><span class="field-type">TEXT</span><span class="field-note">indexed</span></div>
+      <div class="field"><span class="field-name">description</span><span class="field-type">TEXT</span><span class="field-note">indexed</span></div>
+      <div class="field"><span class="field-name">keywords</span><span class="field-type">TEXT</span><span class="field-note">indexed</span></div>
+      <div class="field" style="font-size:11px;color:#64748b;padding:8px 14px">content=datasets · Триггеры: ds_ai, ds_au, ds_ad</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="rel" style="margin-top:24px">
+  <h3>Связи между таблицами</h3>
+  <div class="rel-item"><span class="t1">users</span><span class="arrow">──1:N──▶</span><span class="t2">datasets</span><span class="cardinality">user_id = users.id</span><span style="color:#64748b;font-size:11px;margin-left:8px">Исследователь владеет наборами данных</span></div>
+  <div class="rel-item"><span class="t1">users</span><span class="arrow">──1:N──▶</span><span class="t2">sessions</span><span class="cardinality">user_id = users.id</span><span style="color:#64748b;font-size:11px;margin-left:8px">У пользователя может быть несколько активных сессий</span></div>
+  <div class="rel-item"><span class="t1">users</span><span class="arrow">──1:N──▶</span><span class="t2">api_keys</span><span class="cardinality">user_id = users.id</span><span style="color:#64748b;font-size:11px;margin-left:8px">Пользователь создаёт API-ключи для программного доступа</span></div>
+  <div class="rel-item"><span class="t1">datasets</span><span class="arrow">──1:1──▶</span><span class="t2">datasets_fts</span><span class="cardinality">rowid = datasets.id</span><span style="color:#64748b;font-size:11px;margin-left:8px">FTS5 индекс синхронизируется через триггеры</span></div>
+  <div class="rel-item"><span class="t1">datasets</span><span class="arrow">──N:M──▶</span><span class="t2">datasets</span><span class="cardinality">related_ids (JSON)</span><span style="color:#64748b;font-size:11px;margin-left:8px">Самосвязь: связанные наборы данных</span></div>
+</div>
+</body>
+</html>

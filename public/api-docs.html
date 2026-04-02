@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RDM КГТУ — REST API Документация</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f1117;color:#e2e8f0;min-height:100vh}
+.header{background:#1a1d27;border-bottom:1px solid #2d3148;padding:16px 32px;display:flex;align-items:center;gap:16px}
+.header h1{font-size:18px;font-weight:700;color:#fff}
+.header .badge{background:#4f46e5;color:#fff;font-size:11px;padding:3px 8px;border-radius:4px;font-weight:600}
+.header .version{color:#64748b;font-size:13px}
+.header .base{margin-left:auto;font-size:12px;color:#94a3b8;background:#0f1117;padding:6px 12px;border-radius:6px;border:1px solid #2d3148}
+.container{max-width:1100px;margin:0 auto;padding:32px}
+.section-title{font-size:11px;font-weight:700;letter-spacing:.1em;color:#64748b;text-transform:uppercase;margin:32px 0 12px}
+.endpoint{background:#1a1d27;border:1px solid #2d3148;border-radius:8px;margin-bottom:8px;overflow:hidden}
+.ep-header{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer}
+.method{font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;min-width:52px;text-align:center}
+.GET{background:#065f46;color:#6ee7b7}.POST{background:#1e3a5f;color:#93c5fd}.PUT{background:#78350f;color:#fcd34d}.DELETE{background:#4c1d24;color:#fca5a5}
+.ep-path{font-family:'Fira Code',monospace;font-size:13px;color:#e2e8f0}
+.ep-desc{margin-left:auto;font-size:12px;color:#64748b}
+.ep-body{padding:12px 16px;border-top:1px solid #2d3148;background:#141720}
+.param-table{width:100%;border-collapse:collapse;font-size:12px}
+.param-table th{text-align:left;padding:6px 10px;color:#64748b;font-weight:600;border-bottom:1px solid #2d3148}
+.param-table td{padding:6px 10px;border-bottom:1px solid #1e2333;vertical-align:top}
+.param-table td:first-child{font-family:'Fira Code',monospace;color:#93c5fd}
+.param-table td:nth-child(2){color:#818cf8}
+.req{color:#f87171;font-size:10px;font-weight:700}
+.auth-badge{font-size:10px;padding:2px 6px;border-radius:3px;background:#312e81;color:#a5b4fc;margin-left:auto}
+.response{margin-top:10px;background:#0f1117;border-radius:6px;padding:12px;font-family:'Fira Code',monospace;font-size:12px;color:#86efac;white-space:pre}
+.tag{font-size:10px;padding:2px 6px;border-radius:3px;background:#1e293b;color:#94a3b8;margin-left:6px}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>RDM КГТУ — REST API</h1>
+  <span class="badge">OpenAPI 3.0</span>
+  <span class="version">v1.0.0</span>
+  <span class="base">Base URL: <strong>http://localhost:3000</strong></span>
+</div>
+<div class="container">
+
+  <div class="section-title">🔐 Аутентификация</div>
+
+  <div class="endpoint">
+    <div class="ep-header">
+      <span class="method POST">POST</span>
+      <span class="ep-path">/api/login</span>
+      <span class="ep-desc">Вход пользователя, возвращает JWT-токен</span>
+    </div>
+    <div class="ep-body">
+      <table class="param-table">
+        <tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+        <tr><td>email</td><td>string</td><td>Email пользователя <span class="req">required</span></td></tr>
+        <tr><td>password</td><td>string</td><td>Пароль <span class="req">required</span></td></tr>
+      </table>
+      <div class="response">{ "token": "abc123...", "user": { "id": 2, "name": "Researcher A", "role": "researcher" } }</div>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="ep-header">
+      <span class="method POST">POST</span>
+      <span class="ep-path">/api/register</span>
+      <span class="ep-desc">Регистрация нового пользователя</span>
+    </div>
+    <div class="ep-body">
+      <table class="param-table">
+        <tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+        <tr><td>name</td><td>string</td><td>Полное имя <span class="req">required</span></td></tr>
+        <tr><td>email</td><td>string</td><td>Email <span class="req">required</span></td></tr>
+        <tr><td>password</td><td>string</td><td>Пароль, мин. 6 символов <span class="req">required</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="ep-header">
+      <span class="method POST">POST</span>
+      <span class="ep-path">/api/logout</span>
+      <span class="ep-desc">Завершение сессии</span>
+      <span class="auth-badge">🔒 Bearer</span>
+    </div>
+  </div>
+
+  <div class="section-title">📦 Наборы данных</div>
+
+  <div class="endpoint">
+    <div class="ep-header">
+      <span class="method GET">GET</span>
+      <span class="ep-path">/api/datasets</span>
+      <span class="ep-desc">Список опубликованных наборов данных</span>
+      <span class="tag">FTS5 поиск</span>
+    </div>
+    <div class="ep-body">
+      <table class="param-table">
+        <tr><th>Параметр</th><th>Тип</th><th>Описание</th></tr>
+        <tr><td>q</td><td>string</td><td>Полнотекстовый поиск (FTS5)</td></tr>
+        <tr><td>access</td><td>open|restricted</td><td>Фильтр по доступу</td></tr>
+        <tr><td>license</td><td>string</td><td>Фильтр по лицензии</td></tr>
+        <tr><td>page</td><td>integer</td><td>Номер страницы (default: 1)</td></tr>
+        <tr><td>limit</td><td>integer</td><td>Записей на страницу (default: 12)</td></tr>
+      </table>
+      <div class="response">{ "total": 4, "page": 1, "limit": 12, "pages": 1, "items": [ {...} ] }</div>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="ep-header">
+      <span class="method GET">GET</span>
+      <span class="ep-path">/api/datasets/{id}</span>
+      <span class="ep-desc">Детальная информация о наборе данных</span>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="ep-header">
+      <span class="method POST">POST</span>
+      <span class="ep-path">/api/datasets</span>
+      <span class="ep-desc">Создать новый набор данных</span>
+      <span class="auth-badge">🔒 Bearer</span>
+    </div>
+    <div class="ep-body">
+      <table class="param-table">
+        <tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+        <tr><td>title</td><td>string</td><td>Название <span class="req">required</span></td></tr>
+        <tr><td>description</td><td>string</td><td>Описание <span class="req">required</span></td></tr>
+        <tr><td>keywords</td><td>string[]</td><td>Ключевые слова</td></tr>
+        <tr><td>license</td><td>string</td><td>CC-BY-4.0 | CC0-1.0 | CC-BY-NC-SA-4.0</td></tr>
+        <tr><td>embargoUntil</td><td>ISO date</td><td>Дата снятия эмбарго</td></tr>
+        <tr><td>relatedIds</td><td>number[]</td><td>ID связанных наборов</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="ep-header">
+      <span class="method GET">GET</span>
+      <span class="ep-path">/api/datasets/{id}/export</span>
+      <span class="ep-desc">Экспорт метаданных</span>
+      <span class="tag">?format=bibtex|dc|datacite</span>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="ep-header">
+      <span class="method POST">POST</span>
+      <span class="ep-path">/api/datasets/{id}/file</span>
+      <span class="ep-desc">Загрузка файла датасета</span>
+      <span class="auth-badge">🔒 Bearer</span>
+      <span class="tag">Binary body · X-Filename header</span>
+    </div>
+  </div>
+
+  <div class="section-title">👤 Профиль пользователя</div>
+
+  <div class="endpoint">
+    <div class="ep-header">
+      <span class="method GET">GET</span>
+      <span class="ep-path">/api/me</span>
+      <span class="ep-desc">Текущий пользователь</span>
+      <span class="auth-badge">🔒 Bearer</span>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="ep-header">
+      <span class="method GET">GET</span>
+      <span class="ep-path">/api/my/datasets</span>
+      <span class="ep-desc">Мои наборы данных (включая черновики)</span>
+      <span class="auth-badge">🔒 Bearer</span>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="ep-header">
+      <span class="method PUT">PUT</span>
+      <span class="ep-path">/api/my/datasets/{id}</span>
+      <span class="ep-desc">Обновить свой набор данных</span>
+      <span class="auth-badge">🔒 Bearer</span>
+    </div>
+  </div>
+
+  <div class="section-title">🔑 API-ключи</div>
+
+  <div class="endpoint">
+    <div class="ep-header">
+      <span class="method GET">GET</span>
+      <span class="ep-path">/api/keys</span>
+      <span class="ep-desc">Список активных API-ключей</span>
+      <span class="auth-badge">🔒 Bearer</span>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="ep-header">
+      <span class="method POST">POST</span>
+      <span class="ep-path">/api/keys</span>
+      <span class="ep-desc">Создать API-ключ (возвращается только один раз)</span>
+      <span class="auth-badge">🔒 Bearer</span>
+    </div>
+    <div class="ep-body">
+      <div class="response">{ "id": 1, "name": "jupyter-notebook", "key": "a1b2c3..." }</div>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="ep-header">
+      <span class="method DELETE">DELETE</span>
+      <span class="ep-path">/api/keys/{id}</span>
+      <span class="ep-desc">Отозвать API-ключ</span>
+      <span class="auth-badge">🔒 Bearer</span>
+    </div>
+  </div>
+
+  <div class="section-title">🌐 OAI-PMH</div>
+
+  <div class="endpoint">
+    <div class="ep-header">
+      <span class="method GET">GET</span>
+      <span class="ep-path">/oai</span>
+      <span class="ep-desc">OAI-PMH endpoint — стандартный протокол метаданных</span>
+      <span class="tag">verb=Identify|ListRecords|GetRecord|ListIdentifiers</span>
+    </div>
+    <div class="ep-body">
+      <table class="param-table">
+        <tr><th>Параметр</th><th>Значение</th><th>Описание</th></tr>
+        <tr><td>verb</td><td>Identify</td><td>Информация о репозитории</td></tr>
+        <tr><td>verb</td><td>ListMetadataFormats</td><td>Поддерживаемые форматы</td></tr>
+        <tr><td>verb</td><td>ListRecords</td><td>Все записи (metadataPrefix=oai_dc)</td></tr>
+        <tr><td>verb</td><td>GetRecord</td><td>Одна запись по identifier</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-title">🛡️ Admin API</div>
+
+  <div class="endpoint">
+    <div class="ep-header">
+      <span class="method GET">GET</span>
+      <span class="ep-path">/admin/api/stats</span>
+      <span class="ep-desc">Статистика системы</span>
+      <span class="auth-badge">🔒 Admin</span>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="ep-header">
+      <span class="method GET">GET</span>
+      <span class="ep-path">/admin/api/analytics</span>
+      <span class="ep-desc">Расширенная аналитика и активность API</span>
+      <span class="auth-badge">🔒 Admin</span>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="ep-header">
+      <span class="method POST">POST</span>
+      <span class="ep-path">/admin/api/datasets/{id}/publish</span>
+      <span class="ep-desc">Опубликовать набор данных</span>
+      <span class="auth-badge">🔒 Admin</span>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <div class="ep-header">
+      <span class="method POST">POST</span>
+      <span class="ep-path">/admin/api/datasets/{id}/reject</span>
+      <span class="ep-desc">Отклонить набор данных с комментарием</span>
+      <span class="auth-badge">🔒 Admin</span>
+    </div>
+    <div class="ep-body">
+      <table class="param-table">
+        <tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+        <tr><td>comment</td><td>string</td><td>Причина отклонения</td></tr>
+      </table>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

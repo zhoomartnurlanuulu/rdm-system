@@ -5,201 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>RDM Admin — Панель администратора</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#05060a;--bg1:#0a0c12;--bg2:#0f1118;--bg3:#151820;--bg4:#1b1e2a;
-  --line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--line3:rgba(255,255,255,.18);
-  --t1:#e8eaf2;--t2:#8486a0;--t3:#464860;
-  --acc:#4d9dff;--accbg:rgba(77,157,255,.1);--accbd:rgba(77,157,255,.25);
-  --green:#3ecb7f;--gbg:rgba(62,203,127,.1);--gbd:rgba(62,203,127,.22);
-  --amber:#f0a240;--ambg:rgba(240,162,64,.1);--ambd:rgba(240,162,64,.22);
-  --red:#ff5f5f;--rbg:rgba(255,95,95,.1);--rbd:rgba(255,95,95,.22);
-  --purple:#c47cff;--pbg:rgba(196,124,255,.1);--pbd:rgba(196,124,255,.22);
-  --sans:'Syne',sans-serif;--mono:'JetBrains Mono',monospace;
-  --r:10px;
-}
-html,body{height:100%}
-body{font-family:var(--sans);background:var(--bg);color:var(--t1);overflow-x:hidden;font-size:14px;line-height:1.5;display:flex;flex-direction:column}
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:2px}
-
-/* ── LOGIN SCREEN ── */
-#loginScreen{display:flex;flex:1;align-items:center;justify-content:center;padding:24px;
-  background:radial-gradient(ellipse 70% 60% at 50% 40%,rgba(77,157,255,.06) 0%,transparent 60%)}
-.login-card{background:var(--bg2);border:1px solid var(--line2);border-radius:16px;padding:40px 36px;width:100%;max-width:400px}
-.lc-logo{display:flex;align-items:center;gap:10px;margin-bottom:32px}
-.lc-mark{width:36px;height:36px;border-radius:9px;background:var(--t1);display:grid;place-items:center}
-.lc-mark svg{width:18px;height:18px}
-.lc-name{font-size:15px;font-weight:700;letter-spacing:.04em}
-.lc-sub{font-size:11px;color:var(--t3);font-family:var(--mono);letter-spacing:.06em}
-.lc-title{font-size:22px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
-.lc-desc{font-size:13px;color:var(--t2);margin-bottom:28px}
-.lf-label{font-family:var(--mono);font-size:9px;color:var(--t3);letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:6px}
-.lf-input{width:100%;background:var(--bg3);border:1px solid var(--line);color:var(--t1);padding:11px 14px;border-radius:8px;font-family:var(--sans);font-size:14px;outline:none;transition:border .2s;margin-bottom:14px}
-.lf-input:focus{border-color:var(--acc)}
-.lf-input::placeholder{color:var(--t3)}
-.lf-btn{width:100%;background:var(--acc);color:#fff;border:none;padding:13px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--sans);letter-spacing:.03em;transition:opacity .2s;margin-top:4px}
-.lf-btn:hover{opacity:.88}
-.lf-error{font-size:12px;color:var(--red);margin-top:10px;font-family:var(--mono);text-align:center;min-height:18px}
-.lf-hint{font-size:11px;color:var(--t3);text-align:center;margin-top:16px;font-family:var(--mono);line-height:1.7}
-
-/* ── MAIN LAYOUT ── */
-#adminApp{display:none;height:100vh;flex-direction:row}
-#adminApp.show{display:flex}
-
-/* ── SIDEBAR ── */
-.sidebar{width:220px;flex-shrink:0;background:var(--bg1);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow-y:auto}
-.sb-logo{padding:20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
-.sb-mark{width:28px;height:28px;border-radius:7px;background:var(--t1);display:grid;place-items:center;flex-shrink:0}
-.sb-mark svg{width:14px;height:14px}
-.sb-name{font-size:12px;font-weight:700;letter-spacing:.04em}
-.sb-admin-badge{font-size:9px;font-family:var(--mono);padding:2px 7px;border-radius:3px;background:var(--rbg);color:var(--red);border:1px solid var(--rbd);letter-spacing:.05em;font-weight:500;display:inline-block;margin-top:2px}
-
-.sb-nav{flex:1;padding:12px 10px}
-.sb-section{font-family:var(--mono);font-size:9px;color:var(--t3);letter-spacing:.12em;text-transform:uppercase;padding:12px 8px 6px;margin-top:6px}
-.sb-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:7px;cursor:pointer;transition:all .2s;margin-bottom:2px;color:var(--t2);font-size:13px;font-weight:500;letter-spacing:.01em}
-.sb-item:hover{background:var(--bg3);color:var(--t1)}
-.sb-item.active{background:var(--bg3);color:var(--t1)}
-.sb-item.active .sb-icon{color:var(--acc)}
-.sb-icon{font-size:14px;width:18px;text-align:center;flex-shrink:0}
-.sb-badge{margin-left:auto;font-family:var(--mono);font-size:9px;font-weight:500;padding:2px 6px;border-radius:3px;background:var(--accbg);color:var(--acc)}
-
-.sb-footer{padding:16px 10px;border-top:1px solid var(--line)}
-.sb-user{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;background:var(--bg3);margin-bottom:8px}
-.sb-avatar{width:26px;height:26px;border-radius:50%;background:var(--accbg);border:1px solid var(--accbd);display:grid;place-items:center;font-size:10px;color:var(--acc);font-weight:600;font-family:var(--mono);flex-shrink:0}
-.sb-uname{font-size:12px;font-weight:500;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sb-logout{background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px;transition:color .2s}
-.sb-logout:hover{color:var(--red)}
-.sb-pub-link{display:flex;align-items:center;gap:8px;font-size:11px;font-family:var(--mono);color:var(--t3);text-decoration:none;padding:6px 10px;border-radius:6px;border:1px solid var(--line);transition:all .2s}
-.sb-pub-link:hover{color:var(--t1);border-color:var(--line2)}
-
-/* ── MAIN CONTENT ── */
-.main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
-.topbar{height:52px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:var(--bg1);flex-shrink:0}
-.tb-title{font-size:15px;font-weight:700;letter-spacing:-.01em}
-.tb-right{display:flex;align-items:center;gap:12px}
-.tb-time{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:.04em}
-
-.page{padding:28px;display:none;flex-direction:column;gap:20px}
-.page.active{display:flex}
-
-/* ── CARDS ── */
-.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.stat-card{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:20px;transition:background .2s}
-.stat-card:hover{background:var(--bg3)}
-.sc-lbl{font-family:var(--mono);font-size:9px;color:var(--t3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
-.sc-val{font-family:var(--mono);font-size:32px;font-weight:500;color:var(--t1);margin-bottom:4px}
-.sc-sub{font-size:11px;color:var(--t3)}
-.sc-trend{font-family:var(--mono);font-size:10px;margin-top:6px}
-.sc-trend.up{color:var(--green)}.sc-trend.neutral{color:var(--t3)}
-
-/* fair bars in stat */
-.fair-mini-bars{display:flex;flex-direction:column;gap:7px;margin-top:8px}
-.fmb-row{display:flex;align-items:center;gap:8px}
-.fmb-k{font-family:var(--mono);font-size:9px;font-weight:500;width:10px;flex-shrink:0}
-.fmb-k.F{color:var(--acc)}.fmb-k.A{color:var(--green)}.fmb-k.I{color:var(--amber)}.fmb-k.R{color:var(--purple)}
-.fmb-track{flex:1;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden}
-.fmb-fill{height:100%;border-radius:2px;transition:width 1.2s ease}
-.F .fmb-fill{background:var(--acc)}.A .fmb-fill{background:var(--green)}
-.I .fmb-fill{background:var(--amber)}.R .fmb-fill{background:var(--purple)}
-.fmb-n{font-family:var(--mono);font-size:9px;color:var(--t3);min-width:24px;text-align:right}
-
-/* ── TABLE ── */
-.tbl-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
-.tbl-title{font-size:15px;font-weight:700;letter-spacing:-.01em}
-.tbl-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.tbl-search{background:var(--bg3);border:1px solid var(--line);color:var(--t1);padding:8px 12px;border-radius:7px;font-family:var(--sans);font-size:12px;outline:none;min-width:200px;transition:border .2s}
-.tbl-search:focus{border-color:var(--acc)}.tbl-search::placeholder{color:var(--t3)}
-.tbl-select{background:var(--bg3);border:1px solid var(--line);color:var(--t2);padding:8px 12px;border-radius:7px;font-family:var(--sans);font-size:12px;outline:none;cursor:pointer}
-.a-btn{font-size:12px;font-weight:600;padding:7px 14px;border-radius:7px;border:1px solid var(--line2);background:none;color:var(--t2);cursor:pointer;transition:all .2s;font-family:var(--sans)}
-.a-btn:hover{background:var(--bg3);color:var(--t1);border-color:var(--line3)}
-.a-btn.primary{background:var(--acc);color:#fff;border-color:transparent}
-.a-btn.primary:hover{opacity:.88}
-.a-btn.danger{border-color:var(--rbd);color:var(--red)}
-.a-btn.danger:hover{background:var(--rbg)}
-.a-btn.success{border-color:var(--gbd);color:var(--green)}
-.a-btn.success:hover{background:var(--gbg)}
-
-.tbl-wrap{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
-table{width:100%;border-collapse:collapse;font-size:13px}
-thead{background:var(--bg3)}
-th{padding:11px 14px;text-align:left;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);font-weight:500;white-space:nowrap;border-bottom:1px solid var(--line)}
-td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
-tr:last-child td{border-bottom:none}
-tr:hover td{background:var(--bg3)}
-.td-title{font-weight:500;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.td-doi{font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:.04em}
-.td-mono{font-family:var(--mono);font-size:11px;color:var(--t2)}
-.td-actions{display:flex;gap:5px;white-space:nowrap}
-
-.badge{font-family:var(--mono);font-size:9px;font-weight:500;padding:2px 8px;border-radius:3px;letter-spacing:.05em;white-space:nowrap}
-.badge.published{background:var(--gbg);color:var(--green);border:1px solid var(--gbd)}
-.badge.draft{background:var(--ambg);color:var(--amber);border:1px solid var(--ambd)}
-.badge.admin{background:var(--rbg);color:var(--red);border:1px solid var(--rbd)}
-.badge.researcher{background:var(--accbg);color:var(--acc);border:1px solid var(--accbd)}
-.badge.active{background:var(--gbg);color:var(--green);border:1px solid var(--gbd)}
-.badge.inactive{background:var(--bg4);color:var(--t3);border:1px solid var(--line)}
-
-.fair-cell{display:grid;grid-template-columns:1fr 1fr;gap:2px;width:72px}
-.fair-cell-item{border-radius:2px;padding:2px 4px;text-align:center;font-family:var(--mono);font-size:9px;font-weight:500}
-.fair-cell-item.F{background:var(--accbg);color:var(--acc)}.fair-cell-item.A{background:var(--gbg);color:var(--green)}
-.fair-cell-item.I{background:var(--ambg);color:var(--amber)}.fair-cell-item.R{background:var(--pbg);color:var(--purple)}
-
-.tbl-pagination{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-top:1px solid var(--line);background:var(--bg3)}
-.pag-info{font-family:var(--mono);font-size:10px;color:var(--t3);letter-spacing:.04em}
-.pag-btns{display:flex;gap:4px}
-.pag-btn{background:var(--bg2);border:1px solid var(--line);color:var(--t2);padding:5px 10px;border-radius:5px;cursor:pointer;font-family:var(--mono);font-size:10px;transition:all .2s}
-.pag-btn:hover,.pag-btn.on{background:var(--bg1);border-color:var(--acc);color:var(--acc)}
-
-/* ── EDIT DRAWER ── */
-.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;display:none;backdrop-filter:blur(3px)}
-.drawer-overlay.open{display:block}
-.drawer{position:fixed;top:0;right:0;bottom:0;width:440px;background:var(--bg2);border-left:1px solid var(--line2);z-index:301;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s cubic-bezier(.16,1,.3,1)}
-.drawer.open{transform:none}
-.drawer-head{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.drawer-title{font-size:15px;font-weight:700;letter-spacing:-.01em}
-.drawer-close{background:none;border:none;color:var(--t3);cursor:pointer;font-size:20px;line-height:1;transition:color .2s}
-.drawer-close:hover{color:var(--t1)}
-.drawer-body{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:14px}
-.drawer-footer{padding:16px 24px;border-top:1px solid var(--line);display:flex;gap:8px;flex-shrink:0}
-
-.df-label{font-family:var(--mono);font-size:9px;color:var(--t3);letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:5px}
-.df-input{width:100%;background:var(--bg3);border:1px solid var(--line);color:var(--t1);padding:10px 12px;border-radius:7px;font-family:var(--sans);font-size:13px;outline:none;transition:border .2s}
-.df-input:focus{border-color:var(--acc)}.df-input::placeholder{color:var(--t3)}
-.df-select{width:100%;background:var(--bg3);border:1px solid var(--line);color:var(--t2);padding:10px 12px;border-radius:7px;font-family:var(--sans);font-size:13px;outline:none;cursor:pointer}
-.df-textarea{width:100%;background:var(--bg3);border:1px solid var(--line);color:var(--t1);padding:10px 12px;border-radius:7px;font-family:var(--sans);font-size:13px;outline:none;resize:vertical;transition:border .2s}
-.df-textarea:focus{border-color:var(--acc)}
-.df-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-
-/* ── LOGS ── */
-.log-table{font-family:var(--mono);font-size:11px}
-.log-row{display:grid;grid-template-columns:160px 50px 200px 60px 60px 1fr;gap:0;border-bottom:1px solid var(--line);padding:8px 14px;transition:background .15s}
-.log-row:hover{background:var(--bg3)}
-.log-row.head{background:var(--bg3);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);position:sticky;top:0}
-.log-ts{color:var(--t3)}.log-method{}
-.log-method.GET{color:var(--green)}.log-method.POST{color:var(--acc)}.log-method.PUT{color:var(--amber)}.log-method.DELETE{color:var(--red)}
-.log-path{color:var(--t1)}.log-status{}.log-status.ok{color:var(--green)}.log-status.err{color:var(--red)}
-.log-ms{color:var(--t3)}.log-user{color:var(--purple)}
-
-/* ── CONFIRM ── */
-.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:400;display:none;align-items:center;justify-content:center;padding:24px}
-.confirm-overlay.open{display:flex}
-.confirm-box{background:var(--bg2);border:1px solid var(--rbd);border-radius:12px;padding:28px;max-width:360px;width:100%;text-align:center}
-.confirm-box h4{font-size:16px;font-weight:700;margin-bottom:8px}
-.confirm-box p{font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:24px}
-.confirm-btns{display:flex;gap:8px;justify-content:center}
-
-/* ── TOAST ── */
-.toast{position:fixed;bottom:24px;right:24px;z-index:500;display:flex;flex-direction:column;gap:8px}
-.toast-item{background:var(--bg3);border:1px solid var(--line2);border-radius:8px;padding:12px 16px;font-size:13px;display:flex;align-items:center;gap:10px;min-width:240px;animation:slideIn .3s ease}
-.toast-item.success{border-color:var(--gbd);color:var(--green)}
-.toast-item.error{border-color:var(--rbd);color:var(--red)}
-.toast-item.info{border-color:var(--accbd);color:var(--acc)}
-@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
-
-@media(max-width:900px){.stat-row{grid-template-columns:1fr 1fr}.sidebar{width:180px}}
-@media(max-width:700px){#adminApp{flex-direction:column}.sidebar{width:100%;max-height:56px;overflow:hidden;flex-direction:row}.sb-nav,.sb-footer{display:none}}
-</style>
+<link rel="stylesheet" href="/admin/style.css">
 </head>
 <body>
 
@@ -215,10 +21,9 @@ tr:hover td{background:var(--bg3)}
     <label class="lf-label">Email</label>
     <input class="lf-input" id="aEmail" type="email" value="admin@kstu.kg" placeholder="admin@kstu.kg">
     <label class="lf-label">Пароль</label>
-    <input class="lf-input" id="aPass" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doAdminLogin()">
-    <button class="lf-btn" onclick="doAdminLogin()">Войти в панель</button>
+    <div style="position:relative"><input class="lf-input" id="aPass" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doAdminLogin()" style="padding-right:40px;margin-bottom:0"><button type="button" onclick="toggleAdminPwd('aPass',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--t3);font-size:15px">👁</button></div>
+    <button class="lf-btn" onclick="doAdminLogin()" style="margin-top:14px">Войти в панель</button>
     <div class="lf-error" id="loginErr"></div>
-    <div class="lf-hint">admin@kstu.kg / admin123</div>
   </div>
 </div>
 
@@ -235,6 +40,7 @@ tr:hover td{background:var(--bg3)}
       <div class="sb-item active" data-page="dashboard" onclick="showPage('dashboard')"><span class="sb-icon">◈</span> Дашборд</div>
       <div class="sb-section">Данные</div>
       <div class="sb-item" data-page="datasets" onclick="showPage('datasets')"><span class="sb-icon">⊞</span> Наборы данных<span class="sb-badge" id="sb-dsCount">–</span></div>
+      <div class="sb-item" data-page="analytics" onclick="showPage('analytics')"><span class="sb-icon">◉</span> Аналитика</div>
       <div class="sb-section">Система</div>
       <div class="sb-item" data-page="users" onclick="showPage('users')"><span class="sb-icon">◎</span> Пользователи<span class="sb-badge" id="sb-usrCount">–</span></div>
       <div class="sb-item" data-page="logs" onclick="showPage('logs')"><span class="sb-icon">≡</span> Логи API</div>
@@ -255,7 +61,11 @@ tr:hover td{background:var(--bg3)}
       <div class="tb-title" id="topTitle">Дашборд</div>
       <div class="tb-right">
         <span class="tb-time" id="tbTime"></span>
+        <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t3);cursor:pointer;font-family:var(--mono)">
+          <input type="checkbox" id="autoRefresh" onchange="toggleAutoRefresh()" style="cursor:pointer"> авто
+        </label>
         <button class="a-btn" onclick="refreshCurrent()">↺ Обновить</button>
+        <button class="a-btn" id="adminThemeBtn" onclick="toggleAdminTheme()" title="Тема">🌙</button>
       </div>
     </div>
 
@@ -303,6 +113,7 @@ tr:hover td{background:var(--bg3)}
             <option value="">Все статусы</option>
             <option value="published">Опубликовано</option>
             <option value="draft">Черновики</option>
+            <option value="rejected">Отклонённые</option>
           </select>
           <button class="a-btn primary" onclick="openDsDrawer(null)">+ Создать</button>
         </div>
@@ -325,6 +136,121 @@ tr:hover td{background:var(--bg3)}
       <div class="tbl-wrap">
         <table><thead><tr><th>ID</th><th>Имя</th><th>Email</th><th>Роль</th><th>Статус</th><th>Дата</th><th></th></tr></thead>
         <tbody id="usr-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div class="page" id="page-analytics">
+      <div class="tbl-header">
+        <div class="tbl-title">Аналитика системы</div>
+        <button class="a-btn" onclick="loadAnalytics()">↺ Обновить</button>
+      </div>
+
+      <!-- Row 1: доступ + статус + роли -->
+      <div class="an-row">
+        <div class="an-card">
+          <div class="an-card-title">Доступ к данным</div>
+          <div class="an-donut-wrap">
+            <svg class="an-donut" viewBox="0 0 100 100">
+              <circle class="an-track" cx="50" cy="50" r="38"/>
+              <circle class="an-seg" id="an-access-open" cx="50" cy="50" r="38" stroke="var(--green)"/>
+              <circle class="an-seg" id="an-access-restr" cx="50" cy="50" r="38" stroke="var(--amber)"/>
+            </svg>
+            <div class="an-center-label" id="an-access-total">–</div>
+          </div>
+          <div class="an-legend" id="an-access-legend"></div>
+        </div>
+
+        <div class="an-card">
+          <div class="an-card-title">Статус наборов</div>
+          <div class="an-donut-wrap">
+            <svg class="an-donut" viewBox="0 0 100 100">
+              <circle class="an-track" cx="50" cy="50" r="38"/>
+              <circle class="an-seg" id="an-status-pub" cx="50" cy="50" r="38" stroke="var(--acc)"/>
+              <circle class="an-seg" id="an-status-draft" cx="50" cy="50" r="38" stroke="var(--purple)"/>
+            </svg>
+            <div class="an-center-label" id="an-status-total">–</div>
+          </div>
+          <div class="an-legend" id="an-status-legend"></div>
+        </div>
+
+        <div class="an-card">
+          <div class="an-card-title">Роли пользователей</div>
+          <div class="an-donut-wrap">
+            <svg class="an-donut" viewBox="0 0 100 100">
+              <circle class="an-track" cx="50" cy="50" r="38"/>
+              <circle class="an-seg" id="an-role-admin" cx="50" cy="50" r="38" stroke="var(--red)"/>
+              <circle class="an-seg" id="an-role-res" cx="50" cy="50" r="38" stroke="var(--acc)"/>
+            </svg>
+            <div class="an-center-label" id="an-role-total">–</div>
+          </div>
+          <div class="an-legend" id="an-role-legend"></div>
+        </div>
+      </div>
+
+      <!-- Row 2: FAIR scores -->
+      <div class="an-card an-fair-card">
+        <div class="an-card-title">FAIR-оценка по принципам (средняя)</div>
+        <div class="an-fair-row">
+          <div class="an-fair-item">
+            <svg class="an-donut an-donut-lg" viewBox="0 0 100 100">
+              <circle class="an-track" cx="50" cy="50" r="38"/>
+              <circle class="an-seg" id="an-fair-F" cx="50" cy="50" r="38" stroke="var(--acc)"/>
+            </svg>
+            <div class="an-fair-letter" style="color:var(--acc)">F</div>
+            <div class="an-fair-score" id="an-fair-F-val">–</div>
+            <div class="an-fair-label">Findable</div>
+          </div>
+          <div class="an-fair-item">
+            <svg class="an-donut an-donut-lg" viewBox="0 0 100 100">
+              <circle class="an-track" cx="50" cy="50" r="38"/>
+              <circle class="an-seg" id="an-fair-A" cx="50" cy="50" r="38" stroke="var(--green)"/>
+            </svg>
+            <div class="an-fair-letter" style="color:var(--green)">A</div>
+            <div class="an-fair-score" id="an-fair-A-val">–</div>
+            <div class="an-fair-label">Accessible</div>
+          </div>
+          <div class="an-fair-item">
+            <svg class="an-donut an-donut-lg" viewBox="0 0 100 100">
+              <circle class="an-track" cx="50" cy="50" r="38"/>
+              <circle class="an-seg" id="an-fair-I" cx="50" cy="50" r="38" stroke="var(--amber)"/>
+            </svg>
+            <div class="an-fair-letter" style="color:var(--amber)">I</div>
+            <div class="an-fair-score" id="an-fair-I-val">–</div>
+            <div class="an-fair-label">Interoperable</div>
+          </div>
+          <div class="an-fair-item">
+            <svg class="an-donut an-donut-lg" viewBox="0 0 100 100">
+              <circle class="an-track" cx="50" cy="50" r="38"/>
+              <circle class="an-seg" id="an-fair-R" cx="50" cy="50" r="38" stroke="var(--purple)"/>
+            </svg>
+            <div class="an-fair-letter" style="color:var(--purple)">R</div>
+            <div class="an-fair-score" id="an-fair-R-val">–</div>
+            <div class="an-fair-label">Reusable</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 3: top datasets by downloads -->
+      <div class="an-card">
+        <div class="an-card-title">Топ наборов по скачиваниям</div>
+        <div id="an-top-ds"></div>
+      </div>
+
+      <!-- Row 4: API activity last 14 days -->
+      <div class="an-card">
+        <div class="an-card-title">API-активность за 14 дней</div>
+        <div id="an-api-activity" style="display:flex;align-items:flex-end;gap:6px;height:80px;margin-top:10px"></div>
+      </div>
+
+      <!-- Row 5: Status distribution including rejected -->
+      <div class="an-card">
+        <div class="an-card-title">OAI-PMH endpoint</div>
+        <div style="font-size:13px;color:var(--t2);line-height:1.7">
+          Метаданные доступны через стандартный протокол OAI-PMH:<br>
+          <code style="font-family:var(--mono);font-size:11px;background:var(--bg3);padding:2px 7px;border-radius:5px">GET /oai?verb=ListRecords&metadataPrefix=oai_dc</code><br>
+          <code style="font-family:var(--mono);font-size:11px;background:var(--bg3);padding:2px 7px;border-radius:5px">GET /oai?verb=Identify</code>
+        </div>
       </div>
     </div>
 
@@ -351,6 +277,25 @@ tr:hover td{background:var(--bg3)}
   </div>
 </div>
 
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mob-nav" id="mobNav">
+  <button class="mob-nav-item active" data-page="dashboard" onclick="showPage('dashboard');mobNavActivate(this)">
+    <span class="mn-icon">◈</span>Дашборд
+  </button>
+  <button class="mob-nav-item" data-page="datasets" onclick="showPage('datasets');mobNavActivate(this)">
+    <span class="mn-icon">⊞</span>Данные
+  </button>
+  <button class="mob-nav-item" data-page="analytics" onclick="showPage('analytics');mobNavActivate(this)">
+    <span class="mn-icon">◉</span>Аналит.
+  </button>
+  <button class="mob-nav-item" data-page="users" onclick="showPage('users');mobNavActivate(this)">
+    <span class="mn-icon">◎</span>Юзеры
+  </button>
+  <button class="mob-nav-item" data-page="logs" onclick="showPage('logs');mobNavActivate(this)">
+    <span class="mn-icon">≡</span>Логи
+  </button>
+</nav>
+
 <!-- DATASET DRAWER -->
 <div class="drawer-overlay" id="dsDO" onclick="if(event.target===this)closeDsDrawer()"></div>
 <div class="drawer" id="dsDrawer">
@@ -375,9 +320,11 @@ tr:hover td{background:var(--bg3)}
     <div class="df-row">
       <div><label class="df-label">Формат</label><input class="df-input" id="ds-format" placeholder="text/csv"></div>
       <div><label class="df-label">Статус</label>
-        <select class="df-select" id="ds-status"><option value="draft">Черновик</option><option value="published">Опубликовано</option></select>
+        <select class="df-select" id="ds-status"><option value="draft">Черновик</option><option value="published">Опубликовано</option><option value="rejected">Отклонено</option></select>
       </div>
     </div>
+    <div><label class="df-label">Эмбарго до (дата)</label><input class="df-input" id="ds-embargo" type="date" placeholder="YYYY-MM-DD"></div>
+    <div><label class="df-label">Связанные наборы данных (ID через запятую)</label><input class="df-input" id="ds-related" placeholder="1, 2, 3"></div>
   </div>
   <div class="drawer-footer">
     <button class="a-btn primary" onclick="saveDsDrawer()">Сохранить</button>
@@ -397,7 +344,7 @@ tr:hover td{background:var(--bg3)}
       <div><label class="df-label">Email</label><input class="df-input" id="usr-email" type="email" placeholder="email@kstu.kg"></div>
     </div>
     <div class="df-row">
-      <div><label class="df-label">Пароль</label><input class="df-input" id="usr-pass" type="password" placeholder="Новый пароль (оставьте пустым)"></div>
+      <div><label class="df-label">Пароль</label><div style="position:relative"><input class="df-input" id="usr-pass" type="password" placeholder="Новый пароль (оставьте пустым)" style="padding-right:36px"><button type="button" onclick="toggleAdminPwd('usr-pass',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--t3);font-size:14px">👁</button></div></div>
       <div><label class="df-label">Роль</label>
         <select class="df-select" id="usr-role"><option value="researcher">Researcher</option><option value="admin">Admin</option></select>
       </div>
@@ -469,41 +416,75 @@ async function doAdminLogin(){
   const {ok,data} = await apiFetch('/admin/api/login',{method:'POST',body:JSON.stringify({email,password:pass})});
   if(ok){
     adminToken = data.token; adminUser = data.user;
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('adminApp').classList.add('show');
-    document.getElementById('sb-avatar').textContent = adminUser.name[0].toUpperCase();
-    document.getElementById('sb-uname').textContent  = adminUser.name;
-    initApp();
+    if(data.refreshToken) localStorage.setItem('rdm-admin-refresh', data.refreshToken);
+    showAdminApp();
   } else {
     document.getElementById('loginErr').textContent = data.error || 'Ошибка входа';
   }
 }
 
+function showAdminApp(){
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('adminApp').classList.add('show');
+  document.getElementById('sb-avatar').textContent = adminUser.name[0].toUpperCase();
+  document.getElementById('sb-uname').textContent  = adminUser.name;
+  initApp();
+}
+
 async function doLogout(){
-  await apiFetch('/admin/api/login',{method:'POST'}); // doesn't matter
   adminToken=null; adminUser=null;
+  localStorage.removeItem('rdm-admin-refresh');
   document.getElementById('adminApp').classList.remove('show');
   document.getElementById('loginScreen').style.display = 'flex';
 }
 
+async function tryAutoLogin(){
+  const rt = localStorage.getItem('rdm-admin-refresh');
+  if(!rt) return;
+  try{
+    const r = await fetch(API+'/admin/api/refresh',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({refreshToken:rt})});
+    const data = await r.json();
+    if(r.ok && data.token){
+      adminToken = data.token; adminUser = data.user;
+      if(data.refreshToken) localStorage.setItem('rdm-admin-refresh', data.refreshToken);
+      showAdminApp();
+    } else {
+      localStorage.removeItem('rdm-admin-refresh');
+    }
+  } catch(e){ localStorage.removeItem('rdm-admin-refresh'); }
+}
+tryAutoLogin();
+
 document.getElementById('aPass').addEventListener('keydown', e=>{ if(e.key==='Enter') doAdminLogin(); });
 
 /* ── Navigation ──────────────────────────────────────────────────────── */
-const pageTitles = {dashboard:'Дашборд',datasets:'Наборы данных',users:'Пользователи',logs:'Логи API'};
+const pageTitles = {dashboard:'Дашборд',datasets:'Наборы данных',analytics:'Аналитика',users:'Пользователи',logs:'Логи API'};
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
-  document.querySelector(`.sb-item[data-page="${id}"]`).classList.add('active');
+  const sbItem = document.querySelector(`.sb-item[data-page="${id}"]`);
+  if(sbItem) sbItem.classList.add('active');
+  // sync mobile bottom nav
+  document.querySelectorAll('.mob-nav-item').forEach(b=>b.classList.toggle('active', b.dataset.page===id));
   document.getElementById('topTitle').textContent = pageTitles[id]||id;
+  localStorage.setItem('rdm-admin-page', id);
   if(id==='dashboard') loadDashboard();
   else if(id==='datasets') loadAdminDatasets();
   else if(id==='users') loadUsers();
   else if(id==='logs') loadLogs();
+  else if(id==='analytics') loadAnalytics();
+}
+
+function mobNavActivate(el){
+  document.querySelectorAll('.mob-nav-item').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
 }
 
 function refreshCurrent(){
-  const active = document.querySelector('.sb-item.active')?.dataset.page||'dashboard';
+  const active = document.querySelector('.sb-item.active')?.dataset.page
+    || document.querySelector('.mob-nav-item.active')?.dataset.page
+    || 'dashboard';
   showPage(active);
 }
 
@@ -579,12 +560,13 @@ async function loadAdminDatasets(){
         <div class="fair-cell-item R">R ${d.fair.R}</div>
       </div></td>
       <td class="td-mono">${d.license}</td>
-      <td><span class="badge ${d.status}">${d.status==='published'?'Опубл.':'Черновик'}</span></td>
+      <td><span class="badge ${d.status}">${d.status==='published'?'Опубл.':d.status==='rejected'?'Откл.':'Черновик'}</span></td>
       <td class="td-mono">${d.downloads}</td>
       <td><div class="td-actions">
         <button class="a-btn" onclick='openDsDrawer(${JSON.stringify(d).replace(/'/g,"&#39;")})'>Ред.</button>
-        ${d.status==='draft'?`<button class="a-btn success" onclick="quickPublish(${d.id})">✓</button>`:''}
-        <button class="a-btn danger" onclick="deleteDs(${d.id},'${d.title.slice(0,30)}')">✕</button>
+        ${d.status==='draft'?`<button class="a-btn success" onclick="quickPublish(${d.id})" title="Опубликовать">✓</button>`:''}
+        ${d.status==='draft'||d.status==='published'?`<button class="a-btn danger" onclick="rejectDs(${d.id})" title="Отклонить">✗</button>`:''}
+        <button class="a-btn danger" onclick="deleteDs(${d.id},'${d.title.slice(0,30)}')" title="Удалить">🗑</button>
       </div></td>
     </tr>`).join('');
 
@@ -609,6 +591,8 @@ function openDsDrawer(ds){
   document.getElementById('ds-access').value   = ds?.access||'open';
   document.getElementById('ds-format').value   = ds?.format||'text/csv';
   document.getElementById('ds-status').value   = ds?.status||'draft';
+  document.getElementById('ds-embargo').value  = ds?.embargoUntil ? ds.embargoUntil.slice(0,10) : '';
+  document.getElementById('ds-related').value  = (ds?.relatedIds||[]).join(', ');
   document.getElementById('ds-publish-btn').style.display = (ds&&ds.status==='draft') ? 'inline-block' : 'none';
   document.getElementById('dsDO').classList.add('open');
   document.getElementById('dsDrawer').classList.add('open');
@@ -621,6 +605,8 @@ function closeDsDrawer(){
 
 async function saveDsDrawer(){
   const id = document.getElementById('ds-id').value;
+  const embargoVal = document.getElementById('ds-embargo').value;
+  const relatedVal = document.getElementById('ds-related').value;
   const body = {
     title: document.getElementById('ds-title').value.trim(),
     description: document.getElementById('ds-desc').value.trim(),
@@ -630,6 +616,8 @@ async function saveDsDrawer(){
     access: document.getElementById('ds-access').value,
     format: document.getElementById('ds-format').value,
     status: document.getElementById('ds-status').value,
+    embargoUntil: embargoVal ? embargoVal + 'T00:00:00Z' : null,
+    relatedIds: relatedVal ? relatedVal.split(',').map(s=>parseInt(s.trim())).filter(n=>!isNaN(n)) : [],
   };
   let res;
   if(id){ res = await apiFetch('/admin/api/datasets/'+id, {method:'PUT', body:JSON.stringify(body)}); }
@@ -656,6 +644,16 @@ function deleteDs(id, title){
     if(ok){ toast('Удалено','success'); loadAdminDatasets(); }
     else toast(data.error||'Ошибка','error');
   });
+}
+
+function rejectDs(id){
+  const comment = window.prompt('Причина отклонения (необязательно):');
+  if(comment === null) return; // cancelled
+  apiFetch(`/admin/api/datasets/${id}/reject`,{method:'POST',body:JSON.stringify({comment: comment || 'Отклонено администратором'})})
+    .then(({ok,data})=>{
+      if(ok){ toast('Набор данных отклонён','success'); loadAdminDatasets(); }
+      else toast(data.error||'Ошибка','error');
+    });
 }
 
 /* ── Users CRUD ──────────────────────────────────────────────────────── */
@@ -742,7 +740,162 @@ function renderLogRows(el, logs){
 }
 
 /* ── Init ────────────────────────────────────────────────────────────── */
-function initApp(){ loadDashboard(); }
+function initApp(){
+  const saved = localStorage.getItem('rdm-admin-page') || 'dashboard';
+  showPage(saved);
+}
+
+/* ── Show/hide password ──────────────────────────────────────────────── */
+function toggleAdminPwd(id, btn){
+  const inp = document.getElementById(id);
+  if(inp.type === 'password'){ inp.type = 'text'; btn.textContent = '🙈'; }
+  else { inp.type = 'password'; btn.textContent = '👁'; }
+}
+
+/* ── Theme ───────────────────────────────────────────────────────────── */
+function toggleAdminTheme(){
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  const next = isLight ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', next);
+  document.getElementById('adminThemeBtn').textContent = next === 'light' ? '🌙' : '☀️';
+  localStorage.setItem('rdm-admin-theme', next);
+}
+(function initAdminTheme(){
+  const saved = localStorage.getItem('rdm-admin-theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  const btn = document.getElementById('adminThemeBtn');
+  if(btn) btn.textContent = saved === 'light' ? '🌙' : '☀️';
+})();
+
+/* ── Auto-refresh ────────────────────────────────────────────────────── */
+let autoRefreshTimer = null;
+function toggleAutoRefresh(){
+  const on = document.getElementById('autoRefresh').checked;
+  if(on){
+    autoRefreshTimer = setInterval(()=>refreshCurrent(), 15000);
+    toast('Авто-обновление каждые 15с', 'info');
+  } else {
+    clearInterval(autoRefreshTimer);
+    autoRefreshTimer = null;
+  }
+}
+
+/* ── ANALYTICS ───────────────────────────────────────────────────────── */
+const CIRC = 2 * Math.PI * 38; // circumference for r=38
+
+function setDonut(id, pct, offset=0) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const filled = CIRC * pct / 100;
+  el.style.strokeDasharray = `${filled} ${CIRC}`;
+  el.style.strokeDashoffset = -offset;
+  el.style.transition = 'stroke-dasharray 0.9s cubic-bezier(.4,0,.2,1), stroke-dashoffset 0s';
+}
+
+function makeLegend(containerId, items) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = items.map(i =>
+    `<div class="an-leg-item"><span class="an-leg-dot" style="background:${i.color}"></span><span>${i.label}</span><span class="an-leg-val">${i.val}</span></div>`
+  ).join('');
+}
+
+async function loadAnalytics() {
+  const h = {'Authorization':'Bearer '+adminToken};
+  try {
+    const [dsRes, usrRes] = await Promise.all([
+      fetch('/admin/api/datasets?limit=100', {headers:h}),
+      fetch('/admin/api/users', {headers:h})
+    ]);
+    const dsData = await dsRes.json();
+    const usrData = await usrRes.json();
+    const datasets = dsData.items || [];
+    const users = usrData.users || usrData || [];
+
+    // ── Access (open vs restricted) ──
+    const openCount = datasets.filter(d => d.access === 'open').length;
+    const restrCount = datasets.length - openCount;
+    const total = datasets.length || 1;
+    const openPct = openCount / total * 100;
+    const restrPct = restrCount / total * 100;
+    // first segment starts from top (offset = CIRC/4)
+    const startOffset = CIRC / 4;
+    setDonut('an-access-open', openPct, startOffset);
+    setDonut('an-access-restr', restrPct, startOffset - CIRC * openPct / 100);
+    document.getElementById('an-access-total').textContent = datasets.length;
+    makeLegend('an-access-legend', [
+      {color:'var(--green)', label:'Открытые', val: openCount},
+      {color:'var(--amber)', label:'Ограниченные', val: restrCount}
+    ]);
+
+    // ── Status (published vs draft) ──
+    const pubCount = datasets.filter(d => d.status === 'published').length;
+    const draftCount = datasets.length - pubCount;
+    const pubPct = pubCount / total * 100;
+    setDonut('an-status-pub', pubPct, startOffset);
+    setDonut('an-status-draft', (draftCount/total*100), startOffset - CIRC * pubPct / 100);
+    document.getElementById('an-status-total').textContent = datasets.length;
+    makeLegend('an-status-legend', [
+      {color:'var(--acc)', label:'Опубликованы', val: pubCount},
+      {color:'var(--purple)', label:'Черновики', val: draftCount}
+    ]);
+
+    // ── Roles ──
+    const adminCount = users.filter(u => u.role === 'admin').length;
+    const resCount = users.length - adminCount;
+    const utotal = users.length || 1;
+    const adminPct = adminCount / utotal * 100;
+    setDonut('an-role-admin', adminPct, startOffset);
+    setDonut('an-role-res', resCount/utotal*100, startOffset - CIRC * adminPct / 100);
+    document.getElementById('an-role-total').textContent = users.length;
+    makeLegend('an-role-legend', [
+      {color:'var(--red)', label:'Admins', val: adminCount},
+      {color:'var(--acc)', label:'Researchers', val: resCount}
+    ]);
+
+    // ── FAIR scores ──
+    ['F','A','I','R'].forEach(k => {
+      const vals = datasets.map(d => d.fair?.[k] || d.fair?.[k.toLowerCase()] || 0).filter(v=>v>0);
+      const avg = vals.length ? Math.round(vals.reduce((a,b)=>a+b,0)/vals.length) : 0;
+      setDonut('an-fair-'+k, avg, startOffset);
+      document.getElementById('an-fair-'+k+'-val').textContent = avg ? avg+'%' : '–';
+    });
+
+    // ── Top datasets by downloads ──
+    const top = [...datasets].sort((a,b)=>(b.downloads||0)-(a.downloads||0)).slice(0,5);
+    const maxDl = top[0]?.downloads || 1;
+    document.getElementById('an-top-ds').innerHTML = top.map(d => `
+      <div class="an-bar-row">
+        <div class="an-bar-label" title="${d.title}">${d.title?.slice(0,36)||'—'}${d.title?.length>36?'…':''}</div>
+        <div class="an-bar-track">
+          <div class="an-bar-fill" style="width:${(d.downloads||0)/maxDl*100}%;background:var(--acc)"></div>
+        </div>
+        <div class="an-bar-val">${d.downloads||0}</div>
+      </div>`).join('');
+
+    // ── API Activity (from /admin/api/analytics) ──
+    try {
+      const {ok: aOk, data: aData} = await apiFetch('/admin/api/analytics');
+      if(aOk && aData.apiActivity) {
+        const activity = aData.apiActivity;
+        const maxCount = Math.max(...activity.map(r=>r.count), 1);
+        const el = document.getElementById('an-api-activity');
+        el.innerHTML = activity.length === 0
+          ? '<div style="color:var(--t3);font-size:12px">Нет данных за последние 14 дней</div>'
+          : activity.map(r => {
+              const h = Math.max(4, Math.round(r.count / maxCount * 72));
+              return `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;min-width:0" title="${r.day}: ${r.count} запросов">
+                <div style="width:100%;height:${h}px;background:var(--acc);border-radius:4px 4px 0 0;opacity:.85;transition:opacity .2s" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=.85"></div>
+                <div style="font-size:9px;color:var(--t3);font-family:var(--mono);writing-mode:vertical-rl;transform:rotate(180deg);max-height:36px;overflow:hidden">${r.day.slice(5)}</div>
+              </div>`;
+            }).join('');
+      }
+    } catch(e) { /* analytics endpoint not critical */ }
+
+  } catch(e) {
+    toast('Ошибка загрузки аналитики', 'error');
+  }
+}
 </script>
 </body>
 </html>

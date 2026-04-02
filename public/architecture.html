@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>RDM КГТУ — Архитектура системы</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f1117;color:#e2e8f0;padding:32px;min-height:100vh}
+h1{font-size:20px;font-weight:700;color:#fff;margin-bottom:4px}
+.sub{font-size:13px;color:#64748b;margin-bottom:32px}
+.arch{display:flex;flex-direction:column;gap:4px;max-width:900px}
+.layer{border-radius:10px;overflow:hidden;border:1px solid}
+.layer-header{padding:10px 18px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.layer-body{display:flex;gap:8px;padding:12px;flex-wrap:wrap}
+.box{border-radius:7px;padding:10px 14px;font-size:12px;font-weight:500;display:flex;flex-direction:column;gap:4px;flex:1;min-width:140px}
+.box-title{font-weight:700;font-size:12px}
+.box-desc{font-size:11px;opacity:.7}
+.arrow-row{display:flex;justify-content:center;align-items:center;gap:8px;color:#475569;font-size:18px;padding:2px 0}
+.arrow-label{font-size:11px;color:#475569}
+
+/* Layers */
+.l-client{border-color:#2563eb}.l-client .layer-header{background:#1e3a5f;color:#93c5fd}
+.l-client .box{background:#1e3a5f;color:#bfdbfe}
+.l-gateway{border-color:#7c3aed}.l-gateway .layer-header{background:#2e1065;color:#c4b5fd}
+.l-gateway .box{background:#2e1065;color:#ddd6fe}
+.l-core{border-color:#065f46}.l-core .layer-header{background:#064e3b;color:#6ee7b7}
+.l-core .box{background:#064e3b;color:#a7f3d0}
+.l-data{border-color:#92400e}.l-data .layer-header{background:#451a03;color:#fcd34d}
+.l-data .box{background:#451a03;color:#fde68a}
+.l-infra{border-color:#4c1d24}.l-infra .layer-header{background:#3b0a14;color:#fca5a5}
+.l-infra .box{background:#3b0a14;color:#fecaca}
+.tech-stack{margin-top:28px;display:flex;gap:16px;flex-wrap:wrap}
+.tech-card{background:#1a1d27;border:1px solid #2d3148;border-radius:8px;padding:12px 16px;flex:1;min-width:160px}
+.tech-card h3{font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.tech-item{font-size:12px;color:#94a3b8;padding:3px 0;border-bottom:1px solid #1e2333}
+.tech-item:last-child{border-bottom:none}
+.tech-item strong{color:#e2e8f0}
+</style>
+</head>
+<body>
+<h1>Архитектура системы RDM КГТУ</h1>
+<div class="sub">Монолитная Node.js-архитектура с модульной структурой маршрутов · Готова к Docker-контейнеризации</div>
+
+<div class="arch">
+
+  <div class="layer l-client">
+    <div class="layer-header">🖥 Уровень клиента (браузер)</div>
+    <div class="layer-body">
+      <div class="box"><div class="box-title">Public Web App</div><div class="box-desc">ES Modules · Vanilla JS<br>public/index.html</div></div>
+      <div class="box"><div class="box-title">Admin Panel</div><div class="box-desc">Single Page Admin<br>admin/index.html</div></div>
+      <div class="box"><div class="box-title">API Clients</div><div class="box-desc">Jupyter / Scripts<br>Bearer Token / API Key</div></div>
+      <div class="box"><div class="box-title">OAI-PMH Harvesters</div><div class="box-desc">Внешние агрегаторы<br>Dublin Core XML</div></div>
+    </div>
+  </div>
+
+  <div class="arrow-row">↕ <span class="arrow-label">HTTPS / HTTP</span></div>
+
+  <div class="layer l-gateway">
+    <div class="layer-header">🛡 Уровень сервера (Node.js HTTP)</div>
+    <div class="layer-body">
+      <div class="box"><div class="box-title">server.js</div><div class="box-desc">Rate Limiter (120/min)<br>CORS · Static Files<br>Request Logging</div></div>
+      <div class="box"><div class="box-title">auth.js</div><div class="box-desc">JWT Sessions<br>API Key Auth (SHA-256)<br>Role Check Middleware</div></div>
+      <div class="box"><div class="box-title">utils.js</div><div class="box-desc">SHA-256 · genToken<br>readBody / readRawBody<br>sendJSON · CORS helper</div></div>
+    </div>
+  </div>
+
+  <div class="arrow-row">↕ <span class="arrow-label">Внутренние вызовы маршрутов</span></div>
+
+  <div class="layer l-core">
+    <div class="layer-header">⚙️ Уровень бизнес-логики (маршруты)</div>
+    <div class="layer-body">
+      <div class="box"><div class="box-title">routes/api.js</div><div class="box-desc">Публичный REST API<br>CRUD датасетов · Auth<br>Файлы · Экспорт · Keys</div></div>
+      <div class="box"><div class="box-title">routes/admin.js</div><div class="box-desc">Административный API<br>Управление данными<br>Аналитика · Логи</div></div>
+      <div class="box"><div class="box-title">routes/oai.js</div><div class="box-desc">OAI-PMH Protocol<br>ListRecords · GetRecord<br>Dublin Core XML</div></div>
+    </div>
+  </div>
+
+  <div class="arrow-row">↕ <span class="arrow-label">db.js — Data Access Layer</span></div>
+
+  <div class="layer l-data">
+    <div class="layer-header">🗄 Уровень данных (SQLite)</div>
+    <div class="layer-body">
+      <div class="box"><div class="box-title">users</div><div class="box-desc">Пользователи системы<br>Роли · Хэши паролей</div></div>
+      <div class="box"><div class="box-title">datasets</div><div class="box-desc">Наборы данных<br>FAIR · Эмбарго · Файлы</div></div>
+      <div class="box"><div class="box-title">sessions + api_keys</div><div class="box-desc">JWT сессии<br>Программные ключи доступа</div></div>
+      <div class="box"><div class="box-title">datasets_fts (FTS5)</div><div class="box-desc">Полнотекстовый поиск<br>Авто-синхронизация триггерами</div></div>
+      <div class="box"><div class="box-title">logs</div><div class="box-desc">Аудит API-запросов<br>IP · Метод · Статус</div></div>
+    </div>
+  </div>
+
+  <div class="arrow-row">↕ <span class="arrow-label">Файловая система</span></div>
+
+  <div class="layer l-infra">
+    <div class="layer-header">💾 Уровень хранилища</div>
+    <div class="layer-body">
+      <div class="box"><div class="box-title">data/rdm.db</div><div class="box-desc">SQLite база данных<br>better-sqlite3 driver</div></div>
+      <div class="box"><div class="box-title">data/uploads/</div><div class="box-desc">Загруженные файлы<br>Датасеты · Бинарные данные</div></div>
+      <div class="box"><div class="box-title">public/ static</div><div class="box-desc">HTML · JS (ES Modules)<br>CSS · Иконки</div></div>
+      <div class="box"><div class="box-title">admin/ static</div><div class="box-desc">Admin SPA<br>HTML · CSS · JS</div></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="tech-stack">
+  <div class="tech-card">
+    <h3>Backend</h3>
+    <div class="tech-item"><strong>Node.js</strong> v20+ · HTTP (без фреймворка)</div>
+    <div class="tech-item"><strong>better-sqlite3</strong> — синхронный SQLite</div>
+    <div class="tech-item"><strong>SQLite FTS5</strong> — полнотекстовый поиск</div>
+    <div class="tech-item"><strong>SHA-256</strong> — хэши паролей и API-ключей</div>
+  </div>
+  <div class="tech-card">
+    <h3>Frontend</h3>
+    <div class="tech-item"><strong>Vanilla JS</strong> ES Modules (нет фреймворков)</div>
+    <div class="tech-item"><strong>CSS Custom Properties</strong> — темная/светлая тема</div>
+    <div class="tech-item"><strong>Fetch API</strong> — все запросы к серверу</div>
+    <div class="tech-item"><strong>sessionStorage</strong> — хранение JWT-токена</div>
+  </div>
+  <div class="tech-card">
+    <h3>Протоколы</h3>
+    <div class="tech-item"><strong>REST API</strong> — JSON, Bearer Auth</div>
+    <div class="tech-item"><strong>OAI-PMH</strong> — Dublin Core XML</div>
+    <div class="tech-item"><strong>DataCite XML</strong> — экспорт метаданных</div>
+    <div class="tech-item"><strong>BibTeX</strong> — экспорт для LaTeX</div>
+  </div>
+  <div class="tech-card">
+    <h3>Безопасность</h3>
+    <div class="tech-item"><strong>Rate Limiting</strong> — 120 req/min / 20 login</div>
+    <div class="tech-item"><strong>CORS</strong> — настраиваемый Origin</div>
+    <div class="tech-item"><strong>JWT + Refresh</strong> — 8h / 7d токены</div>
+    <div class="tech-item"><strong>API Keys</strong> — SHA-256 хэш, показ 1 раз</div>
+  </div>
+</div>
+
+</body>
+</html>

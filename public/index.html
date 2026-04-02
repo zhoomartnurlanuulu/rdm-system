@@ -4,312 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>RDM КГТУ — Система управления научными данными</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#07080d;--bg1:#0d0f17;--bg2:#12151f;--bg3:#191d2a;--bg4:#1e2333;
-  --line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.13);--line3:rgba(255,255,255,.2);
-  --t1:#ecedf5;--t2:#8c8ea8;--t3:#4e5068;
-  --F:#4d9dff;--Fbg:rgba(77,157,255,.1);--Fbd:rgba(77,157,255,.25);
-  --A:#3ecb7f;--Abg:rgba(62,203,127,.1);--Abd:rgba(62,203,127,.25);
-  --I:#f0a240;--Ibg:rgba(240,162,64,.1);--Ibd:rgba(240,162,64,.25);
-  --R:#c47cff;--Rbg:rgba(196,124,255,.1);--Rbd:rgba(196,124,255,.25);
-  --acc:#4d9dff;
-  --serif:'Instrument Serif',Georgia,serif;
-  --sans:'Syne',sans-serif;--mono:'JetBrains Mono',monospace;
-  --radius:12px;
-}
-html{scroll-behavior:smooth}
-body{font-family:var(--sans);background:var(--bg);color:var(--t1);overflow-x:hidden;font-size:15px;line-height:1.6}
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  background:radial-gradient(ellipse 70% 50% at 15% -5%,rgba(77,157,255,.07) 0%,transparent 55%),
-             radial-gradient(ellipse 50% 40% at 85% 100%,rgba(196,124,255,.05) 0%,transparent 55%)}
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:2px}
-
-/* ── NAV ── */
-nav{position:fixed;top:0;width:100%;z-index:200;height:58px;
-  background:rgba(7,8,13,.85);backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 32px}
-.nav-logo{font-weight:800;font-size:15px;letter-spacing:.5px;color:var(--t1);text-decoration:none;margin-right:auto;display:flex;align-items:center;gap:8px}
-.nav-logo span{color:var(--F)}
-.nav-links{display:flex;gap:4px;align-items:center}
-.nav-links a{color:var(--t2);text-decoration:none;font-size:13px;padding:6px 12px;border-radius:8px;transition:.2s}
-.nav-links a:hover{color:var(--t1);background:var(--bg3)}
-.nav-btn{background:var(--Fbg);border:1px solid var(--Fbd);color:var(--F);padding:6px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:var(--sans);transition:.2s}
-.nav-btn:hover{background:rgba(77,157,255,.2)}
-#authArea{display:flex;align-items:center;gap:8px;margin-left:16px}
-
-/* ── SECTION BASE ── */
-section{position:relative;z-index:1}
-.wrap{max-width:1180px;margin:0 auto;padding:0 32px}
-.sec-head{text-align:center;margin-bottom:56px}
-.sec-tag{font-family:var(--mono);font-size:12px;color:var(--F);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:block}
-.sec-title{font-size:clamp(28px,3.5vw,44px);font-weight:700;line-height:1.15;margin-bottom:16px}
-.sec-sub{color:var(--t2);max-width:620px;margin:0 auto;line-height:1.7}
-
-/* ── HERO ── */
-#hero{min-height:100vh;display:flex;align-items:center;padding:100px 0 60px;overflow:hidden}
-.hero-inner{max-width:1180px;margin:0 auto;padding:0 32px;width:100%}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--Fbg);border:1px solid var(--Fbd);border-radius:100px;padding:6px 16px;font-size:12px;color:var(--F);font-family:var(--mono);margin-bottom:28px;letter-spacing:1px}
-.hero-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--F);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.hero-title{font-size:clamp(36px,5.5vw,72px);font-weight:800;line-height:1.08;letter-spacing:-.02em;margin-bottom:24px}
-.hero-title em{font-style:italic;font-family:var(--serif);color:var(--F);font-weight:400}
-.hero-sub{font-size:17px;color:var(--t2);max-width:560px;margin-bottom:40px;line-height:1.7}
-.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:64px}
-.btn-primary{background:var(--F);color:#fff;border:none;padding:13px 28px;border-radius:10px;font-size:14px;font-weight:700;font-family:var(--sans);cursor:pointer;transition:.2s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
-.btn-primary:hover{background:#3a8ff0;transform:translateY(-1px)}
-.btn-outline{background:transparent;color:var(--t1);border:1px solid var(--line3);padding:13px 28px;border-radius:10px;font-size:14px;font-weight:600;font-family:var(--sans);cursor:pointer;transition:.2s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
-.btn-outline:hover{border-color:var(--F);color:var(--F);background:var(--Fbg)}
-.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
-.hs-cell{background:var(--bg1);padding:24px;text-align:center}
-.hs-num{font-size:32px;font-weight:800;color:var(--t1);font-family:var(--mono)}
-.hs-lbl{font-size:12px;color:var(--t3);margin-top:4px;letter-spacing:.5px}
-
-/* ── WHY RDM ── */
-#why{padding:100px 0;border-top:1px solid var(--line)}
-.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
-.why-text h3{font-size:24px;font-weight:700;margin-bottom:16px}
-.why-text p{color:var(--t2);line-height:1.8;margin-bottom:20px}
-.why-quote{background:var(--bg2);border-left:3px solid var(--I);border-radius:0 var(--radius) var(--radius) 0;padding:20px 24px;margin:24px 0}
-.why-quote .q-text{font-size:16px;font-weight:600;color:var(--t1);margin-bottom:8px;font-style:italic}
-.why-quote .q-src{font-size:12px;color:var(--t3);font-family:var(--mono)}
-.why-cards{display:grid;gap:16px}
-.why-card{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:20px 24px;display:flex;gap:16px;align-items:flex-start}
-.why-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.why-card h4{font-size:14px;font-weight:700;margin-bottom:4px}
-.why-card p{font-size:13px;color:var(--t2);line-height:1.6}
-
-/* ── FAIR ── */
-#fair{padding:100px 0;background:var(--bg1)}
-.fair-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:48px}
-.fc{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:28px;transition:.3s}
-.fc:hover{transform:translateY(-3px);border-color:var(--line2)}
-.fc-letter{font-size:48px;font-weight:800;margin-bottom:8px;line-height:1}
-.fc-name{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;font-family:var(--mono)}
-.fc-desc{font-size:13px;color:var(--t2);line-height:1.7;margin-bottom:16px}
-.fc-bullets{list-style:none;display:flex;flex-direction:column;gap:6px}
-.fc-bullets li{font-size:12px;color:var(--t3);padding-left:12px;position:relative}
-.fc-bullets li::before{content:'→';position:absolute;left:0;color:var(--t3)}
-.fc-score-wrap{margin-top:16px}
-.fc-score-lbl{font-size:11px;color:var(--t3);font-family:var(--mono);margin-bottom:6px}
-.fc-bar{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden}
-.fc-bar-fill{height:100%;border-radius:2px;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
-.fc.f .fc-letter,.fc.f .fc-name{color:var(--F)} .fc.f .fc-bar-fill{background:var(--F)}
-.fc.a .fc-letter,.fc.a .fc-name{color:var(--A)} .fc.a .fc-bar-fill{background:var(--A)}
-.fc.i .fc-letter,.fc.i .fc-name{color:var(--I)} .fc.i .fc-bar-fill{background:var(--I)}
-.fc.r .fc-letter,.fc.r .fc-name{color:var(--R)} .fc.r .fc-bar-fill{background:var(--R)}
-.fc.f{border-color:var(--Fbd)} .fc.a{border-color:var(--Abd)} .fc.i{border-color:var(--Ibd)} .fc.r{border-color:var(--Rbd)}
-
-/* ── ARCHITECTURE ── */
-#arch{padding:100px 0;border-top:1px solid var(--line)}
-.arch-diagram{background:var(--bg2);border:1px solid var(--line);border-radius:20px;padding:40px;margin:48px 0 0}
-.arch-layer{margin-bottom:32px}
-.arch-layer-label{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
-.arch-row{display:flex;gap:12px;flex-wrap:wrap}
-.arch-box{background:var(--bg3);border:1px solid var(--line2);border-radius:10px;padding:12px 18px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;flex:1;min-width:140px;transition:.2s;cursor:default}
-.arch-box:hover{border-color:var(--line3);background:var(--bg4)}
-.arch-box .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.arch-box.blue .dot{background:var(--F)} .arch-box.green .dot{background:var(--A)}
-.arch-box.orange .dot{background:var(--I)} .arch-box.purple .dot{background:var(--R)}
-.arch-box.blue{border-color:rgba(77,157,255,.2)} .arch-box.green{border-color:rgba(62,203,127,.2)}
-.arch-box.orange{border-color:rgba(240,162,64,.2)} .arch-box.purple{border-color:rgba(196,124,255,.2)}
-.arch-arrow{text-align:center;color:var(--t3);font-size:18px;margin:8px 0}
-.arch-legend{display:flex;gap:24px;flex-wrap:wrap;margin-top:24px;padding-top:24px;border-top:1px solid var(--line)}
-.arch-leg-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2)}
-
-/* ── COMPONENTS ── */
-#components{padding:100px 0;background:var(--bg1)}
-.comp-tabs{display:flex;gap:4px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:6px;margin-bottom:40px;flex-wrap:wrap}
-.comp-tab{flex:1;min-width:100px;padding:10px 14px;border-radius:8px;border:none;background:transparent;color:var(--t2);font-size:12px;font-weight:600;font-family:var(--sans);cursor:pointer;transition:.2s;letter-spacing:.3px}
-.comp-tab.active{background:var(--bg3);color:var(--t1);box-shadow:0 2px 8px rgba(0,0,0,.3)}
-.comp-tab:hover:not(.active){color:var(--t1)}
-.comp-panel{display:none;animation:fadeIn .3s}
-.comp-panel.active{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.comp-info h3{font-size:22px;font-weight:700;margin-bottom:8px}
-.comp-info .comp-tech{font-family:var(--mono);font-size:11px;color:var(--F);margin-bottom:16px;letter-spacing:1px}
-.comp-info p{color:var(--t2);line-height:1.8;margin-bottom:16px}
-.comp-features{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
-.comp-features li{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--t2)}
-.comp-features li::before{content:'✓';color:var(--A);font-weight:700;flex-shrink:0;margin-top:1px}
-.comp-status-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:100px;font-size:12px;font-weight:600;font-family:var(--mono)}
-.status-prod{background:var(--Abg);color:var(--A);border:1px solid var(--Abd)}
-.status-test{background:var(--Ibg);color:var(--I);border:1px solid var(--Ibd)}
-.status-pilot{background:var(--Rbg);color:var(--R);border:1px solid var(--Rbd)}
-.comp-code{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:20px;font-family:var(--mono);font-size:12px;line-height:1.7;color:var(--t2);overflow-x:auto}
-.comp-code .kw{color:var(--F)} .comp-code .str{color:var(--A)} .comp-code .cm{color:var(--t3)}
-.comp-links{display:flex;flex-direction:column;gap:8px;margin-top:16px}
-.comp-link{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2);text-decoration:none;font-family:var(--mono)}
-.comp-link:hover{color:var(--F)}
-.comp-link::before{content:'↗';color:var(--F)}
-
-/* ── CATALOG ── */
-#catalog{padding:100px 0;border-top:1px solid var(--line)}
-.cat-toolbar{display:flex;gap:12px;align-items:center;margin-bottom:32px;flex-wrap:wrap}
-.cat-input{flex:1;min-width:200px;background:var(--bg2);border:1px solid var(--line2);border-radius:10px;padding:10px 16px;color:var(--t1);font-family:var(--sans);font-size:14px;outline:none;transition:.2s}
-.cat-input:focus{border-color:var(--F)}
-.cat-select{background:var(--bg2);border:1px solid var(--line2);border-radius:10px;padding:10px 14px;color:var(--t2);font-family:var(--sans);font-size:13px;outline:none;cursor:pointer}
-.cat-total{font-size:13px;color:var(--t3);font-family:var(--mono);white-space:nowrap}
-.small-btn{background:var(--Fbg);border:1px solid var(--Fbd);color:var(--F);padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;font-family:var(--sans);cursor:pointer;transition:.2s;white-space:nowrap}
-.small-btn:hover{background:rgba(77,157,255,.2)}
-.ds-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
-.ds-card{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:24px;cursor:pointer;transition:.3s;position:relative;overflow:hidden}
-.ds-card:hover{border-color:var(--line2);transform:translateY(-2px)}
-.ds-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-.ds-card.open::before{background:linear-gradient(90deg,var(--A),var(--F))}
-.ds-card.restricted::before{background:linear-gradient(90deg,var(--I),var(--R))}
-.ds-meta{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
-.ds-badge{font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:4px;font-weight:500}
-.ds-badge.open{background:var(--Abg);color:var(--A)}
-.ds-badge.restricted{background:var(--Ibg);color:var(--I)}
-.ds-doi{font-family:var(--mono);font-size:10px;color:var(--t3)}
-.ds-title{font-size:15px;font-weight:700;margin-bottom:8px;line-height:1.4}
-.ds-desc{font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:16px;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.ds-footer{display:flex;justify-content:space-between;align-items:center}
-.ds-kw{display:flex;gap:6px;flex-wrap:wrap}
-.ds-kw span{font-size:10px;color:var(--t3);background:var(--bg3);padding:2px 8px;border-radius:4px}
-.ds-stats{display:flex;gap:12px;font-size:11px;color:var(--t3);font-family:var(--mono)}
-.fair-ring{display:flex;gap:4px;margin-top:12px}
-.fr-item{flex:1;height:3px;border-radius:2px;position:relative}
-.fr-item::after{content:attr(data-label);position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:9px;font-family:var(--mono);color:var(--t3)}
-.cat-pagination{display:flex;gap:6px;justify-content:center;margin-top:32px;flex-wrap:wrap}
-.pg-btn{width:34px;height:34px;border-radius:8px;border:1px solid var(--line2);background:var(--bg2);color:var(--t2);font-family:var(--mono);font-size:13px;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center}
-.pg-btn:hover,.pg-btn.active{background:var(--Fbg);border-color:var(--Fbd);color:var(--F)}
-
-/* ── ROADMAP ── */
-#roadmap{padding:100px 0;background:var(--bg1);border-top:1px solid var(--line)}
-.roadmap-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:48px}
-.rm-card{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:24px;position:relative;overflow:hidden;transition:.3s}
-.rm-card:hover{border-color:var(--line2);transform:translateY(-2px)}
-.rm-num{font-family:var(--mono);font-size:11px;color:var(--t3);margin-bottom:8px;letter-spacing:1px}
-.rm-weeks{font-size:20px;font-weight:800;color:var(--F);margin-bottom:8px;font-family:var(--mono)}
-.rm-stage{font-size:14px;font-weight:700;margin-bottom:12px}
-.rm-items{list-style:none;display:flex;flex-direction:column;gap:6px}
-.rm-items li{font-size:12px;color:var(--t2);padding-left:14px;position:relative}
-.rm-items li::before{content:'·';position:absolute;left:0;color:var(--F);font-size:18px;line-height:.8}
-.rm-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px}
-.rm-card:nth-child(1)::after{background:linear-gradient(90deg,var(--F),transparent)}
-.rm-card:nth-child(2)::after{background:linear-gradient(90deg,var(--A),transparent)}
-.rm-card:nth-child(3)::after{background:linear-gradient(90deg,var(--I),transparent)}
-.rm-card:nth-child(4)::after{background:linear-gradient(90deg,var(--R),transparent)}
-.rm-card:nth-child(5)::after{background:linear-gradient(90deg,var(--F),transparent)}
-.rm-card:nth-child(6)::after{background:linear-gradient(90deg,var(--A),transparent)}
-.rm-card:nth-child(7)::after{background:linear-gradient(90deg,var(--I),transparent)}
-.rm-card:nth-child(8)::after{background:linear-gradient(90deg,var(--R),transparent)}
-
-/* ── DRIVERS ── */
-#drivers{padding:80px 0;border-top:1px solid var(--line)}
-.drivers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
-.drv-card{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:28px}
-.drv-icon{font-size:32px;margin-bottom:16px}
-.drv-title{font-size:16px;font-weight:700;margin-bottom:12px}
-.drv-items{list-style:none;display:flex;flex-direction:column;gap:8px}
-.drv-items li{font-size:13px;color:var(--t2);padding-left:14px;position:relative}
-.drv-items li::before{content:'→';position:absolute;left:0;color:var(--t3);font-size:12px}
-
-/* ── STATS BAR ── */
-#stats-bar{padding:60px 0;background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line)}
-.stat-item{background:var(--bg2);padding:28px;text-align:center}
-.stat-num{font-size:36px;font-weight:800;font-family:var(--mono);color:var(--t1);margin-bottom:4px}
-.stat-lbl{font-size:12px;color:var(--t3);letter-spacing:.5px}
-
-/* ── ABOUT ── */
-#about{padding:80px 0;border-top:1px solid var(--line)}
-.about-grid{display:grid;grid-template-columns:2fr 1fr;gap:48px}
-.about-title{font-size:28px;font-weight:700;margin-bottom:16px}
-.about-text{color:var(--t2);line-height:1.8;margin-bottom:20px}
-.about-keys{display:flex;flex-direction:column;gap:12px}
-.ak-item{display:flex;gap:12px;align-items:flex-start}
-.ak-icon{width:32px;height:32px;background:var(--Fbg);border:1px solid var(--Fbd);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.ak-text h5{font-size:13px;font-weight:700;margin-bottom:2px}
-.ak-text p{font-size:12px;color:var(--t2)}
-.about-links{display:flex;flex-direction:column;gap:12px}
-.al-item{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:16px 20px}
-.al-label{font-size:11px;color:var(--t3);font-family:var(--mono);margin-bottom:4px;letter-spacing:1px;text-transform:uppercase}
-.al-value{font-size:13px;color:var(--t1);font-weight:600}
-.al-meta{font-size:12px;color:var(--t2);margin-top:4px}
-.lessons{margin-top:40px}
-.lessons h4{font-size:16px;font-weight:700;margin-bottom:16px}
-.lesson-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.lesson-item{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
-.lesson-num{font-size:24px;font-weight:800;color:var(--F);font-family:var(--mono);opacity:.4;margin-bottom:4px}
-.lesson-text{font-size:13px;color:var(--t2);line-height:1.6}
-
-/* ── FOOTER ── */
-footer{background:var(--bg1);border-top:1px solid var(--line);padding:40px 0 24px}
-.footer-inner{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:32px}
-.footer-brand{font-weight:800;font-size:16px;margin-bottom:8px}
-.footer-brand span{color:var(--F)}
-.footer-brand-sub{font-size:12px;color:var(--t3);line-height:1.6}
-.footer-col h5{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:14px}
-.footer-col a{display:block;font-size:13px;color:var(--t2);text-decoration:none;margin-bottom:8px;transition:.2s}
-.footer-col a:hover{color:var(--t1)}
-.footer-bottom{border-top:1px solid var(--line);padding-top:20px;display:flex;justify-content:space-between;align-items:center}
-.footer-copy{font-size:12px;color:var(--t3)}
-.footer-fair{display:flex;gap:8px}
-.ff-chip{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800}
-
-/* ── MODALS ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
-.modal-overlay.open{display:flex}
-.modal-box{background:var(--bg2);border:1px solid var(--line2);border-radius:20px;padding:32px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto;position:relative}
-.modal-title{font-size:20px;font-weight:700;margin-bottom:24px}
-.modal-close{position:absolute;top:16px;right:16px;background:var(--bg3);border:none;color:var(--t2);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
-.modal-close:hover{color:var(--t1)}
-.form-field{margin-bottom:16px}
-.form-label{font-size:12px;color:var(--t3);font-family:var(--mono);letter-spacing:.5px;display:block;margin-bottom:6px;text-transform:uppercase}
-.form-inp,.form-textarea,.form-select{width:100%;background:var(--bg3);border:1px solid var(--line2);border-radius:8px;padding:10px 14px;color:var(--t1);font-family:var(--sans);font-size:14px;outline:none;transition:.2s}
-.form-inp:focus,.form-textarea:focus{border-color:var(--F)}
-.form-textarea{resize:vertical;min-height:80px}
-.form-error{font-size:12px;color:#f06;margin-bottom:12px;min-height:16px;font-family:var(--mono)}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.detail-doi{font-family:var(--mono);font-size:12px;color:var(--F);background:var(--Fbg);border:1px solid var(--Fbd);padding:6px 12px;border-radius:6px;display:inline-block;margin-bottom:16px}
-.detail-title{font-size:22px;font-weight:700;margin-bottom:12px}
-.detail-desc{color:var(--t2);line-height:1.8;margin-bottom:20px}
-.detail-meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
-.detail-meta-item{background:var(--bg3);border-radius:8px;padding:12px}
-.detail-meta-label{font-size:10px;color:var(--t3);font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
-.detail-meta-val{font-size:13px;font-weight:600}
-.fair-detail{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
-.fd-item{background:var(--bg3);border-radius:8px;padding:12px;text-align:center}
-.fd-letter{font-size:20px;font-weight:800;margin-bottom:4px}
-.fd-score{font-size:13px;font-family:var(--mono)}
-
-/* ── ANIMATIONS ── */
-.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s,transform .6s}
-.reveal.in{opacity:1;transform:none}
-
-/* ── RESPONSIVE ── */
-@media(max-width:900px){
-  .hero-stats{grid-template-columns:repeat(2,1fr)}
-  .fair-grid{grid-template-columns:repeat(2,1fr)}
-  .comp-panel.active{grid-template-columns:1fr}
-  .roadmap-grid{grid-template-columns:repeat(2,1fr)}
-  .drivers-grid{grid-template-columns:1fr}
-  .stats-grid{grid-template-columns:repeat(3,1fr)}
-  .about-grid{grid-template-columns:1fr}
-  .footer-inner{grid-template-columns:1fr 1fr}
-  .why-grid{grid-template-columns:1fr}
-  .arch-row{flex-direction:column}
-  .lesson-grid{grid-template-columns:repeat(2,1fr)}
-}
-@media(max-width:600px){
-  .wrap,.hero-inner{padding:0 20px}
-  .fair-grid{grid-template-columns:1fr}
-  .roadmap-grid{grid-template-columns:1fr}
-  .stats-grid{grid-template-columns:repeat(2,1fr)}
-  .footer-inner{grid-template-columns:1fr}
-  .hero-stats{grid-template-columns:repeat(2,1fr)}
-  .comp-tabs{flex-direction:column}
-  nav{padding:0 20px}
-  .nav-links{gap:2px}
-  .nav-links a{font-size:12px;padding:5px 8px}
-  .lesson-grid{grid-template-columns:1fr}
-}
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -320,27 +16,133 @@ footer{background:var(--bg1);border-top:1px solid var(--line);padding:40px 0 24p
     <a href="#fair">FAIR</a>
     <a href="#arch">Архитектура</a>
     <a href="#components">Компоненты</a>
-    <a href="#catalog">Данные</a>
+    <a href="#catalog">Каталог</a>
     <a href="#roadmap">Дорожная карта</a>
   </div>
   <div id="authArea">
-    <button class="nav-btn" onclick="openLogin()">Войти</button>
+    <button class="nav-btn outline" onclick="openLogin()">Войти</button>
+    <button class="nav-btn" onclick="openRegister()">Регистрация</button>
   </div>
+  <button id="themeToggle" onclick="toggleTheme()" title="Переключить тему" style="margin-left:8px;background:var(--bg3);border:1.5px solid var(--line);color:var(--t2);width:36px;height:36px;border-radius:9px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0">🌙</button>
+  <button class="burger" id="burgerBtn" onclick="toggleMobileNav()" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- MOBILE NAV -->
+<div id="mobileNav" onclick="closeMobileNav(event)">
+  <div id="mobileNavInner">
+    <a href="#fair" onclick="closeMobileNavFull()">FAIR принципы</a>
+    <a href="#arch" onclick="closeMobileNavFull()">Архитектура</a>
+    <a href="#components" onclick="closeMobileNavFull()">Компоненты</a>
+    <a href="#catalog" onclick="closeMobileNavFull()">Каталог данных</a>
+    <a href="#roadmap" onclick="closeMobileNavFull()">Дорожная карта</a>
+    <div id="mobileAuthBtns">
+      <button class="nav-btn outline" onclick="closeMobileNavFull();openLogin()">Войти</button>
+      <button class="nav-btn" onclick="closeMobileNavFull();openRegister()">Регистрация</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE PANEL -->
+<div id="profileOverlay" onclick="closeProfile()"></div>
+<div id="profilePanel">
+  <div class="pf-header">
+    <span class="pf-title" id="pf-title">My Dashboard</span>
+    <button class="pf-close" onclick="closeProfile()">✕</button>
+  </div>
+  <div class="pf-tabs">
+    <button class="pf-tab active" onclick="switchPfTab('dashboard',this)">Дашборд</button>
+    <button class="pf-tab" onclick="switchPfTab('settings',this)">Настройки</button>
+    <button class="pf-tab" onclick="switchPfTab('keys',this)">API ключи</button>
+  </div>
+  <div class="pf-body">
+
+    <!-- TAB: Dashboard -->
+    <div class="pf-tab-content active" id="pf-tab-dashboard">
+      <div class="pf-user" id="pf-user"></div>
+      <div class="pf-stats" id="pf-stats"></div>
+      <div class="pf-section">Мои наборы данных</div>
+      <div class="pf-ds-list" id="pf-ds-list"><div class="pf-empty">Загрузка...</div></div>
+      <button class="pf-add-btn" onclick="closeProfile();openSubmit()">+ Добавить набор данных</button>
+    </div>
+
+    <!-- TAB: Settings -->
+    <div class="pf-tab-content" id="pf-tab-settings">
+
+      <!-- Личные данные -->
+      <div class="pf-settings-block">
+        <div class="pf-settings-title">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Личные данные
+        </div>
+        <div class="pf-field"><label class="pf-label">Имя</label><input class="pf-input" id="set-name" type="text" placeholder="Ваше имя"></div>
+        <div class="pf-field"><label class="pf-label">Email</label><input class="pf-input" id="set-email" type="email" placeholder="email@kstu.kg"></div>
+        <div class="pf-msg" id="set-profile-msg"></div>
+        <button class="pf-save-btn" onclick="saveProfile()">Сохранить</button>
+      </div>
+
+      <!-- Смена пароля -->
+      <div class="pf-settings-block">
+        <div class="pf-settings-title">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Смена пароля
+        </div>
+        <div class="pf-field"><label class="pf-label">Текущий пароль</label><input class="pf-input" id="set-cur-pass" type="password" placeholder="••••••••"></div>
+        <div class="pf-field"><label class="pf-label">Новый пароль</label><input class="pf-input" id="set-new-pass" type="password" placeholder="Минимум 6 символов"></div>
+        <div class="pf-field"><label class="pf-label">Подтвердите пароль</label><input class="pf-input" id="set-conf-pass" type="password" placeholder="Повторите новый пароль"></div>
+        <div class="pf-msg" id="set-pass-msg"></div>
+        <button class="pf-save-btn" onclick="savePassword()">Изменить пароль</button>
+      </div>
+
+      <!-- Опасная зона -->
+      <div class="pf-settings-block">
+        <div class="pf-settings-title">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Сессия
+        </div>
+        <button class="pf-danger-btn" onclick="closeProfile();doLogout()">↪ Выйти из аккаунта</button>
+      </div>
+
+    </div>
+
+    <!-- TAB: API Keys -->
+    <div class="pf-tab-content" id="pf-tab-keys">
+      <div class="pf-settings-block">
+        <div class="pf-settings-title">🔑 API-ключи для программного доступа</div>
+        <p style="font-size:13px;color:var(--t2);margin-bottom:14px;line-height:1.6">Используйте API-ключи для доступа к данным из скриптов и пайплайнов без входа. Ключ показывается только один раз.</p>
+        <div class="pf-field"><label class="pf-label">Название ключа</label><input class="pf-input" id="pf-key-name" type="text" placeholder="Например: jupyter-notebook"></div>
+        <div class="pf-msg" id="pf-key-msg"></div>
+        <div class="pf-key-new" id="pf-new-key" style="display:none"></div>
+        <button class="pf-save-btn" onclick="createApiKey()">Создать API-ключ</button>
+      </div>
+      <div class="pf-section">Активные ключи</div>
+      <div id="pf-keys-list"><div class="pf-empty">Загрузка...</div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SCROLL TO TOP -->
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Наверх"
+  style="position:fixed;bottom:28px;right:28px;z-index:100;width:44px;height:44px;border-radius:12px;background:var(--F);border:none;color:#fff;font-size:18px;cursor:pointer;box-shadow:0 4px 16px rgba(37,99,235,.4);opacity:0;transform:translateY(10px);transition:.3s;display:flex;align-items:center;justify-content:center">↑</button>
+
+<!-- TOAST -->
+<div id="pubToast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%);z-index:500;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none"></div>
 
 <!-- HERO -->
 <section id="hero">
   <div class="hero-inner">
     <div class="hero-badge">КГТУ — Исследовательские данные</div>
     <h1 class="hero-title">
-      Система управления<br><em>научными данными</em>
+      Платформа управления<br><em>научными данными</em>
     </h1>
     <p class="hero-sub">
-      Профессиональная RDM-инфраструктура Кыргызского государственного технического университета — по модели TU Wien. FAIR-данные, версионирование, DOI, безопасный доступ.
+      Храните, публикуйте и делитесь исследовательскими данными КГТУ. FAIR-принципы, автоматические DOI, версионирование и открытый доступ.
     </p>
     <div class="hero-actions">
-      <a class="btn-primary" href="#catalog">Каталог данных →</a>
-      <a class="btn-outline" href="#arch">Архитектура системы</a>
+      <a class="btn-primary" href="#catalog">Открыть каталог данных →</a>
+      <button class="btn-outline" onclick="openRegister()">Создать аккаунт</button>
     </div>
     <div class="hero-stats reveal">
       <div class="hs-cell"><div class="hs-num" id="st-total">–</div><div class="hs-lbl">Наборов данных</div></div>
@@ -584,9 +386,9 @@ footer{background:var(--bg1);border-top:1px solid var(--line);padding:40px 0 24p
 }
         </div>
         <div class="comp-links">
-          <a class="comp-link" href="#">DSpace Documentation</a>
-          <a class="comp-link" href="#">TU Wien Repositum: repositum.tuwien.ac.at</a>
-          <a class="comp-link" href="#">DataCite DOI Service</a>
+          <a class="comp-link" href="https://dspace.lyrasis.org/documentation/" target="_blank" rel="noopener">DSpace Documentation</a>
+          <a class="comp-link" href="https://repositum.tuwien.ac.at" target="_blank" rel="noopener">TU Wien Repositum: repositum.tuwien.ac.at</a>
+          <a class="comp-link" href="https://datacite.org" target="_blank" rel="noopener">DataCite DOI Service</a>
         </div>
       </div>
     </div>
@@ -634,8 +436,8 @@ footer{background:var(--bg1);border-top:1px solid var(--line);padding:40px 0 24p
   <span class="kw">only</span>: [main]
         </div>
         <div class="comp-links">
-          <a class="comp-link" href="#">TU Wien GitLab: gitlab.tuwien.ac.at</a>
-          <a class="comp-link" href="#">GitLab CE Documentation</a>
+          <a class="comp-link" href="https://gitlab.tuwien.ac.at" target="_blank" rel="noopener">TU Wien GitLab: gitlab.tuwien.ac.at</a>
+          <a class="comp-link" href="https://docs.gitlab.com" target="_blank" rel="noopener">GitLab CE Documentation</a>
         </div>
       </div>
     </div>
@@ -682,8 +484,8 @@ footer{background:var(--bg1);border-top:1px solid var(--line);padding:40px 0 24p
 }
         </div>
         <div class="comp-links">
-          <a class="comp-link" href="#">TU Wien ResearchData: researchdata.tuwien.ac.at</a>
-          <a class="comp-link" href="#">InvenioRDM: inveniosoftware.org</a>
+          <a class="comp-link" href="https://researchdata.tuwien.ac.at" target="_blank" rel="noopener">TU Wien ResearchData: researchdata.tuwien.ac.at</a>
+          <a class="comp-link" href="https://inveniosoftware.org" target="_blank" rel="noopener">InvenioRDM: inveniosoftware.org</a>
         </div>
       </div>
     </div>
@@ -732,9 +534,9 @@ footer{background:var(--bg1);border-top:1px solid var(--line);padding:40px 0 24p
   <span class="kw">AND</span> valid_to &gt; <span class="str">'2024-06-01'</span>;
         </div>
         <div class="comp-links">
-          <a class="comp-link" href="#">DBRepo: ifs.tuwien.ac.at/infrastructures/dbrepo</a>
-          <a class="comp-link" href="#">Demo: dbrepo1.ec.tuwien.ac.at</a>
-          <a class="comp-link" href="#">IJDC Paper: doi.org/10.2218/ijdc.v17i1.825</a>
+          <a class="comp-link" href="https://ifs.tuwien.ac.at/infrastructures/dbrepo" target="_blank" rel="noopener">DBRepo: ifs.tuwien.ac.at/infrastructures/dbrepo</a>
+          <a class="comp-link" href="https://dbrepo1.ec.tuwien.ac.at" target="_blank" rel="noopener">Demo: dbrepo1.ec.tuwien.ac.at</a>
+          <a class="comp-link" href="https://doi.org/10.2218/ijdc.v17i1.825" target="_blank" rel="noopener">IJDC Paper: doi.org/10.2218/ijdc.v17i1.825</a>
         </div>
       </div>
     </div>
@@ -782,9 +584,9 @@ footer{background:var(--bg1);border-top:1px solid var(--line);padding:40px 0 24p
 }
         </div>
         <div class="comp-links">
-          <a class="comp-link" href="#">DAMAP Demo: damap.org</a>
-          <a class="comp-link" href="#">Frontend: tuwien-csd/damap-frontend</a>
-          <a class="comp-link" href="#">Backend: tuwien-csd/damap-backend</a>
+          <a class="comp-link" href="https://damap.org" target="_blank" rel="noopener">DAMAP Demo: damap.org</a>
+          <a class="comp-link" href="https://github.com/tuwien-csd/damap-frontend" target="_blank" rel="noopener">Frontend: tuwien-csd/damap-frontend</a>
+          <a class="comp-link" href="https://github.com/tuwien-csd/damap-backend" target="_blank" rel="noopener">Backend: tuwien-csd/damap-backend</a>
         </div>
       </div>
     </div>
@@ -831,9 +633,9 @@ results.to_csv(<span class="str">"analysis_results.csv"</span>)
 <span class="cm"># DOI для цитирования: 10.48436/query.rdm-003.a3f7c</span>
         </div>
         <div class="comp-links">
-          <a class="comp-link" href="#">TU Wien DataLab: science.datalab.tuwien.ac.at</a>
-          <a class="comp-link" href="#">JupyterHub: jupyter.org/hub</a>
-          <a class="comp-link" href="#">Шаблонные ноутбуки: gitlab.tuwien.ac.at/fairdata/dbrepo-notebooks</a>
+          <a class="comp-link" href="https://science.datalab.tuwien.ac.at" target="_blank" rel="noopener">TU Wien DataLab: science.datalab.tuwien.ac.at</a>
+          <a class="comp-link" href="https://jupyter.org/hub" target="_blank" rel="noopener">JupyterHub: jupyter.org/hub</a>
+          <a class="comp-link" href="https://gitlab.tuwien.ac.at/fairdata/dbrepo-notebooks" target="_blank" rel="noopener">Шаблонные ноутбуки: gitlab.tuwien.ac.at/fairdata/dbrepo-notebooks</a>
         </div>
       </div>
     </div>
@@ -877,8 +679,8 @@ print(session.vnc_connection)
 <span class="cm"># 6. Метаданные доступны публично (FAIR)</span>
         </div>
         <div class="comp-links">
-          <a class="comp-link" href="#">OSSDIP Source: gitlab.tuwien.ac.at/martin.weise/ossdip</a>
-          <a class="comp-link" href="#">Research Paper: Weise et al. (2023)</a>
+          <a class="comp-link" href="https://gitlab.tuwien.ac.at/martin.weise/ossdip" target="_blank" rel="noopener">OSSDIP Source: gitlab.tuwien.ac.at/martin.weise/ossdip</a>
+          <a class="comp-link" href="https://doi.org/10.1145/3579071" target="_blank" rel="noopener">Research Paper: Weise et al. (2023)</a>
         </div>
       </div>
     </div>
@@ -1174,11 +976,11 @@ print(session.vnc_connection)
       </div>
       <div class="footer-col">
         <h5>Внешние ресурсы</h5>
-        <a href="#">TU Wien RDM</a>
-        <a href="#">FAIR Principles</a>
-        <a href="#">Core Trust Seal</a>
-        <a href="#">DataCite</a>
-        <a href="#">EOSC</a>
+        <a href="https://www.tuwien.at/forschung/fides/forschungsdaten" target="_blank" rel="noopener">TU Wien RDM</a>
+        <a href="https://www.go-fair.org/fair-principles/" target="_blank" rel="noopener">FAIR Principles</a>
+        <a href="https://www.coretrustseal.org" target="_blank" rel="noopener">Core Trust Seal</a>
+        <a href="https://datacite.org" target="_blank" rel="noopener">DataCite</a>
+        <a href="https://eosc.eu" target="_blank" rel="noopener">EOSC</a>
       </div>
     </div>
     <div class="footer-bottom">
@@ -1197,11 +999,30 @@ print(session.vnc_connection)
 <div class="modal-overlay" id="loginModal" onclick="if(event.target===this)closeLogin()">
   <div class="modal-box">
     <button class="modal-close" onclick="closeLogin()">✕</button>
-    <div class="modal-title">Вход в систему</div>
-    <div class="form-field"><label class="form-label">Email</label><input class="form-inp" id="lEmail" type="email" placeholder="researcher@kstu.kg"></div>
-    <div class="form-field"><label class="form-label">Пароль</label><input class="form-inp" id="lPass" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <div class="modal-title">Добро пожаловать</div>
+    <div class="modal-sub">Войдите в свой аккаунт RDM КГТУ</div>
+    <div class="form-field"><label class="form-label">Email</label><input class="form-inp" id="lEmail" type="email" placeholder="researcher@kstu.kg" autocomplete="email"></div>
+    <div class="form-field"><label class="form-label">Пароль</label><div style="position:relative"><input class="form-inp" id="lPass" type="password" placeholder="Введите пароль" onkeydown="if(event.key==='Enter')doLogin()" autocomplete="current-password" style="padding-right:44px"><button type="button" onclick="togglePwd('lPass',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--t3);font-size:16px">👁</button></div></div>
     <div class="form-error" id="lError"></div>
-    <button class="btn-primary" style="width:100%" onclick="doLogin()">Войти</button>
+    <button class="btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="doLogin()">Войти в систему</button>
+    <div class="modal-divider">или</div>
+    <div style="text-align:center;font-size:14px;color:var(--t2)">Нет аккаунта? <a href="#" style="color:var(--F);font-weight:600;text-decoration:none" onclick="closeLogin();openRegister();return false">Зарегистрироваться</a></div>
+  </div>
+</div>
+
+<!-- REGISTER MODAL -->
+<div class="modal-overlay" id="registerModal" onclick="if(event.target===this)closeRegister()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeRegister()">✕</button>
+    <div class="modal-title">Создать аккаунт</div>
+    <div class="modal-sub">Зарегистрируйтесь как исследователь КГТУ</div>
+    <div class="form-field"><label class="form-label">Полное имя</label><input class="form-inp" id="rName" type="text" placeholder="Имя Фамилия" autocomplete="name"></div>
+    <div class="form-field"><label class="form-label">Email</label><input class="form-inp" id="rEmail" type="email" placeholder="researcher@kstu.kg" autocomplete="email"></div>
+    <div class="form-field"><label class="form-label">Пароль</label><div style="position:relative"><input class="form-inp" id="rPass" type="password" placeholder="Минимум 6 символов" onkeydown="if(event.key==='Enter')doRegister()" autocomplete="new-password" style="padding-right:44px"><button type="button" onclick="togglePwd('rPass',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--t3);font-size:16px">👁</button></div></div>
+    <div class="form-error" id="rError"></div>
+    <button class="btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="doRegister()">Создать аккаунт</button>
+    <div class="modal-divider">или</div>
+    <div style="text-align:center;font-size:14px;color:var(--t2)">Уже есть аккаунт? <a href="#" style="color:var(--F);font-weight:600;text-decoration:none" onclick="closeRegister();openLogin();return false">Войти</a></div>
   </div>
 </div>
 
@@ -1210,6 +1031,7 @@ print(session.vnc_connection)
   <div class="modal-box">
     <button class="modal-close" onclick="closeSubmit()">✕</button>
     <div class="modal-title">Добавить набор данных</div>
+    <div class="modal-sub">Опубликуйте ваши исследовательские данные</div>
     <div class="form-field"><label class="form-label">Название *</label><input class="form-inp" id="sf-title" placeholder="Название набора данных"></div>
     <div class="form-field"><label class="form-label">Автор</label><input class="form-inp" id="sf-author" placeholder="Имя Фамилия"></div>
     <div class="form-field"><label class="form-label">Описание *</label><textarea class="form-textarea" id="sf-desc" rows="3" placeholder="Подробное описание содержимого набора данных..."></textarea></div>
@@ -1220,7 +1042,31 @@ print(session.vnc_connection)
       </div>
     </div>
     <div class="form-error" id="sError"></div>
-    <button class="btn-primary" style="width:100%" onclick="doSubmit()">Отправить</button>
+    <button class="btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="doSubmit()">Опубликовать данные</button>
+  </div>
+</div>
+
+<!-- EDIT DATASET MODAL -->
+<div class="modal-overlay" id="editDsModal" onclick="if(event.target===this)closeEditDs()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeEditDs()">✕</button>
+    <div class="modal-title">Редактировать набор данных</div>
+    <input type="hidden" id="edit-ds-id">
+    <div class="form-field"><label class="form-label">Название *</label><input class="form-inp" id="edit-title" placeholder="Название набора данных"></div>
+    <div class="form-field"><label class="form-label">Автор</label><input class="form-inp" id="edit-author" placeholder="Имя Фамилия"></div>
+    <div class="form-field"><label class="form-label">Описание *</label><textarea class="form-textarea" id="edit-desc" rows="3" placeholder="Описание..."></textarea></div>
+    <div class="form-row">
+      <div class="form-field"><label class="form-label">Ключевые слова</label><input class="form-inp" id="edit-kw" placeholder="вода, pH, Иссык-Куль"></div>
+      <div class="form-field"><label class="form-label">Лицензия</label>
+        <select class="form-select" id="edit-lic">
+          <option value="CC-BY-4.0">CC-BY-4.0</option>
+          <option value="CC-BY-NC-SA-4.0">CC-BY-NC-SA-4.0</option>
+          <option value="CC0-1.0">CC0-1.0</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-error" id="editDsErr"></div>
+    <button class="btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="doEditDs()">Сохранить изменения</button>
   </div>
 </div>
 
@@ -1232,342 +1078,7 @@ print(session.vnc_connection)
   </div>
 </div>
 
-<script>
-// ── CONFIG ──────────────────────────────────────────────────────────────────
-const API = '';
-let currentUser = null;
-let allDatasets = [];
-let filtered = [];
-let page = 1;
-const PER_PAGE = 6;
+<script type="module" src="js/app.js"></script>
 
-// ── STARTUP ─────────────────────────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', () => {
-  checkSession();
-  loadDatasets();
-  initSearch();
-  initReveal();
-  animateFAIR();
-});
-
-// ── SESSION ─────────────────────────────────────────────────────────────────
-async function checkSession() {
-  try {
-    const r = await fetch(API + '/api/me');
-    if (r.ok) {
-      currentUser = await r.json();
-      renderAuth();
-    }
-  } catch(e) {}
-}
-
-function renderAuth() {
-  const a = document.getElementById('authArea');
-  if (currentUser) {
-    a.innerHTML = `<span style="font-size:12px;color:var(--t2);font-family:var(--mono)">${currentUser.name}</span>
-    <button class="nav-btn" onclick="doLogout()">Выйти</button>`;
-    const btn = document.getElementById('submitBtn');
-    if (btn) btn.style.display = 'block';
-  } else {
-    a.innerHTML = `<button class="nav-btn" onclick="openLogin()">Войти</button>`;
-    const btn = document.getElementById('submitBtn');
-    if (btn) btn.style.display = 'none';
-  }
-}
-
-// ── DATASETS ────────────────────────────────────────────────────────────────
-async function loadDatasets() {
-  try {
-    const r = await fetch(API + '/api/datasets');
-    if (!r.ok) throw new Error();
-    const data = await r.json();
-    allDatasets = data.datasets || [];
-    updateHeroStats(data.stats || {});
-    applyFilters();
-  } catch(e) {
-    // Fallback demo data
-    allDatasets = getDemoDatasets();
-    updateHeroStats({ total: allDatasets.length, downloads: 443, open: allDatasets.filter(d=>d.access==='open').length });
-    applyFilters();
-  }
-}
-
-function getDemoDatasets() {
-  return [
-    { id:1, doi:'10.48436/rdm-001', title:'Air Quality Measurements Bishkek 2024',
-      description:'Hourly PM2.5, NO2, CO measurements from 12 stations across Bishkek city',
-      creator:{name:'Research Team KSTU',orcid:'0000-0002-1234-5678'},
-      keywords:['air quality','Bishkek','PM2.5','environment','monitoring'],
-      license:'CC-BY-4.0', access:'open', format:'text/csv', size:48200, version:3,
-      created:'2024-03-15', updated:'2024-11-20',
-      fair:{F:98,A:95,I:87,R:92}, downloads:142, views:890, status:'published' },
-    { id:2, doi:'10.48436/rdm-002', title:'Soil Composition Analysis — Chui Valley',
-      description:'Chemical composition of agricultural soils across 8 districts, 240 sample points',
-      creator:{name:'Environmental Lab KSTU',orcid:'0000-0001-9876-5432'},
-      keywords:['soil','agriculture','chemistry','Chui Valley','Kyrgyzstan'],
-      license:'CC-BY-NC-SA-4.0', access:'open', format:'application/json', size:12500, version:1,
-      created:'2024-06-10', updated:'2024-06-10',
-      fair:{F:90,A:88,I:95,R:85}, downloads:67, views:340, status:'published' },
-    { id:3, doi:'10.48436/rdm-003', title:'Water Quality Dataset — Issyk-Kul Lake 2023–2024',
-      description:'Temperature, pH, dissolved oxygen, turbidity monitoring at 24 stations',
-      creator:{name:'Hydrology Dept KSTU',orcid:'0000-0003-1111-2222'},
-      keywords:['water','Issyk-Kul','hydrology','monitoring','lake'],
-      license:'CC0-1.0', access:'open', format:'application/vnd.ms-excel', size:87600, version:2,
-      created:'2024-01-05', updated:'2024-09-01',
-      fair:{F:100,A:100,I:78,R:95}, downloads:203, views:1420, status:'published' },
-    { id:4, doi:'10.48436/rdm-004', title:'Mountain Glacier Mass Balance 2020–2024',
-      description:'Annual mass balance measurements for 15 glaciers in Tian-Shan range',
-      creator:{name:'Glaciology Lab KSTU',orcid:'0000-0004-5555-6666'},
-      keywords:['glaciers','Tian-Shan','climate change','mass balance'],
-      license:'CC-BY-4.0', access:'open', format:'text/csv', size:24300, version:1,
-      created:'2024-10-01', updated:'2024-10-15',
-      fair:{F:88,A:92,I:80,R:88}, downloads:31, views:210, status:'published' },
-  ];
-}
-
-function updateHeroStats(stats) {
-  const total = stats.total || allDatasets.length;
-  const dl = stats.downloads || allDatasets.reduce((s,d)=>s+(d.downloads||0),0);
-  const open = stats.open || allDatasets.filter(d=>d.access==='open').length;
-  const avgFair = allDatasets.length ? Math.round(allDatasets.reduce((s,d)=>{
-    const f=d.fair||{F:0,A:0,I:0,R:0};
-    return s+((f.F+f.A+f.I+f.R)/4);
-  },0)/allDatasets.length) : 0;
-
-  animNum('st-total', total);
-  animNum('st-dl', dl);
-  animNum('st-open', open);
-  document.getElementById('st-fair').textContent = avgFair + '%';
-  animNum('sb-ds', total);
-  animNum('sb-dl', dl);
-  animNum('sb-views', allDatasets.reduce((s,d)=>s+(d.views||0),0));
-}
-
-function animNum(id, val) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  let start = 0, end = parseInt(val)||0, dur = 1200;
-  const step = (t) => {
-    start += Math.ceil((end - start) / 8) || 1;
-    el.textContent = start >= end ? end : start;
-    if (start < end) requestAnimationFrame(step);
-  };
-  requestAnimationFrame(step);
-}
-
-// ── FILTERS ─────────────────────────────────────────────────────────────────
-function initSearch() {
-  document.getElementById('catSearch').addEventListener('input', applyFilters);
-  document.getElementById('catAccess').addEventListener('change', applyFilters);
-  document.getElementById('catLicense').addEventListener('change', applyFilters);
-}
-
-function applyFilters() {
-  const q = document.getElementById('catSearch').value.toLowerCase();
-  const acc = document.getElementById('catAccess').value;
-  const lic = document.getElementById('catLicense').value;
-  filtered = allDatasets.filter(d => {
-    if (acc && d.access !== acc) return false;
-    if (lic && d.license !== lic) return false;
-    if (q) {
-      const hay = (d.title + ' ' + d.description + ' ' + (d.keywords||[]).join(' ')).toLowerCase();
-      if (!hay.includes(q)) return false;
-    }
-    return true;
-  });
-  page = 1;
-  renderGrid();
-}
-
-function renderGrid() {
-  const grid = document.getElementById('dsGrid');
-  const total = filtered.length;
-  document.getElementById('catTotal').textContent = total + ' набор' + (total===1?'':'ов') + ' данных';
-  if (!total) {
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--t3);font-family:var(--mono)">Ничего не найдено</div>';
-    document.getElementById('catPag').innerHTML = '';
-    return;
-  }
-  const start = (page-1)*PER_PAGE, end = Math.min(start+PER_PAGE, total);
-  const items = filtered.slice(start, end);
-  grid.innerHTML = items.map(d => cardHTML(d)).join('');
-  renderPagination(total);
-}
-
-function cardHTML(d) {
-  const f = d.fair || {F:0,A:0,I:0,R:0};
-  const fmt = d.format ? d.format.split('/').pop().toUpperCase() : 'DATA';
-  const sz = d.size ? (d.size > 1024*1024 ? (d.size/1024/1024).toFixed(1)+'MB' : (d.size/1024).toFixed(0)+'KB') : '';
-  const kw = (d.keywords||[]).slice(0,3).map(k=>`<span>${k}</span>`).join('');
-  return `<div class="ds-card ${d.access}" onclick="openDetail(${d.id})">
-    <div class="ds-meta">
-      <span class="ds-badge ${d.access}">${d.access==='open'?'Открытый':'Ограниченный'}</span>
-      <span class="ds-doi">${d.doi}</span>
-      ${sz?`<span class="ds-badge" style="background:var(--bg3);color:var(--t3)">${sz}</span>`:''}
-    </div>
-    <div class="ds-title">${d.title}</div>
-    <div class="ds-desc">${d.description}</div>
-    <div class="fair-ring">
-      <div class="fr-item" data-label="F" style="background:rgba(77,157,255,${f.F/100*0.8+0.1})"></div>
-      <div class="fr-item" data-label="A" style="background:rgba(62,203,127,${f.A/100*0.8+0.1})"></div>
-      <div class="fr-item" data-label="I" style="background:rgba(240,162,64,${f.I/100*0.8+0.1})"></div>
-      <div class="fr-item" data-label="R" style="background:rgba(196,124,255,${f.R/100*0.8+0.1})"></div>
-    </div>
-    <div class="ds-footer" style="margin-top:12px">
-      <div class="ds-kw">${kw}</div>
-      <div class="ds-stats"><span>↓ ${d.downloads||0}</span><span>👁 ${d.views||0}</span></div>
-    </div>
-  </div>`;
-}
-
-function renderPagination(total) {
-  const pages = Math.ceil(total / PER_PAGE);
-  if (pages <= 1) { document.getElementById('catPag').innerHTML = ''; return; }
-  let html = '';
-  for (let i = 1; i <= pages; i++) {
-    html += `<button class="pg-btn ${i===page?'active':''}" onclick="goPage(${i})">${i}</button>`;
-  }
-  document.getElementById('catPag').innerHTML = html;
-}
-
-function goPage(p) { page = p; renderGrid(); document.getElementById('catalog').scrollIntoView({behavior:'smooth',block:'start'}); }
-
-// ── DETAIL MODAL ─────────────────────────────────────────────────────────────
-function openDetail(id) {
-  const d = allDatasets.find(x => x.id === id);
-  if (!d) return;
-  const f = d.fair || {F:0,A:0,I:0,R:0};
-  const dc = document.getElementById('detailContent');
-  dc.innerHTML = `
-    <div class="detail-doi">${d.doi}</div>
-    <div class="detail-title">${d.title}</div>
-    <div class="detail-desc">${d.description}</div>
-    <div class="fair-detail">
-      <div class="fd-item"><div class="fd-letter" style="color:var(--F)">F</div><div class="fd-score">${f.F}%</div></div>
-      <div class="fd-item"><div class="fd-letter" style="color:var(--A)">A</div><div class="fd-score">${f.A}%</div></div>
-      <div class="fd-item"><div class="fd-letter" style="color:var(--I)">I</div><div class="fd-score">${f.I}%</div></div>
-      <div class="fd-item"><div class="fd-letter" style="color:var(--R)">R</div><div class="fd-score">${f.R}%</div></div>
-    </div>
-    <div class="detail-meta-grid">
-      <div class="detail-meta-item"><div class="detail-meta-label">Автор</div><div class="detail-meta-val">${d.creator?.name||'—'}</div></div>
-      <div class="detail-meta-item"><div class="detail-meta-label">ORCID</div><div class="detail-meta-val" style="font-family:var(--mono);font-size:11px">${d.creator?.orcid||'—'}</div></div>
-      <div class="detail-meta-item"><div class="detail-meta-label">Лицензия</div><div class="detail-meta-val">${d.license||'—'}</div></div>
-      <div class="detail-meta-item"><div class="detail-meta-label">Доступ</div><div class="detail-meta-val">${d.access==='open'?'Открытый':'Ограниченный'}</div></div>
-      <div class="detail-meta-item"><div class="detail-meta-label">Версия</div><div class="detail-meta-val">v${d.version||1}</div></div>
-      <div class="detail-meta-item"><div class="detail-meta-label">Формат</div><div class="detail-meta-val">${d.format||'—'}</div></div>
-      <div class="detail-meta-item"><div class="detail-meta-label">Скачиваний</div><div class="detail-meta-val">${d.downloads||0}</div></div>
-      <div class="detail-meta-item"><div class="detail-meta-label">Обновлён</div><div class="detail-meta-val">${d.updated||'—'}</div></div>
-    </div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap">
-      ${(d.keywords||[]).map(k=>`<span style="font-size:12px;background:var(--bg3);color:var(--t2);padding:4px 10px;border-radius:6px">${k}</span>`).join('')}
-    </div>`;
-  document.getElementById('detailModal').classList.add('open');
-}
-function closeDetail() { document.getElementById('detailModal').classList.remove('open'); }
-
-// ── AUTH MODALS ──────────────────────────────────────────────────────────────
-function openLogin() { document.getElementById('loginModal').classList.add('open'); }
-function closeLogin() { document.getElementById('loginModal').classList.remove('open'); }
-function openSubmit() { document.getElementById('submitModal').classList.add('open'); }
-function closeSubmit() { document.getElementById('submitModal').classList.remove('open'); }
-
-async function doLogin() {
-  const email = document.getElementById('lEmail').value.trim();
-  const pass = document.getElementById('lPass').value;
-  const err = document.getElementById('lError');
-  if (!email || !pass) { err.textContent = 'Заполните все поля'; return; }
-  try {
-    const r = await fetch(API + '/api/login', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({email, password: pass})
-    });
-    const data = await r.json();
-    if (!r.ok) { err.textContent = data.error || 'Ошибка входа'; return; }
-    currentUser = data.user;
-    closeLogin();
-    renderAuth();
-  } catch(e) { err.textContent = 'Нет соединения с сервером'; }
-}
-
-async function doLogout() {
-  try { await fetch(API + '/api/logout', {method:'POST'}); } catch(e) {}
-  currentUser = null;
-  renderAuth();
-}
-
-async function doSubmit() {
-  const title = document.getElementById('sf-title').value.trim();
-  const desc = document.getElementById('sf-desc').value.trim();
-  const err = document.getElementById('sError');
-  if (!title || !desc) { err.textContent = 'Заполните обязательные поля'; return; }
-  const body = {
-    title,
-    description: desc,
-    creator: { name: document.getElementById('sf-author').value.trim() || 'Anonymous' },
-    keywords: document.getElementById('sf-kw').value.split(',').map(s=>s.trim()).filter(Boolean),
-    license: document.getElementById('sf-lic').value,
-    access: 'open'
-  };
-  try {
-    const r = await fetch(API + '/api/datasets', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(body)
-    });
-    const data = await r.json();
-    if (!r.ok) { err.textContent = data.error || 'Ошибка'; return; }
-    closeSubmit();
-    loadDatasets();
-  } catch(e) { err.textContent = 'Нет соединения с сервером'; }
-}
-
-// ── COMPONENTS TABS ──────────────────────────────────────────────────────────
-function showComp(i) {
-  document.querySelectorAll('.comp-tab').forEach((t,j) => t.classList.toggle('active', j===i));
-  document.querySelectorAll('.comp-panel').forEach((p,j) => p.classList.toggle('active', j===i));
-  document.getElementById('components').scrollIntoView({behavior:'smooth', block:'start'});
-}
-
-// ── FAIR ANIMATION ───────────────────────────────────────────────────────────
-function animateFAIR() {
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        setTimeout(() => {
-          if (allDatasets.length) {
-            const avg = key => Math.round(allDatasets.reduce((s,d)=>s+((d.fair||{})[key]||0),0)/allDatasets.length);
-            const set = (id, val) => { const el=document.getElementById(id); if(el){el.style.width=val+'%';} };
-            set('barF', avg('F')); set('barA', avg('A')); set('barI', avg('I')); set('barR', avg('R'));
-          } else {
-            ['barF','barA','barI','barR'].forEach((id,i)=>{
-              const el=document.getElementById(id);
-              if(el) el.style.width=[94,95,85,90][i]+'%';
-            });
-          }
-        }, 200);
-        obs.unobserve(e.target);
-      }
-    });
-  }, {threshold: 0.3});
-  const el = document.querySelector('.fair-grid');
-  if (el) obs.observe(el);
-}
-
-// ── REVEAL ───────────────────────────────────────────────────────────────────
-function initReveal() {
-  const obs = new IntersectionObserver(entries => entries.forEach(e => {
-    if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
-  }), {threshold:.07, rootMargin:'0px 0px -30px 0px'});
-  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-}
-
-// ── KEYBOARD ─────────────────────────────────────────────────────────────────
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    closeDetail(); closeLogin(); closeSubmit();
-  }
-});
-</script>
 </body>
 </html>
