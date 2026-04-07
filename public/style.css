@@ -413,7 +413,7 @@ footer{background:var(--t1);border-top:none;padding:48px 0 24px}
 .pf-empty{text-align:center;padding:40px 0;color:var(--t3);font-size:14px}
 .pf-add-btn{width:100%;padding:12px;background:var(--F);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:.15s}
 .pf-add-btn:hover{opacity:.88}
-.nav-avatar{width:34px;height:34px;border-radius:9px;background:var(--F);color:#fff;font-size:14px;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;flex-shrink:0}
+.nav-avatar{width:34px;height:34px;border-radius:9px;background:var(--F);color:#fff;font-size:14px;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;flex-shrink:0;text-decoration:none}
 .nav-avatar:hover{opacity:.85}
 
 /* ── Profile Settings ────────────────────────────────────────────────── */

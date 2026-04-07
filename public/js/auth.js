@@ -89,9 +89,9 @@ export function renderAuth() {
   const ma = document.getElementById('mobileAuthBtns');
   if (state.currentUser) {
     const initials = state.currentUser.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-    a.innerHTML  = `<button class="nav-avatar" onclick="openProfile()" title="My Dashboard">${initials}</button>
+    a.innerHTML  = `<a class="nav-avatar" href="/dashboard.html" title="Личный кабинет">${initials}</a>
                     <button class="nav-btn outline" onclick="doLogout()">Выйти</button>`;
-    if (ma) ma.innerHTML = `<button class="nav-avatar" onclick="closeMobileNavFull();openProfile()" title="My Dashboard">${initials}</button>
+    if (ma) ma.innerHTML = `<a class="nav-avatar" href="/dashboard.html" title="Личный кабинет">${initials}</a>
                              <button class="nav-btn outline" onclick="closeMobileNavFull();doLogout()">Выйти</button>`;
     const btn = document.getElementById('submitBtn');
     if (btn) btn.style.display = 'block';
