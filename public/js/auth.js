@@ -175,12 +175,20 @@ export async function doSubmit() {
   const desc  = document.getElementById('sf-desc').value.trim();
   const err   = document.getElementById('sError');
   if (!title || !desc) { err.textContent = 'Заполните обязательные поля'; return; }
+  const funderName = document.getElementById('sf-funder')?.value.trim();
+  const grantId    = document.getElementById('sf-grant')?.value.trim();
+  const spatialDesc = document.getElementById('sf-spatial')?.value.trim();
   const body = {
     title, description: desc,
-    creator:  { name: document.getElementById('sf-author').value.trim() || 'Anonymous' },
-    keywords: document.getElementById('sf-kw').value.split(',').map(s => s.trim()).filter(Boolean),
-    license:  document.getElementById('sf-lic').value,
-    access:   'open',
+    creator:      { name: document.getElementById('sf-author').value.trim() || 'Anonymous', orcid: document.getElementById('sf-orcid')?.value.trim() || undefined },
+    keywords:     document.getElementById('sf-kw').value.split(',').map(s => s.trim()).filter(Boolean),
+    license:      document.getElementById('sf-lic').value,
+    access:       'open',
+    resourceType: document.getElementById('sf-type')?.value || 'Dataset',
+    titleRu:      document.getElementById('sf-title-ru')?.value.trim() || undefined,
+    titleKy:      document.getElementById('sf-title-ky')?.value.trim() || undefined,
+    funder:       funderName ? { name: funderName, grantId: grantId || '' } : undefined,
+    spatial:      spatialDesc ? { description: spatialDesc } : undefined,
   };
   try {
     const headers = { 'Content-Type': 'application/json' };

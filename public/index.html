@@ -13,15 +13,24 @@
 <nav>
   <a class="nav-logo" href="#"><span>RDM</span> КГТУ</a>
   <div class="nav-links">
-    <a href="#fair">FAIR</a>
-    <a href="#arch">Архитектура</a>
-    <a href="#components">Компоненты</a>
-    <a href="#catalog">Каталог</a>
-    <a href="#roadmap">Дорожная карта</a>
+    <a href="#lifecycle" data-i18n="nav.lifecycle">Жизненный цикл</a>
+    <a href="#fair" data-i18n="nav.fair">FAIR</a>
+    <a href="#invenio-principles" data-i18n="nav.invenio">Invenio</a>
+    <a href="#arch" data-i18n="nav.arch">Архитектура</a>
+    <a href="#components" data-i18n="nav.components">Компоненты</a>
+    <a href="#api-ref" data-i18n="nav.api">API</a>
+    <a href="#catalog" data-i18n="nav.catalog">Каталог</a>
+    <a href="#standards" data-i18n="nav.standards">Стандарты</a>
+    <a href="#roadmap" data-i18n="nav.roadmap">Дорожная карта</a>
   </div>
   <div id="authArea">
     <button class="nav-btn outline" onclick="openLogin()">Войти</button>
     <button class="nav-btn" onclick="openRegister()">Регистрация</button>
+  </div>
+  <div class="lang-switcher">
+    <button class="lang-btn" data-lang="ru" onclick="setLang('ru')">RU</button>
+    <button class="lang-btn" data-lang="ky" onclick="setLang('ky')">KY</button>
+    <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
   </div>
   <button id="themeToggle" onclick="toggleTheme()" title="Переключить тему" style="margin-left:8px;background:var(--bg3);border:1.5px solid var(--line);color:var(--t2);width:36px;height:36px;border-radius:9px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0">🌙</button>
   <button class="burger" id="burgerBtn" onclick="toggleMobileNav()" aria-label="Меню">
@@ -32,14 +41,23 @@
 <!-- MOBILE NAV -->
 <div id="mobileNav" onclick="closeMobileNav(event)">
   <div id="mobileNavInner">
+    <a href="#lifecycle" onclick="closeMobileNavFull()">Жизненный цикл</a>
     <a href="#fair" onclick="closeMobileNavFull()">FAIR принципы</a>
+    <a href="#invenio-principles" onclick="closeMobileNavFull()">Invenio</a>
     <a href="#arch" onclick="closeMobileNavFull()">Архитектура</a>
     <a href="#components" onclick="closeMobileNavFull()">Компоненты</a>
+    <a href="#api-ref" onclick="closeMobileNavFull()">REST API</a>
     <a href="#catalog" onclick="closeMobileNavFull()">Каталог данных</a>
+    <a href="#standards" onclick="closeMobileNavFull()">Стандарты</a>
     <a href="#roadmap" onclick="closeMobileNavFull()">Дорожная карта</a>
     <div id="mobileAuthBtns">
       <button class="nav-btn outline" onclick="closeMobileNavFull();openLogin()">Войти</button>
       <button class="nav-btn" onclick="closeMobileNavFull();openRegister()">Регистрация</button>
+    </div>
+    <div class="lang-switcher" style="display:flex;margin-top:12px">
+      <button class="lang-btn" data-lang="ru" onclick="setLang('ru')">RU</button>
+      <button class="lang-btn" data-lang="ky" onclick="setLang('ky')">KY</button>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
     </div>
   </div>
 </div>
@@ -48,13 +66,14 @@
 <div id="profileOverlay" onclick="closeProfile()"></div>
 <div id="profilePanel">
   <div class="pf-header">
-    <span class="pf-title" id="pf-title">My Dashboard</span>
+    <span class="pf-title" id="pf-title" data-i18n="pf.title">My Dashboard</span>
     <button class="pf-close" onclick="closeProfile()">✕</button>
   </div>
   <div class="pf-tabs">
-    <button class="pf-tab active" onclick="switchPfTab('dashboard',this)">Дашборд</button>
-    <button class="pf-tab" onclick="switchPfTab('settings',this)">Настройки</button>
-    <button class="pf-tab" onclick="switchPfTab('keys',this)">API ключи</button>
+    <button class="pf-tab active" onclick="switchPfTab('dashboard',this)" data-i18n="pf.tab.dashboard">Дашборд</button>
+    <button class="pf-tab" onclick="switchPfTab('settings',this)" data-i18n="pf.tab.settings">Настройки</button>
+    <button class="pf-tab" onclick="switchPfTab('keys',this)" data-i18n="pf.tab.keys">API ключи</button>
+    <button class="pf-tab" onclick="switchPfTab('dmp',this)" data-i18n="pf.tab.dmp">DMP</button>
   </div>
   <div class="pf-body">
 
@@ -120,6 +139,25 @@
       <div id="pf-keys-list"><div class="pf-empty">Загрузка...</div></div>
     </div>
 
+    <!-- TAB: DMP -->
+    <div class="pf-tab-content" id="pf-tab-dmp">
+      <div class="pf-settings-block">
+        <div class="pf-settings-title">📄 План управления данными (DMP)</div>
+        <p style="font-size:12px;color:var(--t2);margin-bottom:14px;line-height:1.6">Data Management Plan — документ, описывающий как вы будете собирать, хранить, делиться и архивировать данные. Требуется Horizon Europe и большинством фондов.</p>
+        <div class="pf-field"><label class="pf-label">Описание данных</label><textarea class="pf-input" id="dmp-data-desc" rows="3" placeholder="Какие данные будут собраны? Типы, форматы, объёмы, метод сбора..."></textarea></div>
+        <div class="pf-field"><label class="pf-label">План хранения</label><textarea class="pf-input" id="dmp-storage" rows="2" placeholder="Где и как будут храниться данные? (DBRepo, Invenio, MinIO, объём...)"></textarea></div>
+        <div class="pf-field"><label class="pf-label">Контроль доступа</label><textarea class="pf-input" id="dmp-access" rows="2" placeholder="Кто имеет доступ? Роли, аутентификация, чувствительные данные (OSSDIP)..."></textarea></div>
+        <div class="pf-field"><label class="pf-label">Срок хранения</label><input class="pf-input" id="dmp-retention" type="text" placeholder="Например: 10 лет после окончания проекта"></div>
+        <div class="pf-field"><label class="pf-label">План обмена данными</label><textarea class="pf-input" id="dmp-sharing" rows="2" placeholder="Лицензия CC-BY-4.0, DOI через DataCite, REST API, OAI-PMH..."></textarea></div>
+        <div class="pf-field"><label class="pf-label">Финансирующая организация</label><input class="pf-input" id="dmp-funder" type="text" placeholder="Horizon Europe / Грант №2024-КГТУ-001"></div>
+        <div class="pf-msg" id="dmp-msg"></div>
+        <div style="display:flex;gap:8px;margin-top:14px">
+          <button class="pf-save-btn" style="margin-top:0;flex:1" onclick="saveDmp()">Сохранить DMP</button>
+          <button onclick="exportDmp()" style="flex-shrink:0;padding:10px 14px;background:var(--bg4);color:var(--t2);border:1.5px solid var(--line2);border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--sans);transition:.15s" title="Экспорт maDMP (JSON-LD)">↓ JSON</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -158,9 +196,9 @@
   <div class="wrap">
     <div class="why-grid">
       <div class="why-text">
-        <span class="sec-tag">Зачем это нужно</span>
-        <h3>Воспроизводимость как основа науки</h3>
-        <p>Исследования всё больше опираются на данные. Без профессионального управления данные теряются, результаты невозможно воспроизвести, а вложенные инвестиции пропадают впустую.</p>
+        <span class="sec-tag" data-i18n="why.tag">Зачем это нужно</span>
+        <h3 data-i18n="why.h3">Воспроизводимость как основа науки</h3>
+        <p data-i18n="why.p1">Исследования всё больше опираются на данные. Без профессионального управления данные теряются, результаты невозможно воспроизвести, а вложенные инвестиции пропадают впустую.</p>
         <div class="why-quote">
           <div class="q-text">"Growth in a Time of Debt" — ошибка в Excel, где пропустили 5 строк, изменила выводы с −0.1% до +2.2% роста ВВП.</div>
           <div class="q-src">Reinhart & Rogoff, 2010 — классический пример нарушения воспроизводимости</div>
@@ -169,38 +207,109 @@
           <div class="q-text">"Данные — это новая нефть, но только если правильно управлять ими."</div>
           <div class="q-src">The Economist, May 6, 2017</div>
         </div>
-        <p style="color:var(--t2);line-height:1.8">Цель системы — снять нагрузку с исследователей и обеспечить доверенную среду для сбора, хранения, анализа и публикации данных.</p>
+        <p style="color:var(--t2);line-height:1.8" data-i18n="why.p2">Цель системы — снять нагрузку с исследователей и обеспечить доверенную среду для сбора, хранения, анализа и публикации данных.</p>
       </div>
       <div class="why-cards">
         <div class="why-card">
           <div class="why-icon" style="background:var(--Fbg)">🔬</div>
           <div>
-            <h4>Исследователи</h4>
-            <p>Эффективные исследования, соответствие требованиям фондов, цитируемость данных, аутсорсинг непрофильных задач</p>
+            <h4 data-i18n="why.card1.h">Исследователи</h4>
+            <p data-i18n="why.card1.p">Эффективные исследования, соответствие требованиям фондов, цитируемость данных, аутсорсинг непрофильных задач</p>
           </div>
         </div>
         <div class="why-card">
           <div class="why-icon" style="background:var(--Abg)">💰</div>
           <div>
-            <h4>Финансирующие организации</h4>
-            <p>Защита инвестиций в данные, обеспечение повторного использования, основа для будущих исследований</p>
+            <h4 data-i18n="why.card2.h">Финансирующие организации</h4>
+            <p data-i18n="why.card2.p">Защита инвестиций в данные, обеспечение повторного использования, основа для будущих исследований</p>
           </div>
         </div>
         <div class="why-card">
           <div class="why-icon" style="background:var(--Ibg)">🏛️</div>
           <div>
-            <h4>Университет</h4>
-            <p>Знание об исследовательских данных организации, соответствие GDPR, высококачественная исследовательская среда</p>
+            <h4 data-i18n="why.card3.h">Университет</h4>
+            <p data-i18n="why.card3.p">Знание об исследовательских данных организации, соответствие GDPR, высококачественная исследовательская среда</p>
           </div>
         </div>
         <div class="why-card">
           <div class="why-icon" style="background:var(--Rbg)">🌍</div>
           <div>
-            <h4>Общество</h4>
-            <p>Прозрачная наука, которой можно доверять. Воспроизводимые результаты, открытый доступ к данным</p>
+            <h4 data-i18n="why.card4.h">Общество</h4>
+            <p data-i18n="why.card4.p">Прозрачная наука, которой можно доверять. Воспроизводимые результаты, открытый доступ к данным</p>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- DATA LIFECYCLE -->
+<section id="lifecycle">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-tag" data-i18n="lc.tag">Жизненный цикл данных</span>
+      <h2 class="sec-title" data-i18n="lc.title">7 этапов исследовательского цикла</h2>
+      <p class="sec-sub" data-i18n="lc.sub">RDM-система КГТУ поддерживает каждый этап — от планирования до повторного использования данных в новых исследованиях.</p>
+    </div>
+    <div class="lc-flow reveal">
+      <div class="lc-step lc-f">
+        <div class="lc-num" data-i18n="lc.s1.num">01</div>
+        <div class="lc-icon" data-i18n="lc.s1.icon">📋</div>
+        <h4 class="lc-name" data-i18n="lc.s1.name">Планирование</h4>
+        <p class="lc-desc" data-i18n="lc.s1.desc">DMP, форматы хранения, выбор репозитория, политика доступа, бюджет</p>
+        <div class="lc-tool" data-i18n="lc.s1.tool">DAMAP</div>
+      </div>
+      <div class="lc-connector"></div>
+      <div class="lc-step lc-a">
+        <div class="lc-num" data-i18n="lc.s2.num">02</div>
+        <div class="lc-icon" data-i18n="lc.s2.icon">🔬</div>
+        <h4 class="lc-name" data-i18n="lc.s2.name">Сбор данных</h4>
+        <p class="lc-desc" data-i18n="lc.s2.desc">Полевые измерения, IoT-сенсоры, эксперименты, опросы, симуляции</p>
+        <div class="lc-tool" data-i18n="lc.s2.tool">DBRepo · MQTT</div>
+      </div>
+      <div class="lc-connector"></div>
+      <div class="lc-step lc-i">
+        <div class="lc-num" data-i18n="lc.s3.num">03</div>
+        <div class="lc-icon" data-i18n="lc.s3.icon">⚙️</div>
+        <h4 class="lc-name" data-i18n="lc.s3.name">Обработка</h4>
+        <p class="lc-desc" data-i18n="lc.s3.desc">Очистка, валидация схемы, нормализация, конвертация форматов</p>
+        <div class="lc-tool" data-i18n="lc.s3.tool">JupyterHub</div>
+      </div>
+      <div class="lc-connector"></div>
+      <div class="lc-step lc-r">
+        <div class="lc-num" data-i18n="lc.s4.num">04</div>
+        <div class="lc-icon" data-i18n="lc.s4.icon">📊</div>
+        <h4 class="lc-name" data-i18n="lc.s4.name">Анализ</h4>
+        <p class="lc-desc" data-i18n="lc.s4.desc">Статистика, визуализация, ML-модели, воспроизводимые ноутбуки</p>
+        <div class="lc-tool" data-i18n="lc.s4.tool">JupyterHub · Grafana</div>
+      </div>
+      <div class="lc-connector"></div>
+      <div class="lc-step lc-f">
+        <div class="lc-num" data-i18n="lc.s5.num">05</div>
+        <div class="lc-icon" data-i18n="lc.s5.icon">🗄️</div>
+        <h4 class="lc-name" data-i18n="lc.s5.name">Хранение</h4>
+        <p class="lc-desc" data-i18n="lc.s5.desc">Долгосрочное архивирование, версионирование, контрольные суммы, BagIt</p>
+        <div class="lc-tool" data-i18n="lc.s5.tool">Invenio · Repositum</div>
+      </div>
+      <div class="lc-connector"></div>
+      <div class="lc-step lc-a">
+        <div class="lc-num" data-i18n="lc.s6.num">06</div>
+        <div class="lc-icon" data-i18n="lc.s6.icon">🌐</div>
+        <h4 class="lc-name" data-i18n="lc.s6.name">Публикация</h4>
+        <p class="lc-desc" data-i18n="lc.s6.desc">DOI, FAIR-метаданные, лицензия CC-BY, открытый доступ</p>
+        <div class="lc-tool" data-i18n="lc.s6.tool">Invenio · DataCite</div>
+      </div>
+      <div class="lc-connector"></div>
+      <div class="lc-step lc-i">
+        <div class="lc-num" data-i18n="lc.s7.num">07</div>
+        <div class="lc-icon" data-i18n="lc.s7.icon">♻️</div>
+        <h4 class="lc-name" data-i18n="lc.s7.name">Повторное использование</h4>
+        <p class="lc-desc" data-i18n="lc.s7.desc">Цитирование, интеграция в новые исследования, воспроизводимость</p>
+        <div class="lc-tool" data-i18n="lc.s7.tool">REST API · OAI-PMH</div>
+      </div>
+    </div>
+    <div class="lc-note reveal" data-i18n="lc.note">
+      Жизненный цикл данных — не линейный, а цикличный процесс: данные этапа «Повторное использование» становятся входными данными нового планирования.
     </div>
   </div>
 </section>
@@ -209,71 +318,128 @@
 <section id="fair">
   <div class="wrap">
     <div class="sec-head">
-      <span class="sec-tag">Принципы FAIR</span>
-      <h2 class="sec-title">Findable · Accessible · Interoperable · Reusable</h2>
-      <p class="sec-sub">Принципы FAIR — стандарт для машиночитаемых научных данных, принятый в EOSC (European Open Science Cloud) и поддерживаемый всеми ведущими фондами.</p>
+      <span class="sec-tag" data-i18n="fair.tag">Принципы FAIR</span>
+      <h2 class="sec-title" data-i18n="fair.title">Findable · Accessible · Interoperable · Reusable</h2>
+      <p class="sec-sub" data-i18n="fair.sub">Принципы FAIR — стандарт для машиночитаемых научных данных, принятый в EOSC (European Open Science Cloud) и поддерживаемый всеми ведущими фондами.</p>
     </div>
     <div class="fair-grid reveal">
       <div class="fc f">
         <div class="fc-letter">F</div>
-        <div class="fc-name">Findable</div>
-        <div class="fc-desc">Данные и метаданные должны быть легко находимы как для людей, так и для машин.</div>
+        <div class="fc-name" data-i18n="fair.F.name">Findable</div>
+        <div class="fc-desc" data-i18n="fair.F.desc">Данные и метаданные должны быть легко находимы как для людей, так и для машин.</div>
         <ul class="fc-bullets">
-          <li>Глобальный уникальный идентификатор (DOI)</li>
-          <li>Богатые метаданные для описания данных</li>
-          <li>Метаданные содержат идентификатор данных</li>
-          <li>Регистрация в поисковых индексах</li>
+          <li data-i18n="fair.F.b1">Глобальный уникальный идентификатор (DOI)</li>
+          <li data-i18n="fair.F.b2">Богатые метаданные для описания данных</li>
+          <li data-i18n="fair.F.b3">Метаданные содержат идентификатор данных</li>
+          <li data-i18n="fair.F.b4">Регистрация в поисковых индексах</li>
         </ul>
         <div class="fc-score-wrap">
-          <div class="fc-score-lbl">Средний балл КГТУ</div>
+          <div class="fc-score-lbl" data-i18n="fair.score.lbl">Средний балл КГТУ</div>
           <div class="fc-bar"><div class="fc-bar-fill" id="barF" style="width:0"></div></div>
         </div>
       </div>
       <div class="fc a">
         <div class="fc-letter">A</div>
-        <div class="fc-name">Accessible</div>
-        <div class="fc-desc">Данные и метаданные должны быть доступны через стандартизированные протоколы.</div>
+        <div class="fc-name" data-i18n="fair.A.name">Accessible</div>
+        <div class="fc-desc" data-i18n="fair.A.desc">Данные и метаданные должны быть доступны через стандартизированные протоколы.</div>
         <ul class="fc-bullets">
-          <li>Данные доступны по идентификатору через открытый протокол</li>
-          <li>Протокол обеспечивает аутентификацию при необходимости</li>
-          <li>Метаданные доступны даже без самих данных</li>
-          <li>REST API / OAI-PMH</li>
+          <li data-i18n="fair.A.b1">Данные доступны по идентификатору через открытый протокол</li>
+          <li data-i18n="fair.A.b2">Протокол обеспечивает аутентификацию при необходимости</li>
+          <li data-i18n="fair.A.b3">Метаданные доступны даже без самих данных</li>
+          <li data-i18n="fair.A.b4">REST API / OAI-PMH</li>
         </ul>
         <div class="fc-score-wrap">
-          <div class="fc-score-lbl">Средний балл КГТУ</div>
+          <div class="fc-score-lbl" data-i18n="fair.score.lbl">Средний балл КГТУ</div>
           <div class="fc-bar"><div class="fc-bar-fill" id="barA" style="width:0"></div></div>
         </div>
       </div>
       <div class="fc i">
         <div class="fc-letter">I</div>
-        <div class="fc-name">Interoperable</div>
-        <div class="fc-desc">Данные должны использовать формальные, доступные, разделяемые и широко применимые языки для представления знаний.</div>
+        <div class="fc-name" data-i18n="fair.I.name">Interoperable</div>
+        <div class="fc-desc" data-i18n="fair.I.desc">Данные должны использовать формальные, доступные, разделяемые и широко применимые языки для представления знаний.</div>
         <ul class="fc-bullets">
-          <li>Формальные, доступные, разделяемые онтологии</li>
-          <li>Словари FAIR в метаданных</li>
-          <li>Квалифицированные ссылки на другие данные</li>
-          <li>Wikidata, OWL, schema.org</li>
+          <li data-i18n="fair.I.b1">Формальные, доступные, разделяемые онтологии</li>
+          <li data-i18n="fair.I.b2">Словари FAIR в метаданных</li>
+          <li data-i18n="fair.I.b3">Квалифицированные ссылки на другие данные</li>
+          <li data-i18n="fair.I.b4">Wikidata, OWL, schema.org</li>
         </ul>
         <div class="fc-score-wrap">
-          <div class="fc-score-lbl">Средний балл КГТУ</div>
+          <div class="fc-score-lbl" data-i18n="fair.score.lbl">Средний балл КГТУ</div>
           <div class="fc-bar"><div class="fc-bar-fill" id="barI" style="width:0"></div></div>
         </div>
       </div>
       <div class="fc r">
         <div class="fc-letter">R</div>
-        <div class="fc-name">Reusable</div>
-        <div class="fc-desc">Данные и метаданные должны быть хорошо описаны, чтобы их можно было повторно использовать в разных контекстах.</div>
+        <div class="fc-name" data-i18n="fair.R.name">Reusable</div>
+        <div class="fc-desc" data-i18n="fair.R.desc">Данные и метаданные должны быть хорошо описаны, чтобы их можно было повторно использовать в разных контекстах.</div>
         <ul class="fc-bullets">
-          <li>Множество точных атрибутов метаданных</li>
-          <li>Чёткая и доступная лицензия (CC-BY, CC0)</li>
-          <li>Подробное происхождение данных</li>
-          <li>Соответствие стандартам домена</li>
+          <li data-i18n="fair.R.b1">Множество точных атрибутов метаданных</li>
+          <li data-i18n="fair.R.b2">Чёткая и доступная лицензия (CC-BY, CC0)</li>
+          <li data-i18n="fair.R.b3">Подробное происхождение данных</li>
+          <li data-i18n="fair.R.b4">Соответствие стандартам домена</li>
         </ul>
         <div class="fc-score-wrap">
-          <div class="fc-score-lbl">Средний балл КГТУ</div>
+          <div class="fc-score-lbl" data-i18n="fair.score.lbl">Средний балл КГТУ</div>
           <div class="fc-bar"><div class="fc-bar-fill" id="barR" style="width:0"></div></div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- INVENIO PRINCIPLES -->
+<section id="invenio-principles">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-tag" data-i18n="inv.tag">Invenio Framework</span>
+      <h2 class="sec-title" data-i18n="inv.title">Core Principles of InvenioRDM</h2>
+      <p class="sec-sub" data-i18n="inv.sub">InvenioRDM is built on proven principles from CERN and partner institutions.</p>
+    </div>
+    <div class="inv-grid reveal">
+      <div class="inv-card">
+        <div class="inv-icon">🔒</div>
+        <h4 data-i18n="inv.p1.title">Safety &amp; Long-term Preservation</h4>
+        <p data-i18n="inv.p1.desc">Security and digital preservation are built into the core. Fixity checks, BagIt archival export, DOI minting and version linking guarantee data integrity for decades.</p>
+      </div>
+      <div class="inv-card">
+        <div class="inv-icon">📈</div>
+        <h4 data-i18n="inv.p2.title">Scalability by Design</h4>
+        <p data-i18n="inv.p2.desc">Engineered for 100M+ records and petabytes of files. Distributed OpenSearch and PostgreSQL underpin linear horizontal scaling.</p>
+      </div>
+      <div class="inv-card">
+        <div class="inv-icon">🌐</div>
+        <h4 data-i18n="inv.p3.title">Open Standards &amp; Open Source</h4>
+        <p data-i18n="inv.p3.desc">MIT-licensed, JSON-native REST APIs, integration with ORCID, DataCite and OpenAIRE. Open science infrastructure any institution can deploy and extend.</p>
+      </div>
+      <div class="inv-card">
+        <div class="inv-icon">✨</div>
+        <h4 data-i18n="inv.p4.title">Excellent User Experience</h4>
+        <p data-i18n="inv.p4.desc">UX is a first-class concern. Every feature goes through Balsamiq mockups, bi-weekly community review and RFC approval before any code is written.</p>
+      </div>
+      <div class="inv-card">
+        <div class="inv-icon">🎯</div>
+        <h4 data-i18n="inv.p5.title">Simplicity over Feature Bloat</h4>
+        <p data-i18n="inv.p5.desc">"Design for power through simplicity." InvenioRDM deliberately avoids adding every requested feature. A focused interface serves researchers better.</p>
+      </div>
+      <div class="inv-card">
+        <div class="inv-icon">🤝</div>
+        <h4 data-i18n="inv.p6.title">Community-Driven Governance</h4>
+        <p data-i18n="inv.p6.desc">Open, Inclusive, Considerate, Respectful. Decisions are made via RFCs with contributions from CERN, Northwestern University and institutions worldwide.</p>
+      </div>
+      <div class="inv-card">
+        <div class="inv-icon">🏗️</div>
+        <h4 data-i18n="inv.p7.title">Design-First Development</h4>
+        <p data-i18n="inv.p7.desc">Ideas are discussed, real user needs gathered, mockups and RFCs written before implementation. This prevents costly rework and ensures intentional UX patterns.</p>
+      </div>
+      <div class="inv-card">
+        <div class="inv-icon">🚀</div>
+        <h4 data-i18n="inv.p8.title">Production Readiness</h4>
+        <p data-i18n="inv.p8.desc">Every feature ships with tests, i18n, accessibility, docs and migration scripts. v13 powers Zenodo, CERN Repository, TU Graz and TU Wien in production.</p>
+      </div>
+    </div>
+    <div class="inv-source reveal">
+      Source: <a href="https://inveniosoftware.org/products/rdm/" target="_blank" rel="noopener">inveniosoftware.org</a> &nbsp;·&nbsp;
+      <a href="https://inveniordm.docs.cern.ch/community/code/process/" target="_blank" rel="noopener">InvenioRDM Development Process</a>
     </div>
   </div>
 </section>
@@ -282,13 +448,13 @@
 <section id="arch">
   <div class="wrap">
     <div class="sec-head">
-      <span class="sec-tag">Архитектура системы</span>
-      <h2 class="sec-title">Микросервисная RDM-инфраструктура</h2>
-      <p class="sec-sub">Семь взаимосвязанных компонентов — по модели TU Wien. Ни одна система не удовлетворяет всем требованиям, поэтому используется композиция сервисов.</p>
+      <span class="sec-tag" data-i18n="arch.tag">Архитектура системы</span>
+      <h2 class="sec-title" data-i18n="arch.title">Микросервисная RDM-инфраструктура</h2>
+      <p class="sec-sub" data-i18n="arch.sub">Семь взаимосвязанных компонентов — по модели TU Wien. Ни одна система не удовлетворяет всем требованиям, поэтому используется композиция сервисов.</p>
     </div>
     <div class="arch-diagram reveal">
       <div class="arch-layer">
-        <div class="arch-layer-label">Пользовательский интерфейс</div>
+        <div class="arch-layer-label" data-i18n="arch.l1">Пользовательский интерфейс</div>
         <div class="arch-row">
           <div class="arch-box blue"><span class="dot"></span>Web Frontend (React/Vue)</div>
           <div class="arch-box blue"><span class="dot"></span>JupyterHub Notebooks</div>
@@ -298,7 +464,7 @@
       </div>
       <div class="arch-arrow">↕</div>
       <div class="arch-layer">
-        <div class="arch-layer-label">API Gateway &amp; Аутентификация</div>
+        <div class="arch-layer-label" data-i18n="arch.l2">API Gateway &amp; Аутентификация</div>
         <div class="arch-row">
           <div class="arch-box orange"><span class="dot"></span>API Gateway (Kong / Spring Cloud)</div>
           <div class="arch-box orange"><span class="dot"></span>Auth Service (Keycloak / OAuth2 / ORCID)</div>
@@ -307,7 +473,7 @@
       </div>
       <div class="arch-arrow">↕</div>
       <div class="arch-layer">
-        <div class="arch-layer-label">Основные сервисы</div>
+        <div class="arch-layer-label" data-i18n="arch.l3">Основные сервисы</div>
         <div class="arch-row">
           <div class="arch-box green"><span class="dot"></span>Metadata Service (PostgreSQL + Elasticsearch)</div>
           <div class="arch-box green"><span class="dot"></span>Storage Service (MinIO / S3)</div>
@@ -317,7 +483,7 @@
       </div>
       <div class="arch-arrow">↕</div>
       <div class="arch-layer">
-        <div class="arch-layer-label">Инфраструктура &amp; Потоковые данные</div>
+        <div class="arch-layer-label" data-i18n="arch.l4">Инфраструктура &amp; Потоковые данные</div>
         <div class="arch-row">
           <div class="arch-box purple"><span class="dot"></span>Message Queue (RabbitMQ / AMQP / MQTT)</div>
           <div class="arch-box purple"><span class="dot"></span>Kubernetes Orchestration</div>
@@ -340,9 +506,9 @@
 <section id="components">
   <div class="wrap">
     <div class="sec-head">
-      <span class="sec-tag">7 компонентов</span>
-      <h2 class="sec-title">Репозитории и сервисы</h2>
-      <p class="sec-sub">Каждый компонент обслуживает определённый тип исследовательских объектов. Вместе они образуют виртуальную исследовательскую среду.</p>
+      <span class="sec-tag" data-i18n="comp.tag">7 компонентов</span>
+      <h2 class="sec-title" data-i18n="comp.title">Репозитории и сервисы</h2>
+      <p class="sec-sub" data-i18n="comp.sub">Каждый компонент обслуживает определённый тип исследовательских объектов. Вместе они образуют виртуальную исследовательскую среду.</p>
     </div>
     <div class="comp-tabs">
       <button class="comp-tab active" onclick="showComp(0)">1. Repositum</button>
@@ -687,29 +853,100 @@ print(session.vnc_connection)
   </div>
 </section>
 
+<!-- API REFERENCE -->
+<section id="api-ref">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag" data-i18n="api.tag">REST API</span>
+      <h2 class="sec-title" data-i18n="api.title">Программный доступ к данным</h2>
+      <p class="sec-sub" data-i18n="api.sub">Полноценный REST API для интеграции с Jupyter Notebooks, скриптами обработки данных и внешними системами. Аутентификация через Bearer-токен или API-ключ.</p>
+    </div>
+    <div class="api-layout reveal">
+      <div class="api-endpoints">
+        <div class="api-group-title" data-i18n="api.group.public">Каталог данных (публичные)</div>
+        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/datasets</span><span class="api-edesc">Список опубликованных датасетов · пагинация, фильтры, полнотекстовый поиск</span></div>
+        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/datasets/{id}</span><span class="api-edesc">Метаданные конкретного датасета</span></div>
+        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/datasets/{id}/download</span><span class="api-edesc">Скачать файл датасета</span></div>
+        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/datasets/{id}/metadata</span><span class="api-edesc">JSON-LD метаданные (schema.org · DataCite)</span></div>
+        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/datasets/{id}/fair</span><span class="api-edesc">FAIR-оценка F/A/I/R + рекомендации по улучшению</span></div>
+        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/stats</span><span class="api-edesc">Статистика платформы (датасеты, скачивания, FAIR)</span></div>
+        <div class="api-group-title" style="margin-top:18px" data-i18n="api.group.manage">Управление (требует auth)</div>
+        <div class="api-ep"><span class="api-method post">POST</span><span class="api-path">/api/datasets</span><span class="api-edesc">Создать черновик датасета</span></div>
+        <div class="api-ep"><span class="api-method put">PUT</span><span class="api-path">/api/my/datasets/{id}</span><span class="api-edesc">Обновить метаданные</span></div>
+        <div class="api-ep"><span class="api-method post">POST</span><span class="api-path">/api/my/datasets/{id}/publish</span><span class="api-edesc">Опубликовать черновик</span></div>
+        <div class="api-ep"><span class="api-method post">POST</span><span class="api-path">/api/my/datasets/{id}/unpublish</span><span class="api-edesc">Снять с публикации</span></div>
+        <div class="api-ep api-ep-del"><span class="api-method del">DEL</span><span class="api-path">/api/my/datasets/{id}</span><span class="api-edesc">Удалить черновик</span></div>
+        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/my/dmp</span><span class="api-edesc">Получить план управления данными (DMP)</span></div>
+        <div class="api-ep"><span class="api-method post">POST</span><span class="api-path">/api/my/dmp</span><span class="api-edesc">Создать / обновить DMP</span></div>
+        <div class="api-group-title" style="margin-top:18px" data-i18n="api.group.auth">Аутентификация</div>
+        <div class="api-ep"><span class="api-method post">POST</span><span class="api-path">/api/login</span><span class="api-edesc">Получить Bearer-токен сессии (8 часов)</span></div>
+        <div class="api-ep"><span class="api-method post">POST</span><span class="api-path">/api/register</span><span class="api-edesc">Регистрация нового аккаунта</span></div>
+        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/keys</span><span class="api-edesc">Список API-ключей · POST для создания · DELETE для отзыва</span></div>
+      </div>
+      <div class="api-example">
+        <div class="api-ex-title" data-i18n="api.ex.title">Пример — Python</div>
+        <div class="comp-code">
+<span class="cm"># Поиск и скачивание данных через RDM API</span>
+<span class="kw">import</span> requests, json
+
+BASE = <span class="str">"http://localhost:3000/api"</span>
+KEY  = <span class="str">"ваш-api-ключ"</span>  <span class="cm"># из Личного кабинета → API</span>
+
+<span class="cm"># 1. Поиск датасетов по теме</span>
+r = requests.get(f<span class="str">"{BASE}/datasets"</span>, params={
+  <span class="str">"q"</span>: <span class="str">"Иссык-Куль"</span>, <span class="str">"access"</span>: <span class="str">"open"</span>,
+  <span class="str">"page"</span>: 1, <span class="str">"limit"</span>: 5
+})
+data = r.json()
+print(f<span class="str">"Найдено: {data['total']} датасетов"</span>)
+
+<span class="cm"># 2. Скачать первый результат с API-ключом</span>
+ds_id = data[<span class="str">'items'</span>][0][<span class="str">'id'</span>]
+dl = requests.get(
+  f<span class="str">"{BASE}/datasets/{ds_id}/download"</span>,
+  headers={<span class="str">"Authorization"</span>: f<span class="str">"Bearer {KEY}"</span>}
+)
+<span class="kw">with</span> <span class="kw">open</span>(<span class="str">"data.csv"</span>, <span class="str">"wb"</span>) <span class="kw">as</span> f:
+  f.write(dl.content)
+
+<span class="cm"># 3. Проверить FAIR-оценку</span>
+fair = requests.get(f<span class="str">"{BASE}/datasets/{ds_id}/fair"</span>).json()
+print(fair[<span class="str">'fair'</span>])  <span class="cm"># {'F':75,'A':80,'I':60,'R':70}</span>
+        </div>
+        <div class="api-auth-note">
+          <div class="api-auth-title" data-i18n="api.auth.title">Форматы аутентификации</div>
+          <div class="api-auth-row"><span class="api-auth-type">Session</span><code>Authorization: Bearer &lt;token&gt;</code></div>
+          <div class="api-auth-row"><span class="api-auth-type">API Key</span><code>Authorization: Bearer &lt;api-key&gt;</code></div>
+          <div class="api-auth-row"><span class="api-auth-type">Header</span><code>X-Api-Key: &lt;api-key&gt;</code></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- CATALOG -->
 <section id="catalog">
   <div class="wrap">
     <div class="sec-head">
-      <span class="sec-tag">Каталог данных</span>
-      <h2 class="sec-title">Исследовательские данные КГТУ</h2>
-      <p class="sec-sub">Открытые и защищённые наборы данных с DOI, FAIR-оценкой и машиночитаемыми метаданными.</p>
+      <span class="sec-tag" data-i18n="cat.tag">Каталог данных</span>
+      <h2 class="sec-title" data-i18n="cat.title">Исследовательские данные КГТУ</h2>
+      <p class="sec-sub" data-i18n="cat.sub">Открытые и защищённые наборы данных с DOI, FAIR-оценкой и машиночитаемыми метаданными.</p>
     </div>
     <div class="cat-toolbar">
-      <input class="cat-input" id="catSearch" placeholder="Поиск по названию, ключевым словам...">
+      <input class="cat-input" id="catSearch" placeholder="Поиск по названию, ключевым словам..." data-i18n-ph="cat.search.ph">
       <select class="cat-select" id="catAccess">
-        <option value="">Все типы доступа</option>
-        <option value="open">Открытый</option>
-        <option value="restricted">Ограниченный</option>
+        <option value="" data-i18n="cat.access.all">Все типы доступа</option>
+        <option value="open" data-i18n="cat.access.open">Открытый</option>
+        <option value="restricted" data-i18n="cat.access.res">Ограниченный</option>
       </select>
       <select class="cat-select" id="catLicense">
-        <option value="">Все лицензии</option>
+        <option value="" data-i18n="cat.lic.all">Все лицензии</option>
         <option value="CC-BY-4.0">CC-BY-4.0</option>
         <option value="CC-BY-NC-SA-4.0">CC-BY-NC-SA-4.0</option>
         <option value="CC0-1.0">CC0-1.0</option>
       </select>
       <span class="cat-total" id="catTotal"></span>
-      <button class="small-btn" id="submitBtn" onclick="openSubmit()" style="display:none">+ Добавить</button>
+      <button class="small-btn" id="submitBtn" onclick="openSubmit()" style="display:none" data-i18n="cat.add">+ Добавить</button>
     </div>
     <div class="ds-grid reveal" id="dsGrid"><div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--t3);font-family:var(--mono)">Загрузка...</div></div>
     <div class="cat-pagination" id="catPag"></div>
@@ -720,9 +957,9 @@ print(session.vnc_connection)
 <section id="roadmap">
   <div class="wrap">
     <div class="sec-head">
-      <span class="sec-tag">Дорожная карта разработки</span>
-      <h2 class="sec-title">16-недельный план развёртывания</h2>
-      <p class="sec-sub">Поэтапное развитие системы по методологии TU Wien: от анализа требований до production-развёртывания с тестированием пользователями.</p>
+      <span class="sec-tag" data-i18n="rm.tag">Дорожная карта разработки</span>
+      <h2 class="sec-title" data-i18n="rm.title">16-недельный план развёртывания</h2>
+      <p class="sec-sub" data-i18n="rm.sub">Поэтапное развитие системы по методологии TU Wien: от анализа требований до production-развёртывания с тестированием пользователями.</p>
     </div>
     <div class="roadmap-grid reveal">
       <div class="rm-card">
@@ -821,9 +1058,9 @@ print(session.vnc_connection)
 <section id="drivers">
   <div class="wrap">
     <div class="sec-head">
-      <span class="sec-tag">Зачем вкладываться</span>
-      <h2 class="sec-title">Три ключевых драйвера</h2>
-      <p class="sec-sub">Система RDM создаётся для трёх групп заинтересованных сторон. Главный вопрос: какова цена НЕделания этого?</p>
+      <span class="sec-tag" data-i18n="drv.tag">Зачем вкладываться</span>
+      <h2 class="sec-title" data-i18n="drv.title">Три ключевых драйвера</h2>
+      <p class="sec-sub" data-i18n="drv.sub">Система RDM создаётся для трёх групп заинтересованных сторон. Главный вопрос: какова цена НЕделания этого?</p>
     </div>
     <div class="drivers-grid reveal">
       <div class="drv-card">
@@ -858,6 +1095,68 @@ print(session.vnc_connection)
           <li>Репутация и доверие к результатам</li>
           <li>Привлечение дополнительных проектов и грантов</li>
         </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STANDARDS & POLICY -->
+<section id="standards">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-tag" data-i18n="std.tag">Стандарты и политика</span>
+      <h2 class="sec-title" data-i18n="std.title">Метаданные и требования финансирующих организаций</h2>
+      <p class="sec-sub" data-i18n="std.sub">RDM КГТУ поддерживает ведущие стандарты метаданных и соответствует требованиям Horizon Europe, Science Europe и мировых репозиториев.</p>
+    </div>
+    <div class="std-grid reveal">
+      <div class="std-card">
+        <div class="std-logo" style="background:var(--Fbg);color:var(--F)">DC</div>
+        <div class="std-info">
+          <div class="std-name" data-i18n="std.dc.name">Dublin Core</div>
+          <div class="std-desc" data-i18n="std.dc.desc">15 базовых элементов метаданных. Используется в Repositum (DSpace) для публикаций. OAI-PMH совместимый — агрегация в BASE, CORE, OpenDOAR.</div>
+          <div class="std-badge" style="color:var(--F);background:var(--Fbg);border-color:var(--Fbd)">dc.title · dc.creator · dc.identifier · dc.rights</div>
+        </div>
+      </div>
+      <div class="std-card">
+        <div class="std-logo" style="background:var(--Abg);color:var(--A)">DC4</div>
+        <div class="std-info">
+          <div class="std-name" data-i18n="std.dc4.name">DataCite Metadata Schema 4.x</div>
+          <div class="std-desc" data-i18n="std.dc4.desc">Расширенная схема для наборов данных с DOI. Поддерживает ORCID, типы ресурсов, геопокрытие, источники финансирования и связанные идентификаторы.</div>
+          <div class="std-badge" style="color:var(--A);background:var(--Abg);border-color:var(--Abd)">resourceType · geoLocation · funder · relatedIds</div>
+        </div>
+      </div>
+      <div class="std-card">
+        <div class="std-logo" style="background:var(--Ibg);color:var(--I)">SO</div>
+        <div class="std-info">
+          <div class="std-name" data-i18n="std.so.name">schema.org / JSON-LD</div>
+          <div class="std-desc" data-i18n="std.so.desc">Машиночитаемые метаданные для поисковых систем. Google Dataset Search и OpenAIRE индексируют датасеты с этой разметкой. Выдаётся по эндпоинту /metadata.</div>
+          <div class="std-badge" style="color:var(--I);background:var(--Ibg);border-color:var(--Ibd)">@type Dataset · variableMeasured · distribution</div>
+        </div>
+      </div>
+      <div class="std-card">
+        <div class="std-logo" style="background:var(--Rbg);color:var(--R)">DMP</div>
+        <div class="std-info">
+          <div class="std-name" data-i18n="std.dmp.name">maDMP — RDA DMP Common Standard</div>
+          <div class="std-desc" data-i18n="std.dmp.desc">Машиночитаемые планы управления данными. JSON-LD формат с экспортом для Horizon Europe, Science Europe. Встроен в вкладку DMP личного кабинета.</div>
+          <div class="std-badge" style="color:var(--R);background:var(--Rbg);border-color:var(--Rbd)">dmp.dataset.distribution.license · contact.orcid</div>
+        </div>
+      </div>
+    </div>
+    <div class="policy-bar reveal">
+      <div class="pb-title" data-i18n="std.policy.title">Требования финансирующих организаций</div>
+      <div class="pb-items">
+        <div class="pb-item">
+          <div class="pb-org" data-i18n="std.p1.org"><span style="color:var(--F)">🇪🇺</span> Horizon Europe</div>
+          <div class="pb-req" data-i18n="std.p1.req">DMP обязателен с первого месяца · Открытый доступ к публикациям и данным · FAIR-совместимые метаданные · DOI через DataCite · Стоимость управления данными в бюджете</div>
+        </div>
+        <div class="pb-item">
+          <div class="pb-org" data-i18n="std.p2.org"><span style="color:var(--A)">📋</span> Science Europe</div>
+          <div class="pb-req" data-i18n="std.p2.req">DMP по Practical Guide (6 разделов) · maDMP экспорт · Описание форматов и стандартов · Этические и правовые аспекты · Ответственность за данные</div>
+        </div>
+        <div class="pb-item">
+          <div class="pb-org" data-i18n="std.p3.org"><span style="color:var(--I)">🏛️</span> КГТУ / НАН КР</div>
+          <div class="pb-req" data-i18n="std.p3.req">Публикация данных в RDM КГТУ · DOI для датасетов · Открытый доступ при отсутствии ограничений · Ссылка на данные в отчётах · FAIR-совместимые метаданные</div>
+        </div>
       </div>
     </div>
   </div>
@@ -968,9 +1267,11 @@ print(session.vnc_connection)
       </div>
       <div class="footer-col">
         <h5>Ресурсы</h5>
+        <a href="#lifecycle">Жизненный цикл</a>
         <a href="#fair">FAIR принципы</a>
-        <a href="#arch">Архитектура</a>
+        <a href="#api-ref">REST API</a>
         <a href="#catalog">Каталог данных</a>
+        <a href="#standards">Стандарты</a>
         <a href="#roadmap">Дорожная карта</a>
         <a href="#about">О системе</a>
       </div>
@@ -999,12 +1300,12 @@ print(session.vnc_connection)
 <div class="modal-overlay" id="loginModal" onclick="if(event.target===this)closeLogin()">
   <div class="modal-box">
     <button class="modal-close" onclick="closeLogin()">✕</button>
-    <div class="modal-title">Добро пожаловать</div>
-    <div class="modal-sub">Войдите в свой аккаунт RDM КГТУ</div>
-    <div class="form-field"><label class="form-label">Email</label><input class="form-inp" id="lEmail" type="email" placeholder="researcher@kstu.kg" autocomplete="email"></div>
-    <div class="form-field"><label class="form-label">Пароль</label><div style="position:relative"><input class="form-inp" id="lPass" type="password" placeholder="Введите пароль" onkeydown="if(event.key==='Enter')doLogin()" autocomplete="current-password" style="padding-right:44px"><button type="button" onclick="togglePwd('lPass',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--t3);font-size:16px">👁</button></div></div>
+    <div class="modal-title" data-i18n="login.title">Добро пожаловать</div>
+    <div class="modal-sub" data-i18n="login.sub">Войдите в свой аккаунт RDM КГТУ</div>
+    <div class="form-field"><label class="form-label" data-i18n="login.lbl.email">Email</label><input class="form-inp" id="lEmail" type="email" placeholder="researcher@kstu.kg" autocomplete="email"></div>
+    <div class="form-field"><label class="form-label" data-i18n="login.lbl.pass">Пароль</label><div style="position:relative"><input class="form-inp" id="lPass" type="password" placeholder="Введите пароль" onkeydown="if(event.key==='Enter')doLogin()" autocomplete="current-password" style="padding-right:44px"><button type="button" onclick="togglePwd('lPass',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--t3);font-size:16px">👁</button></div></div>
     <div class="form-error" id="lError"></div>
-    <button class="btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="doLogin()">Войти в систему</button>
+    <button class="btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="doLogin()" data-i18n="login.btn">Войти в систему</button>
     <div class="modal-divider">или</div>
     <div style="text-align:center;font-size:14px;color:var(--t2)">Нет аккаунта? <a href="#" style="color:var(--F);font-weight:600;text-decoration:none" onclick="closeLogin();openRegister();return false">Зарегистрироваться</a></div>
   </div>
@@ -1014,13 +1315,13 @@ print(session.vnc_connection)
 <div class="modal-overlay" id="registerModal" onclick="if(event.target===this)closeRegister()">
   <div class="modal-box">
     <button class="modal-close" onclick="closeRegister()">✕</button>
-    <div class="modal-title">Создать аккаунт</div>
-    <div class="modal-sub">Зарегистрируйтесь как исследователь КГТУ</div>
+    <div class="modal-title" data-i18n="reg.title">Создать аккаунт</div>
+    <div class="modal-sub" data-i18n="reg.sub">Зарегистрируйтесь как исследователь КГТУ</div>
     <div class="form-field"><label class="form-label">Полное имя</label><input class="form-inp" id="rName" type="text" placeholder="Имя Фамилия" autocomplete="name"></div>
     <div class="form-field"><label class="form-label">Email</label><input class="form-inp" id="rEmail" type="email" placeholder="researcher@kstu.kg" autocomplete="email"></div>
     <div class="form-field"><label class="form-label">Пароль</label><div style="position:relative"><input class="form-inp" id="rPass" type="password" placeholder="Минимум 6 символов" onkeydown="if(event.key==='Enter')doRegister()" autocomplete="new-password" style="padding-right:44px"><button type="button" onclick="togglePwd('rPass',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--t3);font-size:16px">👁</button></div></div>
     <div class="form-error" id="rError"></div>
-    <button class="btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="doRegister()">Создать аккаунт</button>
+    <button class="btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="doRegister()" data-i18n="reg.btn">Создать аккаунт</button>
     <div class="modal-divider">или</div>
     <div style="text-align:center;font-size:14px;color:var(--t2)">Уже есть аккаунт? <a href="#" style="color:var(--F);font-weight:600;text-decoration:none" onclick="closeRegister();openLogin();return false">Войти</a></div>
   </div>
@@ -1028,33 +1329,68 @@ print(session.vnc_connection)
 
 <!-- SUBMIT MODAL -->
 <div class="modal-overlay" id="submitModal" onclick="if(event.target===this)closeSubmit()">
-  <div class="modal-box">
+  <div class="modal-box" style="max-width:520px">
     <button class="modal-close" onclick="closeSubmit()">✕</button>
-    <div class="modal-title">Добавить набор данных</div>
-    <div class="modal-sub">Опубликуйте ваши исследовательские данные</div>
-    <div class="form-field"><label class="form-label">Название *</label><input class="form-inp" id="sf-title" placeholder="Название набора данных"></div>
-    <div class="form-field"><label class="form-label">Автор</label><input class="form-inp" id="sf-author" placeholder="Имя Фамилия"></div>
-    <div class="form-field"><label class="form-label">Описание *</label><textarea class="form-textarea" id="sf-desc" rows="3" placeholder="Подробное описание содержимого набора данных..."></textarea></div>
+    <div class="modal-title" data-i18n="sub.title">Добавить набор данных</div>
+    <div class="modal-sub" data-i18n="sub.sub">Заполните метаданные — чем полнее, тем выше FAIR-балл</div>
+    <div class="form-field"><label class="form-label" data-i18n="sub.lbl.title">Название (EN) *</label><input class="form-inp" id="sf-title" placeholder="Dataset title in English"></div>
+    <div class="form-row">
+      <div class="form-field"><label class="form-label">Название (RU)</label><input class="form-inp" id="sf-title-ru" placeholder="Название на русском"></div>
+      <div class="form-field"><label class="form-label">Название (KY)</label><input class="form-inp" id="sf-title-ky" placeholder="Кыргызча аталышы"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label class="form-label" data-i18n="sub.lbl.author">Автор</label><input class="form-inp" id="sf-author" placeholder="Имя Фамилия"></div>
+      <div class="form-field"><label class="form-label">ORCID автора</label><input class="form-inp" id="sf-orcid" placeholder="0000-0002-1234-5678"></div>
+    </div>
+    <div class="form-field"><label class="form-label" data-i18n="sub.lbl.desc">Описание *</label><textarea class="form-textarea" id="sf-desc" rows="3" placeholder="Подробное описание содержимого набора данных (50+ символов для FAIR)..."></textarea></div>
     <div class="form-row">
       <div class="form-field"><label class="form-label">Ключевые слова</label><input class="form-inp" id="sf-kw" placeholder="вода, Иссык-Куль, pH"></div>
       <div class="form-field"><label class="form-label">Лицензия</label>
-        <select class="form-select" id="sf-lic"><option value="CC-BY-4.0">CC-BY-4.0</option><option value="CC-BY-NC-SA-4.0">CC-BY-NC-SA-4.0</option><option value="CC0-1.0">CC0-1.0</option></select>
+        <select class="form-select" id="sf-lic">
+          <option value="CC-BY-4.0">CC-BY-4.0</option>
+          <option value="CC-BY-NC-SA-4.0">CC-BY-NC-SA-4.0</option>
+          <option value="CC0-1.0">CC0-1.0 (общественное достояние)</option>
+        </select>
       </div>
     </div>
+    <div class="form-row">
+      <div class="form-field"><label class="form-label">Тип ресурса</label>
+        <select class="form-select" id="sf-type">
+          <option value="Dataset">Dataset</option>
+          <option value="Software">Software</option>
+          <option value="Image">Image</option>
+          <option value="Workflow">Workflow</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-field"><label class="form-label">Географический охват</label><input class="form-inp" id="sf-spatial" placeholder="Бишкек / Иссык-Куль / КР"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label class="form-label">Финансирующая орг.</label><input class="form-inp" id="sf-funder" placeholder="Horizon Europe / НАН КР"></div>
+      <div class="form-field"><label class="form-label">Номер гранта</label><input class="form-inp" id="sf-grant" placeholder="101000000 / 2024-001"></div>
+    </div>
     <div class="form-error" id="sError"></div>
-    <button class="btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="doSubmit()">Опубликовать данные</button>
+    <button class="btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="doSubmit()" data-i18n="sub.btn">Создать черновик датасета</button>
   </div>
 </div>
 
 <!-- EDIT DATASET MODAL -->
 <div class="modal-overlay" id="editDsModal" onclick="if(event.target===this)closeEditDs()">
-  <div class="modal-box">
+  <div class="modal-box" style="max-width:520px">
     <button class="modal-close" onclick="closeEditDs()">✕</button>
-    <div class="modal-title">Редактировать набор данных</div>
+    <div class="modal-title" data-i18n="edit.title">Редактировать набор данных</div>
     <input type="hidden" id="edit-ds-id">
-    <div class="form-field"><label class="form-label">Название *</label><input class="form-inp" id="edit-title" placeholder="Название набора данных"></div>
-    <div class="form-field"><label class="form-label">Автор</label><input class="form-inp" id="edit-author" placeholder="Имя Фамилия"></div>
-    <div class="form-field"><label class="form-label">Описание *</label><textarea class="form-textarea" id="edit-desc" rows="3" placeholder="Описание..."></textarea></div>
+    <div id="edit-fair-hints"></div>
+    <div class="form-field"><label class="form-label">Название (EN) *</label><input class="form-inp" id="edit-title" placeholder="Dataset title in English"></div>
+    <div class="form-row">
+      <div class="form-field"><label class="form-label">Название (RU)</label><input class="form-inp" id="edit-title-ru" placeholder="Название на русском"></div>
+      <div class="form-field"><label class="form-label">Название (KY)</label><input class="form-inp" id="edit-title-ky" placeholder="Кыргызча аталышы"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label class="form-label">Автор</label><input class="form-inp" id="edit-author" placeholder="Имя Фамилия"></div>
+      <div class="form-field"><label class="form-label">ORCID автора</label><input class="form-inp" id="edit-orcid" placeholder="0000-0002-1234-5678"></div>
+    </div>
+    <div class="form-field"><label class="form-label">Описание *</label><textarea class="form-textarea" id="edit-desc" rows="3" placeholder="Описание (50+ символов для FAIR)..."></textarea></div>
     <div class="form-row">
       <div class="form-field"><label class="form-label">Ключевые слова</label><input class="form-inp" id="edit-kw" placeholder="вода, pH, Иссык-Куль"></div>
       <div class="form-field"><label class="form-label">Лицензия</label>
@@ -1065,8 +1401,24 @@ print(session.vnc_connection)
         </select>
       </div>
     </div>
+    <div class="form-row">
+      <div class="form-field"><label class="form-label">Тип ресурса</label>
+        <select class="form-select" id="edit-type">
+          <option value="Dataset">Dataset</option>
+          <option value="Software">Software</option>
+          <option value="Image">Image</option>
+          <option value="Workflow">Workflow</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-field"><label class="form-label">Географический охват</label><input class="form-inp" id="edit-spatial" placeholder="Бишкек / Иссык-Куль / КР"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label class="form-label">Финансирующая орг.</label><input class="form-inp" id="edit-funder" placeholder="Horizon Europe / НАН КР"></div>
+      <div class="form-field"><label class="form-label">Номер гранта</label><input class="form-inp" id="edit-grant" placeholder="101000000 / 2024-001"></div>
+    </div>
     <div class="form-error" id="editDsErr"></div>
-    <button class="btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="doEditDs()">Сохранить изменения</button>
+    <button class="btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="doEditDs()" data-i18n="edit.btn">Сохранить изменения</button>
   </div>
 </div>
 

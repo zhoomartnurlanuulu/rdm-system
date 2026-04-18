@@ -14,7 +14,8 @@ import { loadDatasets, initSearch, applyFilters, goPage,
 import { openProfile, closeProfile, switchPfTab,
          loadProfile, saveProfile, savePassword,
          openEditDs, closeEditDs, doEditDs,
-         loadApiKeys, createApiKey, revokeApiKey, resubmitDs } from './profile.js';
+         loadApiKeys, createApiKey, revokeApiKey, resubmitDs,
+         loadDmp, saveDmp, publishDs, unpublishDs, deleteDs, exportDmp } from './profile.js';
 
 import { toggleTheme, initTheme, showToast,
          toggleMobileNav, closeMobileNav, closeMobileNavFull,
@@ -22,9 +23,13 @@ import { toggleTheme, initTheme, showToast,
          showComp, togglePwd } from './ui.js';
 
 import { state } from './state.js';
+import { initLang, applyLang } from './i18n.js';
+
+function setLang(lang) { applyLang(lang); }
 
 // ── Expose to window (called from HTML onclick attributes) ────────────────────
 Object.assign(window, {
+  setLang,
   // auth
   openLogin, closeLogin, openRegister, closeRegister,
   openSubmit, closeSubmit, doLogin, doRegister, doLogout, doSubmit,
@@ -33,7 +38,8 @@ Object.assign(window, {
   // profile
   openProfile, closeProfile, switchPfTab, loadProfile,
   saveProfile, savePassword, openEditDs, closeEditDs, doEditDs,
-  loadApiKeys, createApiKey, revokeApiKey, resubmitDs,
+  loadApiKeys, createApiKey, revokeApiKey, resubmitDs, loadDmp, saveDmp,
+  publishDs, unpublishDs, deleteDs, exportDmp,
   // ui
   toggleTheme, toggleMobileNav, closeMobileNav, closeMobileNavFull,
   showComp, togglePwd, showToast,
@@ -42,6 +48,7 @@ Object.assign(window, {
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
+  initLang();
   initScrollTop();
   initReveal();
   initFAIRAnimation(() => state.allDatasets);

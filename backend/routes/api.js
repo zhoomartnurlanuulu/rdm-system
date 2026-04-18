@@ -3,7 +3,19 @@ const path = require('path');
 const fs = require('fs');
 const db = require('../db');
 const { auth, getToken } = require('../auth');
-const { sha256, genToken, cors, sendJSON, readBody, readRawBody } = require('../utils');
+const { sha256, genToken, cors, sendJSON, readBody, readRawBody, fairHints } = require('../utils');
+
+const SESSION_TTL = 8 * 3600 * 1000;
+
+function sanitizeUser(u) {
+  return { id: u.id, name: u.name, email: u.email, role: u.role, created: u.created };
+}
+
+function mkSession(userId, role) {
+  const token = genToken();
+  db.setSession(token, { userId, exp: Date.now() + SESSION_TTL, role });
+  return token;
+}
 
 module.exports = function registerPublicRoutes(route) {
 
@@ -36,16 +48,13 @@ module.exports = function registerPublicRoutes(route) {
       return true;
     });
     if (q.q) {
-      // Use FTS5 for search
       const ftsIds = db.searchDatasets(q.q);
       if (ftsIds.length > 0) {
         const idSet = new Set(ftsIds);
         r = r.filter(d => idSet.has(d.id));
-        // Preserve FTS ranking order
         const order = Object.fromEntries(ftsIds.map((id, i) => [id, i]));
         r.sort((a, b) => (order[a.id] ?? 999) - (order[b.id] ?? 999));
       } else {
-        // Fallback to JS filter
         const s = q.q.toLowerCase();
         r = r.filter(d =>
           d.title.toLowerCase().includes(s) ||
@@ -56,7 +65,7 @@ module.exports = function registerPublicRoutes(route) {
     }
     if (q.access)  r = r.filter(d => d.access === q.access);
     if (q.license) r = r.filter(d => d.license === q.license);
-    const page = parseInt(q.page) || 1, lim = parseInt(q.limit) || 12;
+    const page = parseInt(q.page) || 1, lim = Math.min(parseInt(q.limit) || 12, 100);
     sendJSON(res, 200, { total: r.length, page, limit: lim, pages: Math.ceil(r.length / lim), items: r.slice((page - 1) * lim, page * lim) });
   });
 
@@ -66,6 +75,12 @@ module.exports = function registerPublicRoutes(route) {
     if (ds.embargoUntil && new Date(ds.embargoUntil) > new Date()) return sendJSON(res, 403, { error: 'Dataset under embargo', availableFrom: ds.embargoUntil });
     db.incrementViews(ds.id);
     sendJSON(res, 200, { ...ds, _links: { self: `/api/datasets/${ds.id}`, download: `/api/datasets/${ds.id}/download`, metadata: `/api/datasets/${ds.id}/metadata` } });
+  });
+
+  route('GET', '/api/datasets/(\\d+)/fair', (_req, res, _q, p) => {
+    const ds = db.getDataset(parseInt(p[1]));
+    if (!ds || ds.status !== 'published') return sendJSON(res, 404, { error: 'Not found' });
+    sendJSON(res, 200, { fair: ds.fair, hints: fairHints(ds) });
   });
 
   route('GET', '/api/datasets/(\\d+)/metadata', (_req, res, _q, p) => {
@@ -122,7 +137,7 @@ module.exports = function registerPublicRoutes(route) {
   route('GET', '/api/me', (req, res) => {
     const user = auth(req);
     if (!user) return sendJSON(res, 401, { error: 'Unauthorized' });
-    sendJSON(res, 200, { id: user.id, name: user.name, email: user.email, role: user.role, created: user.created });
+    sendJSON(res, 200, sanitizeUser(user));
   });
 
   route('PUT', '/api/me', async (req, res) => {
@@ -131,9 +146,9 @@ module.exports = function registerPublicRoutes(route) {
     const { name, email } = await readBody(req).catch(() => ({}));
     if (!name && !email) return sendJSON(res, 422, { error: 'name or email required' });
     if (email && email !== user.email && db.findUserByEmail(email))
-      return sendJSON(res, 409, { error: 'Email уже используется' });
+      return sendJSON(res, 409, { error: 'Email already in use' });
     const updated = db.updateUser(user.id, { ...(name && { name }), ...(email && { email }) });
-    sendJSON(res, 200, { id: updated.id, name: updated.name, email: updated.email, role: updated.role, created: updated.created });
+    sendJSON(res, 200, sanitizeUser(updated));
   });
 
   route('PUT', '/api/me/password', async (req, res) => {
@@ -154,9 +169,8 @@ module.exports = function registerPublicRoutes(route) {
     if (!name || !email || !password) return sendJSON(res, 422, { error: 'name, email, password required' });
     if (db.findUserByEmail(email)) return sendJSON(res, 409, { error: 'Email already exists' });
     const user = db.createUser({ name, email, role: 'researcher', passwordHash: sha256(password), active: true, created: new Date().toISOString() });
-    const token = genToken();
-    db.setSession(token, { userId: user.id, exp: Date.now() + 8 * 3600 * 1000, role: 'researcher' });
-    sendJSON(res, 201, { token, user: { id: user.id, name: user.name, email: user.email, role: user.role, created: user.created } });
+    const token = mkSession(user.id, 'researcher');
+    sendJSON(res, 201, { token, user: sanitizeUser(user) });
   });
 
   route('POST', '/api/login', async (req, res) => {
@@ -164,9 +178,8 @@ module.exports = function registerPublicRoutes(route) {
     const user = db.findUserByEmail(email);
     if (!user || !user.active || user.passwordHash !== sha256(password || ''))
       return sendJSON(res, 401, { error: 'Invalid credentials' });
-    const token = genToken();
-    db.setSession(token, { userId: user.id, exp: Date.now() + 8 * 3600 * 1000, role: user.role });
-    sendJSON(res, 200, { token, user: { id: user.id, name: user.name, email: user.email, role: user.role, created: user.created } });
+    const token = mkSession(user.id, user.role);
+    sendJSON(res, 200, { token, user: sanitizeUser(user) });
   });
 
   route('POST', '/api/logout', async (req, res) => {
@@ -190,6 +203,41 @@ module.exports = function registerPublicRoutes(route) {
     sendJSON(res, 200, { datasets: mine, total: mine.length });
   });
 
+  route('POST', '/api/my/datasets/(\\d+)/publish', (req, res, _q, p) => {
+    const user = auth(req);
+    if (!user) return sendJSON(res, 401, { error: 'Authentication required' });
+    const id = parseInt(p[1]);
+    const ds = db.getDataset(id);
+    if (!ds || ds.userId !== user.id) return sendJSON(res, 404, { error: 'Not found or not yours' });
+    if (ds.status === 'published') return sendJSON(res, 409, { error: 'Already published' });
+    if (!ds.title || !ds.description || !ds.license)
+      return sendJSON(res, 422, { error: 'Dataset must have title, description and license before publishing' });
+    const updated = db.updateDataset(id, { status: 'published', updated: new Date().toISOString() });
+    sendJSON(res, 200, { id: updated.id, status: updated.status, message: 'Dataset published' });
+  });
+
+  route('POST', '/api/my/datasets/(\\d+)/unpublish', (req, res, _q, p) => {
+    const user = auth(req);
+    if (!user) return sendJSON(res, 401, { error: 'Authentication required' });
+    const id = parseInt(p[1]);
+    const ds = db.getDataset(id);
+    if (!ds || ds.userId !== user.id) return sendJSON(res, 404, { error: 'Not found or not yours' });
+    if (ds.status !== 'published') return sendJSON(res, 409, { error: 'Dataset is not published' });
+    const updated = db.updateDataset(id, { status: 'draft', updated: new Date().toISOString() });
+    sendJSON(res, 200, { id: updated.id, status: updated.status, message: 'Dataset unpublished' });
+  });
+
+  route('DELETE', '/api/my/datasets/(\\d+)', (req, res, _q, p) => {
+    const user = auth(req);
+    if (!user) return sendJSON(res, 401, { error: 'Authentication required' });
+    const id = parseInt(p[1]);
+    const ds = db.getDataset(id);
+    if (!ds || ds.userId !== user.id) return sendJSON(res, 404, { error: 'Not found or not yours' });
+    if (ds.status === 'published') return sendJSON(res, 403, { error: 'Cannot delete a published dataset. Unpublish it first.' });
+    db.deleteDataset(id);
+    sendJSON(res, 200, { message: 'Dataset deleted' });
+  });
+
   route('PUT', '/api/my/datasets/(\\d+)', async (req, res, _q, p) => {
     const user = auth(req);
     if (!user) return sendJSON(res, 401, { error: 'Authentication required' });
@@ -198,7 +246,9 @@ module.exports = function registerPublicRoutes(route) {
     if (!ds || ds.userId !== user.id) return sendJSON(res, 404, { error: 'Not found or not yours' });
     const body = await readBody(req).catch(() => null);
     if (!body) return sendJSON(res, 400, { error: 'Bad request' });
-    const allowed = ['title', 'description', 'keywords', 'license', 'creator'];
+    const allowed = ['title', 'description', 'keywords', 'license', 'creator',
+                     'resourceType', 'funder', 'spatial',
+                     'titleKy', 'titleRu', 'descriptionKy', 'descriptionRu', 'relatedIds'];
     const patch = Object.fromEntries(Object.entries(body).filter(([k]) => allowed.includes(k)));
     const updated = db.updateDataset(id, { ...patch, updated: new Date().toISOString() });
     sendJSON(res, 200, { id: updated.id, title: updated.title, status: updated.status, license: updated.license, keywords: updated.keywords, description: updated.description, creator: updated.creator, fair: updated.fair });
@@ -210,7 +260,6 @@ module.exports = function registerPublicRoutes(route) {
     const body = await readBody(req).catch(() => null);
     if (!body || !body.title || !body.description || !body.license)
       return sendJSON(res, 422, { error: 'title, description, license required' });
-    // Generate DOI using current timestamp to avoid collisions
     const doiNum = String(Date.now()).slice(-6);
     const ds = db.createDataset({
       doi: `10.48436/rdm-${doiNum}`,
@@ -221,6 +270,11 @@ module.exports = function registerPublicRoutes(route) {
       size: body.size || 0, version: 1,
       created: new Date().toISOString(), updated: new Date().toISOString(),
       downloads: 0, views: 0, status: 'draft', userId: user.id,
+      resourceType: body.resourceType || 'Dataset',
+      funder: body.funder || null,
+      spatial: body.spatial || null,
+      titleKy: body.titleKy || null, titleRu: body.titleRu || null,
+      descriptionKy: body.descriptionKy || null, descriptionRu: body.descriptionRu || null,
     });
     sendJSON(res, 201, ds);
   });
@@ -237,11 +291,11 @@ module.exports = function registerPublicRoutes(route) {
     const ext = fileName.includes('.') ? fileName.slice(fileName.lastIndexOf('.')) : '';
     const safeExt = ext.replace(/[^a-zA-Z0-9.]/g, '').slice(0, 10);
     const uploadsDir = path.join(__dirname, '..', 'data', 'uploads');
-    if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
+    fs.mkdirSync(uploadsDir, { recursive: true });
     const filePath = path.join(uploadsDir, `${id}${safeExt}`);
     const data = await readRawBody(req).catch(() => null);
     if (!data) return sendJSON(res, 400, { error: 'No file data' });
-    fs.writeFileSync(filePath, data);
+    await fs.promises.writeFile(filePath, data);
     const updated = db.updateDataset(id, { file: { path: filePath, name: fileName, mime, size: data.length }, updated: new Date().toISOString() });
     sendJSON(res, 200, { message: 'File uploaded', fileName, size: data.length, dataset: updated });
   });
@@ -329,6 +383,20 @@ ${kw}
     if (!user) return sendJSON(res, 401, { error: 'Unauthorized' });
     db.revokeApiKey(parseInt(p[1]), user.id);
     sendJSON(res, 200, { message: 'Key revoked' });
+  });
+
+  // ── DMP ───────────────────────────────────────────────────────────────────
+  route('GET', '/api/my/dmp', (req, res) => {
+    const user = auth(req);
+    if (!user) return sendJSON(res, 401, { error: 'Unauthorized' });
+    sendJSON(res, 200, db.getDmp(user.id) || {});
+  });
+
+  route('POST', '/api/my/dmp', async (req, res) => {
+    const user = auth(req);
+    if (!user) return sendJSON(res, 401, { error: 'Unauthorized' });
+    const body = await readBody(req).catch(() => ({}));
+    sendJSON(res, 200, db.upsertDmp(user.id, body));
   });
 
 };

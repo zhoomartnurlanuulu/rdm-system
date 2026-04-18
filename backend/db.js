@@ -76,10 +76,35 @@ const datasetNewCols = [
   ["file_name", "TEXT"],
   ["file_mime", "TEXT"],
   ["file_size", "INTEGER DEFAULT 0"],
+  // TU Wien / FAIR enhancements
+  ["resource_type", "TEXT DEFAULT 'Dataset'"],
+  ["funder_name", "TEXT"],
+  ["funder_grant_id", "TEXT"],
+  ["spatial", "TEXT"],
+  ["title_ky", "TEXT"],
+  ["title_ru", "TEXT"],
+  ["description_ky", "TEXT"],
+  ["description_ru", "TEXT"],
 ];
 for (const [col, def] of datasetNewCols) {
   try { sql.exec(`ALTER TABLE datasets ADD COLUMN ${col} ${def}`); } catch (e) { /* already exists */ }
 }
+
+// ── DMP table ─────────────────────────────────────────────────────────────────
+sql.exec(`
+  CREATE TABLE IF NOT EXISTS dmp (
+    id               INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id          INTEGER UNIQUE NOT NULL REFERENCES users(id),
+    data_description TEXT DEFAULT '',
+    storage_plan     TEXT DEFAULT '',
+    access_control   TEXT DEFAULT '',
+    retention_period TEXT DEFAULT '',
+    sharing_plan     TEXT DEFAULT '',
+    funder           TEXT DEFAULT '',
+    created          TEXT NOT NULL,
+    updated          TEXT NOT NULL
+  );
+`);
 
 // ── API keys table ────────────────────────────────────────────────────────────
 sql.exec(`
@@ -139,6 +164,14 @@ function rowToDataset(row) {
     rejectComment: row.reject_comment || null,
     relatedIds: JSON.parse(row.related_ids || '[]'),
     file: row.file_path ? { path: row.file_path, name: row.file_name, mime: row.file_mime, size: row.file_size || 0 } : null,
+    // TU Wien / FAIR enhancements
+    resourceType: row.resource_type || 'Dataset',
+    funder: row.funder_name ? { name: row.funder_name, grantId: row.funder_grant_id || '' } : null,
+    spatial: row.spatial ? JSON.parse(row.spatial) : null,
+    titleKy: row.title_ky || null,
+    titleRu: row.title_ru || null,
+    descriptionKy: row.description_ky || null,
+    descriptionRu: row.description_ru || null,
   };
 }
 
@@ -272,8 +305,10 @@ function createDataset(data) {
     INSERT INTO datasets
       (doi,title,description,creator_name,creator_orcid,keywords,license,access,format,
        size,version,created,updated,fair_f,fair_a,fair_i,fair_r,downloads,views,status,user_id,
-       embargo_until,reject_comment,related_ids,file_path,file_name,file_mime,file_size)
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+       embargo_until,reject_comment,related_ids,file_path,file_name,file_mime,file_size,
+       resource_type,funder_name,funder_grant_id,spatial,
+       title_ky,title_ru,description_ky,description_ru)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
   `).run(
     data.doi, data.title, data.description,
     data.creator?.name || null, data.creator?.orcid || null,
@@ -290,7 +325,12 @@ function createDataset(data) {
     fileObj ? fileObj.path : null,
     fileObj ? fileObj.name : null,
     fileObj ? fileObj.mime : null,
-    fileObj ? (fileObj.size || 0) : 0
+    fileObj ? (fileObj.size || 0) : 0,
+    data.resourceType || 'Dataset',
+    data.funder?.name || null, data.funder?.grantId || null,
+    data.spatial ? JSON.stringify(data.spatial) : null,
+    data.titleKy || null, data.titleRu || null,
+    data.descriptionKy || null, data.descriptionRu || null
   );
   return getDataset(r.lastInsertRowid);
 }
@@ -311,7 +351,9 @@ function updateDataset(id, data) {
       fair_f=?, fair_a=?, fair_i=?, fair_r=?,
       downloads=?, views=?, status=?, user_id=?,
       embargo_until=?, reject_comment=?, related_ids=?,
-      file_path=?, file_name=?, file_mime=?, file_size=?
+      file_path=?, file_name=?, file_mime=?, file_size=?,
+      resource_type=?, funder_name=?, funder_grant_id=?, spatial=?,
+      title_ky=?, title_ru=?, description_ky=?, description_ru=?
     WHERE id=?
   `).run(
     merged.title, merged.description,
@@ -329,6 +371,11 @@ function updateDataset(id, data) {
     fileObj ? fileObj.name : null,
     fileObj ? fileObj.mime : null,
     fileObj ? (fileObj.size || 0) : 0,
+    merged.resourceType || 'Dataset',
+    merged.funder?.name || null, merged.funder?.grantId || null,
+    merged.spatial ? JSON.stringify(merged.spatial) : null,
+    merged.titleKy || null, merged.titleRu || null,
+    merged.descriptionKy || null, merged.descriptionRu || null,
     id
   );
   return getDataset(id);
@@ -391,6 +438,50 @@ function touchApiKey(id) {
   sql.prepare('UPDATE api_keys SET last_used=? WHERE id=?').run(new Date().toISOString(), id);
 }
 
+// ── DMP ───────────────────────────────────────────────────────────────────────
+function getDmp(userId) {
+  const row = sql.prepare('SELECT * FROM dmp WHERE user_id = ?').get(userId);
+  if (!row) return null;
+  return {
+    id: row.id, userId: row.user_id,
+    dataDescription: row.data_description,
+    storagePlan: row.storage_plan,
+    accessControl: row.access_control,
+    retentionPeriod: row.retention_period,
+    sharingPlan: row.sharing_plan,
+    funder: row.funder,
+    created: row.created, updated: row.updated,
+  };
+}
+
+function upsertDmp(userId, data) {
+  const now = new Date().toISOString();
+  const existing = sql.prepare('SELECT id FROM dmp WHERE user_id = ?').get(userId);
+  if (existing) {
+    sql.prepare(`
+      UPDATE dmp SET
+        data_description=?, storage_plan=?, access_control=?,
+        retention_period=?, sharing_plan=?, funder=?, updated=?
+      WHERE user_id=?
+    `).run(
+      data.dataDescription || '', data.storagePlan || '',
+      data.accessControl || '', data.retentionPeriod || '',
+      data.sharingPlan || '', data.funder || '', now, userId
+    );
+  } else {
+    sql.prepare(`
+      INSERT INTO dmp
+        (user_id,data_description,storage_plan,access_control,retention_period,sharing_plan,funder,created,updated)
+      VALUES (?,?,?,?,?,?,?,?,?)
+    `).run(
+      userId, data.dataDescription || '', data.storagePlan || '',
+      data.accessControl || '', data.retentionPeriod || '',
+      data.sharingPlan || '', data.funder || '', now, now
+    );
+  }
+  return getDmp(userId);
+}
+
 // ── FTS Search ────────────────────────────────────────────────────────────────
 function searchDatasets(query) {
   try {
@@ -434,4 +525,6 @@ module.exports = {
   searchDatasets,
   // analytics
   getAnalytics,
+  // dmp
+  getDmp, upsertDmp,
 };
