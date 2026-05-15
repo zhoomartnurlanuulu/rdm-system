@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>RDM Admin — Панель администратора</title>
+<title data-i18n="adm.page.title">RDM Admin — Панель администратора</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/admin/style.css">
 </head>
@@ -16,16 +16,27 @@
       <div class="lc-mark"><svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" fill="#05060a"/><rect x="9" y="1" width="6" height="6" rx="1.5" fill="#05060a"/><rect x="1" y="9" width="6" height="6" rx="1.5" fill="#05060a"/><circle cx="12" cy="12" r="3" fill="#4d9dff"/></svg></div>
       <div><div class="lc-name">RDM · КГТУ</div><div class="lc-admin-badge" style="font-size:9px;font-family:var(--mono);color:var(--red);letter-spacing:.06em">ADMIN PANEL</div></div>
     </div>
-    <div class="lc-title">Вход для администратора</div>
-    <div class="lc-desc">Введите учётные данные администратора системы</div>
-    <label class="lf-label">Email</label>
+    <div class="lc-title" data-i18n="adm.login.title">Вход для администратора</div>
+    <div class="lc-desc" data-i18n="adm.login.desc">Введите учётные данные администратора системы</div>
+    <label class="lf-label" data-i18n="adm.login.email">Email</label>
     <input class="lf-input" id="aEmail" type="email" value="admin@kstu.kg" placeholder="admin@kstu.kg">
-    <label class="lf-label">Пароль</label>
+    <label class="lf-label" data-i18n="adm.login.pass">Пароль</label>
     <div style="position:relative"><input class="lf-input" id="aPass" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doAdminLogin()" style="padding-right:40px;margin-bottom:0"><button type="button" onclick="toggleAdminPwd('aPass',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--t3);font-size:15px">👁</button></div>
-    <button class="lf-btn" onclick="doAdminLogin()" style="margin-top:14px">Войти в панель</button>
+    <button class="lf-btn" onclick="doAdminLogin()" style="margin-top:14px" data-i18n="adm.login.btn">Войти в панель</button>
     <div class="lf-error" id="loginErr"></div>
+    <div class="lang-switcher" style="margin-top:14px;display:flex;gap:4px;padding:4px;background:var(--bg3);border-radius:8px">
+      <button class="lang-btn" data-lang="ru" onclick="RDM_applyLang('ru')" style="flex:1;padding:5px;border:none;background:transparent;color:var(--t3);font-family:var(--mono);font-size:11px;font-weight:700;border-radius:6px;cursor:pointer;text-transform:uppercase">RU</button>
+      <button class="lang-btn" data-lang="ky" onclick="RDM_applyLang('ky')" style="flex:1;padding:5px;border:none;background:transparent;color:var(--t3);font-family:var(--mono);font-size:11px;font-weight:700;border-radius:6px;cursor:pointer;text-transform:uppercase">KY</button>
+      <button class="lang-btn" data-lang="en" onclick="RDM_applyLang('en')" style="flex:1;padding:5px;border:none;background:transparent;color:var(--t3);font-family:var(--mono);font-size:11px;font-weight:700;border-radius:6px;cursor:pointer;text-transform:uppercase">EN</button>
+    </div>
   </div>
 </div>
+<style>
+.lang-btn.active{background:var(--bg1)!important;color:var(--acc)!important}
+.adm-bulk-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--Fbg);border:1.5px solid var(--Fbd);border-radius:10px;margin-bottom:12px;font-size:12px}
+.adm-bulk-bar.active{display:flex}
+.adm-bulk-bar input[type=checkbox]{cursor:pointer}
+</style>
 
 <!-- ═══ ADMIN APP ═══ -->
 <div id="adminApp">
@@ -36,36 +47,41 @@
       <div><div class="sb-name">RDM Admin</div><div class="sb-admin-badge">ADMIN</div></div>
     </div>
     <div class="sb-nav">
-      <div class="sb-section">Главное</div>
-      <div class="sb-item active" data-page="dashboard" onclick="showPage('dashboard')"><span class="sb-icon">◈</span> Дашборд</div>
-      <div class="sb-section">Данные</div>
-      <div class="sb-item" data-page="datasets" onclick="showPage('datasets')"><span class="sb-icon">⊞</span> Наборы данных<span class="sb-badge" id="sb-dsCount">–</span></div>
-      <div class="sb-item" data-page="analytics" onclick="showPage('analytics')"><span class="sb-icon">◉</span> Аналитика</div>
-      <div class="sb-section">Система</div>
-      <div class="sb-item" data-page="users" onclick="showPage('users')"><span class="sb-icon">◎</span> Пользователи<span class="sb-badge" id="sb-usrCount">–</span></div>
-      <div class="sb-item" data-page="logs" onclick="showPage('logs')"><span class="sb-icon">≡</span> Логи API</div>
+      <div class="sb-section" data-i18n="adm.sec.main">Главное</div>
+      <div class="sb-item active" data-page="dashboard" onclick="showPage('dashboard')"><span class="sb-icon">◈</span> <span data-i18n="adm.nav.dashboard">Дашборд</span></div>
+      <div class="sb-section" data-i18n="adm.sec.data">Данные</div>
+      <div class="sb-item" data-page="datasets" onclick="showPage('datasets')"><span class="sb-icon">⊞</span> <span data-i18n="adm.nav.datasets">Наборы данных</span><span class="sb-badge" id="sb-dsCount">–</span></div>
+      <div class="sb-item" data-page="analytics" onclick="showPage('analytics')"><span class="sb-icon">◉</span> <span data-i18n="adm.nav.analytics">Аналитика</span></div>
+      <div class="sb-section" data-i18n="adm.sec.system">Система</div>
+      <div class="sb-item" data-page="users" onclick="showPage('users')"><span class="sb-icon">◎</span> <span data-i18n="adm.nav.users">Пользователи</span><span class="sb-badge" id="sb-usrCount">–</span></div>
+      <div class="sb-item" data-page="logs" onclick="showPage('logs')"><span class="sb-icon">≡</span> <span data-i18n="adm.nav.logs">Логи API</span></div>
     </div>
     <div class="sb-footer">
       <div class="sb-user">
         <div class="sb-avatar" id="sb-avatar">A</div>
         <div class="sb-uname" id="sb-uname">Admin</div>
-        <button class="sb-logout" onclick="doLogout()" title="Выйти">↪</button>
+        <button class="sb-logout" onclick="doLogout()" data-i18n-title="adm.logout">↪</button>
       </div>
-      <a class="sb-pub-link" href="/" target="_blank">⬡ Публичный сайт ↗</a>
+      <div class="lang-switcher" style="display:flex;gap:4px;padding:4px;background:var(--bg3);border-radius:8px;margin:6px 0">
+        <button class="lang-btn" data-lang="ru" onclick="RDM_applyLang('ru')" style="flex:1;padding:4px;border:none;background:transparent;color:var(--t3);font-family:var(--mono);font-size:10px;font-weight:700;border-radius:5px;cursor:pointer;text-transform:uppercase">RU</button>
+        <button class="lang-btn" data-lang="ky" onclick="RDM_applyLang('ky')" style="flex:1;padding:4px;border:none;background:transparent;color:var(--t3);font-family:var(--mono);font-size:10px;font-weight:700;border-radius:5px;cursor:pointer;text-transform:uppercase">KY</button>
+        <button class="lang-btn" data-lang="en" onclick="RDM_applyLang('en')" style="flex:1;padding:4px;border:none;background:transparent;color:var(--t3);font-family:var(--mono);font-size:10px;font-weight:700;border-radius:5px;cursor:pointer;text-transform:uppercase">EN</button>
+      </div>
+      <a class="sb-pub-link" href="/" target="_blank" data-i18n="adm.public.link">⬡ Публичный сайт ↗</a>
     </div>
   </div>
 
   <!-- MAIN -->
   <div class="main">
     <div class="topbar">
-      <div class="tb-title" id="topTitle">Дашборд</div>
+      <div class="tb-title" id="topTitle" data-i18n="adm.nav.dashboard">Дашборд</div>
       <div class="tb-right">
         <span class="tb-time" id="tbTime"></span>
         <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t3);cursor:pointer;font-family:var(--mono)">
-          <input type="checkbox" id="autoRefresh" onchange="toggleAutoRefresh()" style="cursor:pointer"> авто
+          <input type="checkbox" id="autoRefresh" onchange="toggleAutoRefresh()" style="cursor:pointer"> <span data-i18n="adm.auto">авто</span>
         </label>
-        <button class="a-btn" onclick="refreshCurrent()">↺ Обновить</button>
-        <button class="a-btn" id="adminThemeBtn" onclick="toggleAdminTheme()" title="Тема">🌙</button>
+        <button class="a-btn" onclick="refreshCurrent()" data-i18n="adm.refresh">↺ Обновить</button>
+        <button class="a-btn" id="adminThemeBtn" onclick="toggleAdminTheme()" data-i18n-title="adm.theme">🌙</button>
       </div>
     </div>
 
@@ -106,20 +122,27 @@
     <!-- DATASETS -->
     <div class="page" id="page-datasets">
       <div class="tbl-header">
-        <div class="tbl-title">Наборы данных</div>
+        <div class="tbl-title" data-i18n="adm.nav.datasets">Наборы данных</div>
         <div class="tbl-actions">
-          <input class="tbl-search" id="ds-search" placeholder="Поиск..." oninput="dsDebouncedSearch()">
+          <input class="tbl-search" id="ds-search" oninput="dsDebouncedSearch()" data-i18n-ph="adm.search.ph">
           <select class="tbl-select" id="ds-status-filter" onchange="loadAdminDatasets()">
-            <option value="">Все статусы</option>
-            <option value="published">Опубликовано</option>
-            <option value="draft">Черновики</option>
-            <option value="rejected">Отклонённые</option>
+            <option value="" data-i18n="adm.status.all">Все статусы</option>
+            <option value="published" data-i18n="adm.status.published">Опубликовано</option>
+            <option value="draft" data-i18n="adm.status.draft">Черновики</option>
+            <option value="rejected" data-i18n="adm.status.rejected">Отклонённые</option>
           </select>
-          <button class="a-btn primary" onclick="openDsDrawer(null)">+ Создать</button>
+          <button class="a-btn primary" onclick="openDsDrawer(null)" data-i18n="adm.create">+ Создать</button>
         </div>
       </div>
+      <div class="adm-bulk-bar" id="ds-bulk-bar" style="display:none">
+        <span id="ds-bulk-count">0</span> <span data-i18n="adm.bulk.selected">выбрано</span>
+        <button class="a-btn success" onclick="bulkDsAction('publish')" data-i18n="adm.bulk.publish">Опубликовать</button>
+        <button class="a-btn" onclick="bulkDsAction('unpublish')" data-i18n="adm.bulk.unpublish">Снять с публ.</button>
+        <button class="a-btn danger" onclick="bulkDsAction('delete')" data-i18n="adm.bulk.delete">Удалить</button>
+        <button class="a-btn" onclick="clearDsSelection()" style="margin-left:auto" data-i18n="adm.bulk.clear">Очистить</button>
+      </div>
       <div class="tbl-wrap">
-        <table><thead><tr><th>DOI</th><th>Название</th><th>FAIR</th><th>Лицензия</th><th>Статус</th><th>↓</th><th></th></tr></thead>
+        <table><thead><tr><th style="width:32px"><input type="checkbox" id="ds-select-all" onchange="toggleDsSelectAll(this)"></th><th>DOI</th><th data-i18n="adm.col.title">Название</th><th>FAIR</th><th data-i18n="adm.col.license">Лицензия</th><th data-i18n="adm.col.status">Статус</th><th>↓</th><th></th></tr></thead>
         <tbody id="ds-tbody"></tbody></table>
         <div class="tbl-pagination"><span class="pag-info" id="ds-pag-info"></span><div class="pag-btns" id="ds-pag-btns"></div></div>
       </div>
@@ -128,13 +151,20 @@
     <!-- USERS -->
     <div class="page" id="page-users">
       <div class="tbl-header">
-        <div class="tbl-title">Пользователи</div>
+        <div class="tbl-title" data-i18n="adm.nav.users">Пользователи</div>
         <div class="tbl-actions">
-          <button class="a-btn primary" onclick="openUserDrawer(null)">+ Создать</button>
+          <button class="a-btn primary" onclick="openUserDrawer(null)" data-i18n="adm.create">+ Создать</button>
         </div>
       </div>
+      <div class="adm-bulk-bar" id="usr-bulk-bar" style="display:none">
+        <span id="usr-bulk-count">0</span> <span data-i18n="adm.bulk.selected">выбрано</span>
+        <button class="a-btn success" onclick="bulkUsrAction('activate')" data-i18n="adm.bulk.activate">Активировать</button>
+        <button class="a-btn" onclick="bulkUsrAction('deactivate')" data-i18n="adm.bulk.deactivate">Заблокировать</button>
+        <button class="a-btn danger" onclick="bulkUsrAction('delete')" data-i18n="adm.bulk.delete">Удалить</button>
+        <button class="a-btn" onclick="clearUsrSelection()" style="margin-left:auto" data-i18n="adm.bulk.clear">Очистить</button>
+      </div>
       <div class="tbl-wrap">
-        <table><thead><tr><th>ID</th><th>Имя</th><th>Email</th><th>Роль</th><th>Статус</th><th>Дата</th><th></th></tr></thead>
+        <table><thead><tr><th style="width:32px"><input type="checkbox" id="usr-select-all" onchange="toggleUsrSelectAll(this)"></th><th>ID</th><th data-i18n="adm.col.name">Имя</th><th>Email</th><th data-i18n="adm.col.role">Роль</th><th data-i18n="adm.col.status">Статус</th><th data-i18n="adm.col.date">Дата</th><th></th></tr></thead>
         <tbody id="usr-tbody"></tbody></table>
       </div>
     </div>
@@ -257,14 +287,15 @@
     <!-- LOGS -->
     <div class="page" id="page-logs">
       <div class="tbl-header">
-        <div class="tbl-title">Логи API-запросов</div>
+        <div class="tbl-title" data-i18n="adm.logs.title">Логи API-запросов</div>
         <div class="tbl-actions">
           <select class="tbl-select" id="log-limit" onchange="loadLogs()">
-            <option value="50">50 записей</option>
-            <option value="100" selected>100 записей</option>
-            <option value="200">200 записей</option>
+            <option value="50" data-i18n="adm.logs.50">50 записей</option>
+            <option value="100" selected data-i18n="adm.logs.100">100 записей</option>
+            <option value="200" data-i18n="adm.logs.200">200 записей</option>
           </select>
-          <button class="a-btn" onclick="loadLogs()">↺ Обновить</button>
+          <button class="a-btn" onclick="loadLogs()" data-i18n="adm.refresh">↺ Обновить</button>
+          <button class="a-btn primary" onclick="exportLogsCsv()" data-i18n="adm.logs.export">⬇ Экспорт CSV</button>
         </div>
       </div>
       <div class="tbl-wrap" style="overflow-y:auto;max-height:calc(100vh - 200px)">
@@ -374,11 +405,212 @@
 <!-- TOAST -->
 <div class="toast" id="toastArea"></div>
 
+<script src="/js/page-i18n.js?v=2"></script>
 <script>
 'use strict';
+window.RDM_PAGE_T = {
+  ru: {
+    'adm.page.title':'RDM Admin — Панель администратора',
+    'adm.login.title':'Вход для администратора',
+    'adm.login.desc':'Введите учётные данные администратора системы',
+    'adm.login.email':'Email',
+    'adm.login.pass':'Пароль',
+    'adm.login.btn':'Войти в панель',
+    'adm.sec.main':'Главное',
+    'adm.sec.data':'Данные',
+    'adm.sec.system':'Система',
+    'adm.nav.dashboard':'Дашборд',
+    'adm.nav.datasets':'Наборы данных',
+    'adm.nav.analytics':'Аналитика',
+    'adm.nav.users':'Пользователи',
+    'adm.nav.logs':'Логи API',
+    'adm.public.link':'⬡ Публичный сайт ↗',
+    'adm.logout':'Выйти',
+    'adm.auto':'авто',
+    'adm.refresh':'↺ Обновить',
+    'adm.theme':'Тема',
+    'adm.create':'+ Создать',
+    'adm.search.ph':'Поиск...',
+    'adm.status.all':'Все статусы',
+    'adm.status.published':'Опубликовано',
+    'adm.status.draft':'Черновики',
+    'adm.status.rejected':'Отклонённые',
+    'adm.col.title':'Название',
+    'adm.col.license':'Лицензия',
+    'adm.col.status':'Статус',
+    'adm.col.name':'Имя',
+    'adm.col.role':'Роль',
+    'adm.col.date':'Дата',
+    'adm.bulk.selected':'выбрано',
+    'adm.bulk.publish':'Опубликовать',
+    'adm.bulk.unpublish':'Снять с публ.',
+    'adm.bulk.activate':'Активировать',
+    'adm.bulk.deactivate':'Заблокировать',
+    'adm.bulk.delete':'Удалить',
+    'adm.bulk.clear':'Очистить',
+    'adm.logs.title':'Логи API-запросов',
+    'adm.logs.50':'50 записей',
+    'adm.logs.100':'100 записей',
+    'adm.logs.200':'200 записей',
+    'adm.logs.export':'⬇ Экспорт CSV',
+    'adm.confirm':'Подтвердить',
+    'adm.cancel':'Отмена',
+    'adm.published.short':'Опубл.',
+    'adm.draft.short':'Черновик',
+    'adm.rejected.short':'Откл.',
+    'adm.user.active':'Активен',
+    'adm.user.blocked':'Заблокирован',
+    'adm.confirm.bulk':'Применить «{action}» к {n} элементам?',
+    'adm.toast.saved':'Сохранено',
+    'adm.toast.created':'Создано',
+    'adm.toast.updated':'Обновлено',
+    'adm.toast.deleted':'Удалено',
+    'adm.toast.published':'Опубликовано',
+    'adm.toast.bulk.done':'Готово: {ok} успешно, {fail} не удалось',
+    'adm.toast.export.done':'CSV экспортирован',
+    'adm.err.generic':'Ошибка',
+    'adm.err.pass.required':'Пароль обязателен',
+    'adm.invalid.creds':'Неверные учётные данные',
+  },
+  ky: {
+    'adm.page.title':'RDM Admin — Администратордун панели',
+    'adm.login.title':'Администратор үчүн кирүү',
+    'adm.login.desc':'Администратордун маалыматтарын киргизиңиз',
+    'adm.login.email':'Email',
+    'adm.login.pass':'Сырсөз',
+    'adm.login.btn':'Панелге кирүү',
+    'adm.sec.main':'Башкы',
+    'adm.sec.data':'Маалыматтар',
+    'adm.sec.system':'Система',
+    'adm.nav.dashboard':'Башкы панел',
+    'adm.nav.datasets':'Маалымат жыйындыктары',
+    'adm.nav.analytics':'Аналитика',
+    'adm.nav.users':'Колдонуучулар',
+    'adm.nav.logs':'API логдору',
+    'adm.public.link':'⬡ Жалпы сайт ↗',
+    'adm.logout':'Чыгуу',
+    'adm.auto':'авто',
+    'adm.refresh':'↺ Жаңылоо',
+    'adm.theme':'Тема',
+    'adm.create':'+ Түзүү',
+    'adm.search.ph':'Издөө...',
+    'adm.status.all':'Бардык статустар',
+    'adm.status.published':'Жарыяланган',
+    'adm.status.draft':'Долбоорлор',
+    'adm.status.rejected':'Четке кагылган',
+    'adm.col.title':'Аталышы',
+    'adm.col.license':'Лицензия',
+    'adm.col.status':'Статус',
+    'adm.col.name':'Аты',
+    'adm.col.role':'Ролу',
+    'adm.col.date':'Дата',
+    'adm.bulk.selected':'тандалды',
+    'adm.bulk.publish':'Жарыялоо',
+    'adm.bulk.unpublish':'Алып салуу',
+    'adm.bulk.activate':'Активдештирүү',
+    'adm.bulk.deactivate':'Бөгөттөө',
+    'adm.bulk.delete':'Жок кылуу',
+    'adm.bulk.clear':'Тазалоо',
+    'adm.logs.title':'API сурам логдору',
+    'adm.logs.50':'50 жазуу',
+    'adm.logs.100':'100 жазуу',
+    'adm.logs.200':'200 жазуу',
+    'adm.logs.export':'⬇ CSV экспорт',
+    'adm.confirm':'Ырастоо',
+    'adm.cancel':'Жокко чыгаруу',
+    'adm.published.short':'Жар-н.',
+    'adm.draft.short':'Долбоор',
+    'adm.rejected.short':'Кагылган',
+    'adm.user.active':'Активдүү',
+    'adm.user.blocked':'Бөгөттөлгөн',
+    'adm.confirm.bulk':'«{action}» аракетин {n} элементке колдоносузбу?',
+    'adm.toast.saved':'Сакталды',
+    'adm.toast.created':'Түзүлдү',
+    'adm.toast.updated':'Жаңыртылды',
+    'adm.toast.deleted':'Жок кылынды',
+    'adm.toast.published':'Жарыяланды',
+    'adm.toast.bulk.done':'Бүттү: {ok} ийгиликтүү, {fail} ийгиликсиз',
+    'adm.toast.export.done':'CSV экспорт кылынды',
+    'adm.err.generic':'Ката',
+    'adm.err.pass.required':'Сырсөз милдеттүү',
+    'adm.invalid.creds':'Туура эмес маалымат',
+  },
+  en: {
+    'adm.page.title':'RDM Admin — Administrator panel',
+    'adm.login.title':'Administrator login',
+    'adm.login.desc':'Enter administrator credentials',
+    'adm.login.email':'Email',
+    'adm.login.pass':'Password',
+    'adm.login.btn':'Sign in',
+    'adm.sec.main':'Main',
+    'adm.sec.data':'Data',
+    'adm.sec.system':'System',
+    'adm.nav.dashboard':'Dashboard',
+    'adm.nav.datasets':'Datasets',
+    'adm.nav.analytics':'Analytics',
+    'adm.nav.users':'Users',
+    'adm.nav.logs':'API Logs',
+    'adm.public.link':'⬡ Public site ↗',
+    'adm.logout':'Log out',
+    'adm.auto':'auto',
+    'adm.refresh':'↺ Refresh',
+    'adm.theme':'Theme',
+    'adm.create':'+ Create',
+    'adm.search.ph':'Search...',
+    'adm.status.all':'All statuses',
+    'adm.status.published':'Published',
+    'adm.status.draft':'Drafts',
+    'adm.status.rejected':'Rejected',
+    'adm.col.title':'Title',
+    'adm.col.license':'Licence',
+    'adm.col.status':'Status',
+    'adm.col.name':'Name',
+    'adm.col.role':'Role',
+    'adm.col.date':'Date',
+    'adm.bulk.selected':'selected',
+    'adm.bulk.publish':'Publish',
+    'adm.bulk.unpublish':'Unpublish',
+    'adm.bulk.activate':'Activate',
+    'adm.bulk.deactivate':'Deactivate',
+    'adm.bulk.delete':'Delete',
+    'adm.bulk.clear':'Clear',
+    'adm.logs.title':'API request logs',
+    'adm.logs.50':'50 entries',
+    'adm.logs.100':'100 entries',
+    'adm.logs.200':'200 entries',
+    'adm.logs.export':'⬇ Export CSV',
+    'adm.confirm':'Confirm',
+    'adm.cancel':'Cancel',
+    'adm.published.short':'Pub.',
+    'adm.draft.short':'Draft',
+    'adm.rejected.short':'Rej.',
+    'adm.user.active':'Active',
+    'adm.user.blocked':'Blocked',
+    'adm.confirm.bulk':'Apply "{action}" to {n} items?',
+    'adm.toast.saved':'Saved',
+    'adm.toast.created':'Created',
+    'adm.toast.updated':'Updated',
+    'adm.toast.deleted':'Deleted',
+    'adm.toast.published':'Published',
+    'adm.toast.bulk.done':'Done: {ok} ok, {fail} failed',
+    'adm.toast.export.done':'CSV exported',
+    'adm.err.generic':'Error',
+    'adm.err.pass.required':'Password is required',
+    'adm.invalid.creds':'Invalid credentials',
+  },
+};
+const T = (k, vars) => { let s = window.RDM_t ? window.RDM_t(k) : k; if (vars) for (const x in vars) s = s.split('{'+x+'}').join(vars[x]); return s; };
+if (window.RDM_initLang) window.RDM_initLang();
+window.onLangChange = function () {
+  if (typeof loadAdminDatasets === 'function' && document.getElementById('page-datasets')?.classList.contains('active')) loadAdminDatasets();
+  if (typeof loadUsers === 'function' && document.getElementById('page-users')?.classList.contains('active')) loadUsers();
+};
+
 const API = 'http://localhost:3000';
 let adminToken = null, adminUser = null;
 let dsPage = 1, dsQ = '', dsStatus = '';
+const dsSelected = new Set();
+const usrSelected = new Set();
 
 /* ── Helpers ──────────────────────────────────────────────────────────── */
 async function apiFetch(path, opts={}){
@@ -458,7 +690,7 @@ tryAutoLogin();
 document.getElementById('aPass').addEventListener('keydown', e=>{ if(e.key==='Enter') doAdminLogin(); });
 
 /* ── Navigation ──────────────────────────────────────────────────────── */
-const pageTitles = {dashboard:'Дашборд',datasets:'Наборы данных',analytics:'Аналитика',users:'Пользователи',logs:'Логи API'};
+const pageTitleKeys = { dashboard: 'adm.nav.dashboard', datasets: 'adm.nav.datasets', analytics: 'adm.nav.analytics', users: 'adm.nav.users', logs: 'adm.nav.logs' };
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
@@ -467,7 +699,7 @@ function showPage(id){
   if(sbItem) sbItem.classList.add('active');
   // sync mobile bottom nav
   document.querySelectorAll('.mob-nav-item').forEach(b=>b.classList.toggle('active', b.dataset.page===id));
-  document.getElementById('topTitle').textContent = pageTitles[id]||id;
+  document.getElementById('topTitle').textContent = pageTitleKeys[id] ? T(pageTitleKeys[id]) : id;
   localStorage.setItem('rdm-admin-page', id);
   if(id==='dashboard') loadDashboard();
   else if(id==='datasets') loadAdminDatasets();
@@ -549,8 +781,11 @@ async function loadAdminDatasets(){
   const {data} = await apiFetch(url);
   if(!data.items) return;
 
-  document.getElementById('ds-tbody').innerHTML = data.items.map(d=>`
-    <tr>
+  document.getElementById('ds-tbody').innerHTML = data.items.map(d=>{
+    const sLbl = d.status==='published'?T('adm.published.short'):d.status==='rejected'?T('adm.rejected.short'):T('adm.draft.short');
+    const checked = dsSelected.has(d.id) ? 'checked' : '';
+    return `<tr>
+      <td><input type="checkbox" class="ds-row-cb" data-id="${d.id}" ${checked} onchange="toggleDsRow(${d.id}, this.checked)"></td>
       <td class="td-doi">${d.doi}</td>
       <td><div class="td-title">${d.title}</div></td>
       <td><div class="fair-cell">
@@ -560,15 +795,17 @@ async function loadAdminDatasets(){
         <div class="fair-cell-item R">R ${d.fair.R}</div>
       </div></td>
       <td class="td-mono">${d.license}</td>
-      <td><span class="badge ${d.status}">${d.status==='published'?'Опубл.':d.status==='rejected'?'Откл.':'Черновик'}</span></td>
+      <td><span class="badge ${d.status}">${sLbl}</span></td>
       <td class="td-mono">${d.downloads}</td>
       <td><div class="td-actions">
         <button class="a-btn" onclick='openDsDrawer(${JSON.stringify(d).replace(/'/g,"&#39;")})'>Ред.</button>
-        ${d.status==='draft'?`<button class="a-btn success" onclick="quickPublish(${d.id})" title="Опубликовать">✓</button>`:''}
-        ${d.status==='draft'||d.status==='published'?`<button class="a-btn danger" onclick="rejectDs(${d.id})" title="Отклонить">✗</button>`:''}
-        <button class="a-btn danger" onclick="deleteDs(${d.id},'${d.title.slice(0,30)}')" title="Удалить">🗑</button>
+        ${d.status==='draft'?`<button class="a-btn success" onclick="quickPublish(${d.id})">✓</button>`:''}
+        ${d.status==='draft'||d.status==='published'?`<button class="a-btn danger" onclick="rejectDs(${d.id})">✗</button>`:''}
+        <button class="a-btn danger" onclick="deleteDs(${d.id},'${d.title.slice(0,30).replace(/'/g,'')}')">🗑</button>
       </div></td>
-    </tr>`).join('');
+    </tr>`;
+  }).join('');
+  updateDsBulkBar();
 
   // pagination
   document.getElementById('ds-pag-info').textContent = `${data.total} записей · стр. ${data.page}/${data.pages||1}`;
@@ -660,19 +897,85 @@ function rejectDs(id){
 async function loadUsers(){
   const {data} = await apiFetch('/admin/api/users');
   if(!Array.isArray(data)) return;
-  document.getElementById('usr-tbody').innerHTML = data.map(u=>`
-    <tr>
+  document.getElementById('usr-tbody').innerHTML = data.map(u=>{
+    const checked = usrSelected.has(u.id) ? 'checked' : '';
+    return `<tr>
+      <td>${u.id!==1?`<input type="checkbox" class="usr-row-cb" data-id="${u.id}" ${checked} onchange="toggleUsrRow(${u.id}, this.checked)">`:''}</td>
       <td class="td-mono">${u.id}</td>
       <td style="font-weight:500">${u.name}</td>
       <td class="td-mono">${u.email}</td>
       <td><span class="badge ${u.role}">${u.role}</span></td>
-      <td><span class="badge ${u.active?'active':'inactive'}">${u.active?'Активен':'Заблокирован'}</span></td>
+      <td><span class="badge ${u.active?'active':'inactive'}">${u.active?T('adm.user.active'):T('adm.user.blocked')}</span></td>
       <td class="td-mono">${fmtDate(u.created)}</td>
       <td><div class="td-actions">
         <button class="a-btn" onclick='openUserDrawer(${JSON.stringify(u).replace(/'/g,"&#39;")})'>Ред.</button>
-        ${u.id!==1?`<button class="a-btn danger" onclick="deleteUser(${u.id},'${u.name}')">✕</button>`:''}
+        ${u.id!==1?`<button class="a-btn danger" onclick="deleteUser(${u.id},'${u.name.replace(/'/g,'')}')">✕</button>`:''}
       </div></td>
-    </tr>`).join('');
+    </tr>`;
+  }).join('');
+  updateUsrBulkBar();
+}
+
+// ── Bulk operations ───────────────────────────────────────────────────────
+function toggleDsRow(id, on) { if (on) dsSelected.add(id); else dsSelected.delete(id); updateDsBulkBar(); }
+function toggleUsrRow(id, on){ if (on) usrSelected.add(id); else usrSelected.delete(id); updateUsrBulkBar(); }
+function toggleDsSelectAll(cb){
+  document.querySelectorAll('.ds-row-cb').forEach(c => { c.checked = cb.checked; const id = parseInt(c.dataset.id); if (cb.checked) dsSelected.add(id); else dsSelected.delete(id); });
+  updateDsBulkBar();
+}
+function toggleUsrSelectAll(cb){
+  document.querySelectorAll('.usr-row-cb').forEach(c => { c.checked = cb.checked; const id = parseInt(c.dataset.id); if (cb.checked) usrSelected.add(id); else usrSelected.delete(id); });
+  updateUsrBulkBar();
+}
+function clearDsSelection() { dsSelected.clear(); document.querySelectorAll('.ds-row-cb').forEach(c => c.checked = false); const sa = document.getElementById('ds-select-all'); if (sa) sa.checked = false; updateDsBulkBar(); }
+function clearUsrSelection(){ usrSelected.clear(); document.querySelectorAll('.usr-row-cb').forEach(c => c.checked = false); const sa = document.getElementById('usr-select-all'); if (sa) sa.checked = false; updateUsrBulkBar(); }
+function updateDsBulkBar() {
+  const n = dsSelected.size;
+  const bar = document.getElementById('ds-bulk-bar');
+  const cnt = document.getElementById('ds-bulk-count');
+  if (cnt) cnt.textContent = n;
+  if (bar) bar.style.display = n ? 'flex' : 'none';
+}
+function updateUsrBulkBar() {
+  const n = usrSelected.size;
+  const bar = document.getElementById('usr-bulk-bar');
+  const cnt = document.getElementById('usr-bulk-count');
+  if (cnt) cnt.textContent = n;
+  if (bar) bar.style.display = n ? 'flex' : 'none';
+}
+
+async function bulkDsAction(action) {
+  if (!dsSelected.size) return;
+  const labelKey = { publish: 'adm.bulk.publish', unpublish: 'adm.bulk.unpublish', delete: 'adm.bulk.delete' }[action];
+  if (!window.confirm(T('adm.confirm.bulk', { action: T(labelKey), n: dsSelected.size }))) return;
+  const ids = Array.from(dsSelected);
+  const { ok, data } = await apiFetch('/admin/api/datasets/bulk', { method: 'POST', body: JSON.stringify({ ids, action }) });
+  if (ok) { toast(T('adm.toast.bulk.done', { ok: data.ok, fail: data.fail }), data.fail ? 'info' : 'success'); clearDsSelection(); loadAdminDatasets(); }
+  else toast(data.error || T('adm.err.generic'), 'error');
+}
+
+async function bulkUsrAction(action) {
+  if (!usrSelected.size) return;
+  const labelKey = { activate: 'adm.bulk.activate', deactivate: 'adm.bulk.deactivate', delete: 'adm.bulk.delete' }[action];
+  if (!window.confirm(T('adm.confirm.bulk', { action: T(labelKey), n: usrSelected.size }))) return;
+  const ids = Array.from(usrSelected);
+  const { ok, data } = await apiFetch('/admin/api/users/bulk', { method: 'POST', body: JSON.stringify({ ids, action }) });
+  if (ok) { toast(T('adm.toast.bulk.done', { ok: data.ok, fail: data.fail }), data.fail ? 'info' : 'success'); clearUsrSelection(); loadUsers(); }
+  else toast(data.error || T('adm.err.generic'), 'error');
+}
+
+async function exportLogsCsv() {
+  try {
+    const r = await fetch(API + '/admin/api/logs/export', { headers: { 'Authorization': 'Bearer ' + adminToken } });
+    if (!r.ok) { toast(T('adm.err.generic'), 'error'); return; }
+    const blob = await r.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'rdm-logs.csv';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast(T('adm.toast.export.done'), 'success');
+  } catch (e) { toast(T('adm.err.generic'), 'error'); }
 }
 
 function openUserDrawer(u){

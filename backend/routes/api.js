@@ -3,7 +3,11 @@ const path = require('path');
 const fs = require('fs');
 const db = require('../db');
 const { auth, getToken } = require('../auth');
-const { sha256, genToken, cors, sendJSON, readBody, readRawBody, fairHints } = require('../utils');
+const {
+  sha256, genToken, cors, sendJSON, readBody, readRawBody, fairHints,
+  hashPassword, verifyPassword, isLegacyHash,
+  validateDOI, validateORCID, checkRateLimit,
+} = require('../utils');
 
 const SESSION_TTL = 8 * 3600 * 1000;
 
@@ -42,31 +46,28 @@ module.exports = function registerPublicRoutes(route) {
   });
 
   route('GET', '/api/datasets', (_req, res, q) => {
-    let r = db.getAllDatasets().filter(d => {
-      if (d.status !== 'published') return false;
-      if (d.embargoUntil && new Date(d.embargoUntil) > new Date()) return false;
-      return true;
+    const result = db.queryDatasets({
+      q: q.q, access: q.access, license: q.license, format: q.format,
+      sort: q.sort, page: q.page, limit: q.limit,
+      status: 'published', includeEmbargoed: false,
     });
-    if (q.q) {
-      const ftsIds = db.searchDatasets(q.q);
-      if (ftsIds.length > 0) {
-        const idSet = new Set(ftsIds);
-        r = r.filter(d => idSet.has(d.id));
-        const order = Object.fromEntries(ftsIds.map((id, i) => [id, i]));
-        r.sort((a, b) => (order[a.id] ?? 999) - (order[b.id] ?? 999));
-      } else {
-        const s = q.q.toLowerCase();
-        r = r.filter(d =>
-          d.title.toLowerCase().includes(s) ||
-          d.description.toLowerCase().includes(s) ||
-          d.keywords.some(k => k.toLowerCase().includes(s))
-        );
-      }
-    }
-    if (q.access)  r = r.filter(d => d.access === q.access);
-    if (q.license) r = r.filter(d => d.license === q.license);
-    const page = parseInt(q.page) || 1, lim = Math.min(parseInt(q.limit) || 12, 100);
-    sendJSON(res, 200, { total: r.length, page, limit: lim, pages: Math.ceil(r.length / lim), items: r.slice((page - 1) * lim, page * lim) });
+    sendJSON(res, 200, result);
+  });
+
+  route('GET', '/api/filters', (_req, res) => {
+    sendJSON(res, 200, {
+      licenses: db.distinctLicenses(true),
+      formats: db.distinctFormats(true),
+      sortOptions: [
+        { value: 'newest',    labelRu: 'Сначала новые',     labelEn: 'Newest',     labelKy: 'Жаңылары' },
+        { value: 'oldest',    labelRu: 'Сначала старые',    labelEn: 'Oldest',     labelKy: 'Эскилери' },
+        { value: 'updated',   labelRu: 'Недавно обновлённые', labelEn: 'Recently updated', labelKy: 'Жаңыртылган' },
+        { value: 'downloads', labelRu: 'Популярные',         labelEn: 'Most downloaded', labelKy: 'Көп жүктөлгөн' },
+        { value: 'views',     labelRu: 'Часто просматриваемые', labelEn: 'Most viewed', labelKy: 'Көп көрүлгөн' },
+        { value: 'fair',      labelRu: 'Высокий FAIR',       labelEn: 'Highest FAIR', labelKy: 'Жогорку FAIR' },
+        { value: 'title',     labelRu: 'По алфавиту',        labelEn: 'A → Z',       labelKy: 'А → Я' },
+      ],
+    });
   });
 
   route('GET', '/api/datasets/(\\d+)', (_req, res, _q, p) => {
@@ -156,9 +157,9 @@ module.exports = function registerPublicRoutes(route) {
     if (!user) return sendJSON(res, 401, { error: 'Unauthorized' });
     const { currentPassword, newPassword } = await readBody(req).catch(() => ({}));
     if (!currentPassword || !newPassword) return sendJSON(res, 422, { error: 'currentPassword and newPassword required' });
-    if (user.passwordHash !== sha256(currentPassword)) return sendJSON(res, 400, { error: 'Неверный текущий пароль' });
+    if (!verifyPassword(currentPassword, user.passwordHash)) return sendJSON(res, 400, { error: 'Неверный текущий пароль' });
     if (newPassword.length < 6) return sendJSON(res, 422, { error: 'Новый пароль минимум 6 символов' });
-    db.updateUser(user.id, { passwordHash: sha256(newPassword) });
+    db.updateUser(user.id, { passwordHash: hashPassword(newPassword) });
     sendJSON(res, 200, { message: 'Пароль изменён' });
   });
 
@@ -167,17 +168,24 @@ module.exports = function registerPublicRoutes(route) {
   route('POST', '/api/register', async (req, res) => {
     const { name, email, password } = await readBody(req).catch(() => ({}));
     if (!name || !email || !password) return sendJSON(res, 422, { error: 'name, email, password required' });
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return sendJSON(res, 422, { error: 'Неверный формат email' });
+    if (password.length < 6) return sendJSON(res, 422, { error: 'Пароль минимум 6 символов' });
     if (db.findUserByEmail(email)) return sendJSON(res, 409, { error: 'Email already exists' });
-    const user = db.createUser({ name, email, role: 'researcher', passwordHash: sha256(password), active: true, created: new Date().toISOString() });
+    const user = db.createUser({ name, email, role: 'researcher', passwordHash: hashPassword(password), active: true, created: new Date().toISOString() });
     const token = mkSession(user.id, 'researcher');
     sendJSON(res, 201, { token, user: sanitizeUser(user) });
   });
 
   route('POST', '/api/login', async (req, res) => {
     const { email, password } = await readBody(req).catch(() => ({}));
+    if (!email) return sendJSON(res, 422, { error: 'email required' });
+    if (!checkRateLimit(`login:${String(email).toLowerCase()}`, 5, 15 * 60_000)) {
+      return sendJSON(res, 429, { error: 'Слишком много попыток. Попробуйте через 15 минут.', retryAfter: 900 });
+    }
     const user = db.findUserByEmail(email);
-    if (!user || !user.active || user.passwordHash !== sha256(password || ''))
-      return sendJSON(res, 401, { error: 'Invalid credentials' });
+    const ok = user && user.active && verifyPassword(password || '', user.passwordHash);
+    if (!ok) return sendJSON(res, 401, { error: 'Invalid credentials' });
+    if (isLegacyHash(user.passwordHash)) db.updateUser(user.id, { passwordHash: hashPassword(password) });
     const token = mkSession(user.id, user.role);
     sendJSON(res, 200, { token, user: sanitizeUser(user) });
   });
@@ -250,6 +258,10 @@ module.exports = function registerPublicRoutes(route) {
                      'resourceType', 'funder', 'spatial',
                      'titleKy', 'titleRu', 'descriptionKy', 'descriptionRu', 'relatedIds'];
     const patch = Object.fromEntries(Object.entries(body).filter(([k]) => allowed.includes(k)));
+    if (patch.creator?.orcid !== undefined && patch.creator.orcid) {
+      const c = validateORCID(patch.creator.orcid);
+      if (!c.ok) return sendJSON(res, 422, { error: c.error, field: 'orcid' });
+    }
     const updated = db.updateDataset(id, { ...patch, updated: new Date().toISOString() });
     sendJSON(res, 200, { id: updated.id, title: updated.title, status: updated.status, license: updated.license, keywords: updated.keywords, description: updated.description, creator: updated.creator, fair: updated.fair });
   });
@@ -260,6 +272,9 @@ module.exports = function registerPublicRoutes(route) {
     const body = await readBody(req).catch(() => null);
     if (!body || !body.title || !body.description || !body.license)
       return sendJSON(res, 422, { error: 'title, description, license required' });
+    // ORCID validation (optional but must be valid if provided)
+    const orcidCheck = validateORCID(body.creator?.orcid);
+    if (!orcidCheck.ok) return sendJSON(res, 422, { error: orcidCheck.error, field: 'orcid' });
     const doiNum = String(Date.now()).slice(-6);
     const ds = db.createDataset({
       doi: `10.48436/rdm-${doiNum}`,

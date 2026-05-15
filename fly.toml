@@ -1,0 +1,29 @@
+# Fly.io config for RDM System v2 (KSTU)
+# Deploy: `fly deploy`   ·   Logs: `fly logs`   ·   Open: `fly open`
+
+app = "rdm-kstu"        # имя приложения — измените после первого `fly launch`
+primary_region = "fra"  # Frankfurt — ближайший к КГ из бесплатных регионов
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT = "3000"
+  NODE_ENV = "production"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = "stop"   # засыпать при простое (экономит free hours)
+  auto_start_machines = true    # просыпаться на входящий запрос
+  min_machines_running = 0
+  processes = ["app"]
+
+# Persistent volume for SQLite DB + uploaded files
+[mounts]
+  source = "rdm_data"
+  destination = "/app/backend/data"
+
+[[vm]]
+  size = "shared-cpu-1x"   # самый дешёвый плана free tier
+  memory = "256mb"         # better-sqlite3 + Node.js спокойно умещается

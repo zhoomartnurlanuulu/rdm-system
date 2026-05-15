@@ -138,6 +138,19 @@ sql.exec(`
 `);
 sql.exec("INSERT INTO datasets_fts(datasets_fts) VALUES('rebuild')");
 
+// ── Indexes ───────────────────────────────────────────────────────────────────
+sql.exec(`
+  CREATE INDEX IF NOT EXISTS idx_ds_status     ON datasets(status);
+  CREATE INDEX IF NOT EXISTS idx_ds_access     ON datasets(access);
+  CREATE INDEX IF NOT EXISTS idx_ds_license    ON datasets(license);
+  CREATE INDEX IF NOT EXISTS idx_ds_user       ON datasets(user_id);
+  CREATE INDEX IF NOT EXISTS idx_ds_created    ON datasets(created);
+  CREATE INDEX IF NOT EXISTS idx_ds_downloads  ON datasets(downloads);
+  CREATE INDEX IF NOT EXISTS idx_ds_status_acc ON datasets(status, access);
+  CREATE INDEX IF NOT EXISTS idx_logs_ts       ON logs(ts);
+  CREATE INDEX IF NOT EXISTS idx_users_email   ON users(email);
+`);
+
 // ── Row converters ────────────────────────────────────────────────────────────
 function rowToUser(row) {
   if (!row) return null;
@@ -491,6 +504,77 @@ function searchDatasets(query) {
   } catch (e) { return []; }
 }
 
+// ── Paginated dataset query (SQL-level) ───────────────────────────────────────
+// opts: { q, access, license, format, status='published', sort, page, limit, includeEmbargoed=false }
+const SORT_COLUMNS = {
+  newest:    'datetime(created) DESC',
+  oldest:    'datetime(created) ASC',
+  updated:   'datetime(updated) DESC',
+  downloads: 'downloads DESC, id DESC',
+  views:     'views DESC, id DESC',
+  fair:      '(fair_f + fair_a + fair_i + fair_r) DESC, id DESC',
+  title:     'title COLLATE NOCASE ASC',
+};
+function queryDatasets(opts = {}) {
+  const where = [];
+  const params = [];
+  const status = opts.status || 'published';
+  if (status !== 'all') { where.push('status = ?'); params.push(status); }
+  if (!opts.includeEmbargoed) {
+    where.push("(embargo_until IS NULL OR embargo_until = '' OR datetime(embargo_until) <= datetime('now'))");
+  }
+  if (opts.access)  { where.push('access = ?');  params.push(opts.access); }
+  if (opts.license) { where.push('license = ?'); params.push(opts.license); }
+  if (opts.format)  { where.push('format LIKE ?'); params.push('%' + opts.format + '%'); }
+  if (opts.userId)  { where.push('user_id = ?'); params.push(opts.userId); }
+
+  let ftsOrder = null;
+  if (opts.q) {
+    const ftsIds = searchDatasets(opts.q);
+    if (ftsIds.length) {
+      where.push(`id IN (${ftsIds.map(() => '?').join(',')})`);
+      params.push(...ftsIds);
+      ftsOrder = ftsIds;
+    } else {
+      // Fallback: LIKE on title/description/keywords
+      where.push('(LOWER(title) LIKE ? OR LOWER(description) LIKE ? OR LOWER(keywords) LIKE ?)');
+      const like = '%' + String(opts.q).toLowerCase() + '%';
+      params.push(like, like, like);
+    }
+  }
+
+  const whereSQL = where.length ? `WHERE ${where.join(' AND ')}` : '';
+  const totalRow = sql.prepare(`SELECT COUNT(*) AS c FROM datasets ${whereSQL}`).get(...params);
+  const total = totalRow.c;
+  const page = Math.max(1, parseInt(opts.page) || 1);
+  const limit = Math.max(1, Math.min(parseInt(opts.limit) || 12, 100));
+  const offset = (page - 1) * limit;
+
+  let orderSQL = SORT_COLUMNS[opts.sort] || SORT_COLUMNS.newest;
+  if (ftsOrder && !opts.sort) {
+    // Preserve FTS rank order if no explicit sort
+    const ranking = ftsOrder.map((id, i) => `WHEN ${id} THEN ${i}`).join(' ');
+    orderSQL = `CASE id ${ranking} ELSE 9999 END`;
+  }
+  const rows = sql.prepare(
+    `SELECT * FROM datasets ${whereSQL} ORDER BY ${orderSQL} LIMIT ? OFFSET ?`
+  ).all(...params, limit, offset);
+  return {
+    total, page, limit, pages: Math.ceil(total / limit),
+    items: rows.map(rowToDataset),
+  };
+}
+
+function distinctLicenses(publishedOnly = true) {
+  const whereSQL = publishedOnly ? "WHERE status='published'" : '';
+  return sql.prepare(`SELECT DISTINCT license FROM datasets ${whereSQL} ORDER BY license`).all().map(r => r.license).filter(Boolean);
+}
+
+function distinctFormats(publishedOnly = true) {
+  const whereSQL = publishedOnly ? "WHERE status='published'" : '';
+  return sql.prepare(`SELECT DISTINCT format FROM datasets ${whereSQL} ORDER BY format`).all().map(r => r.format).filter(Boolean);
+}
+
 // ── Analytics ─────────────────────────────────────────────────────────────────
 function getAnalytics() {
   const datasets = getAllDatasets();
@@ -521,8 +605,8 @@ module.exports = {
   addLog, getLogs, countLogsToday,
   // api keys
   getApiKey, getUserApiKeys, createApiKey, revokeApiKey, touchApiKey,
-  // search
-  searchDatasets,
+  // search & paginated query
+  searchDatasets, queryDatasets, distinctLicenses, distinctFormats,
   // analytics
   getAnalytics,
   // dmp

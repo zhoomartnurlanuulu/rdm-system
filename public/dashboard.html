@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Личный кабинет — RDM КГТУ</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title data-i18n="page.title">Личный кабинет — RDM КГТУ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -405,6 +408,31 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t1);font-size:15px
   .form-row{grid-template-columns:1fr}
   .stats-grid{grid-template-columns:repeat(2,1fr)}
 }
+
+/* ── Language switcher ───────────────────────────────────────────────────── */
+.lang-switcher{display:flex;gap:4px;padding:4px;background:var(--bg3);border-radius:8px;margin:8px 0}
+.lang-btn{flex:1;padding:5px 10px;border:none;background:transparent;color:var(--t3);font-family:var(--mono);font-size:11px;font-weight:700;border-radius:6px;cursor:pointer;transition:.15s;text-transform:uppercase}
+.lang-btn:hover{color:var(--t1)}
+.lang-btn.active{background:var(--bg1);color:var(--F);box-shadow:0 1px 2px rgba(0,0,0,.05)}
+
+/* ── Drop zone ───────────────────────────────────────────────────────────── */
+.drop-zone{border:2px dashed var(--line2);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:.2s;background:var(--bg3)}
+.drop-zone:hover,.drop-zone.dragover{border-color:var(--F);background:var(--Fbg)}
+.drop-zone-icon{font-size:34px;margin-bottom:8px;opacity:.6}
+.drop-zone-text{font-size:13px;color:var(--t2);font-weight:600;margin-bottom:4px}
+.drop-zone-hint{font-size:11px;color:var(--t3)}
+.drop-file{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg3);border-radius:10px;margin-top:10px;font-size:12px}
+.drop-file-name{flex:1;font-weight:600;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.drop-file-size{color:var(--t3);font-family:var(--mono);font-size:11px}
+.drop-file-rm{background:none;border:none;color:#dc2626;cursor:pointer;font-size:16px;padding:0 4px}
+.upload-progress{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-top:8px;display:none}
+.upload-progress.active{display:block}
+.upload-progress-bar{height:100%;background:linear-gradient(90deg,var(--F),var(--R));width:0%;transition:width .15s}
+.preview-box{margin-top:12px;background:var(--bg3);border-radius:10px;padding:12px;font-family:var(--mono);font-size:11px;color:var(--t2);max-height:200px;overflow:auto;display:none}
+.preview-box.active{display:block}
+.preview-box table{border-collapse:collapse;width:100%}
+.preview-box th,.preview-box td{padding:3px 6px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+.preview-box th{font-weight:700;color:var(--t1);background:var(--bg1);position:sticky;top:0}
 </style>
 </head>
 <body>
@@ -412,16 +440,16 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t1);font-size:15px
 <!-- Loading -->
 <div id="loading-screen">
   <div class="spinner"></div>
-  <p>Загрузка...</p>
+  <p data-i18n="dash.loading">Загрузка...</p>
 </div>
 
 <!-- Not authenticated -->
 <div id="not-auth">
   <div class="not-auth-box">
     <div class="not-auth-icon">🔐</div>
-    <h2>Требуется вход</h2>
-    <p>Для доступа к личному кабинету необходимо войти в систему.</p>
-    <a href="/?login=1">Войти в систему →</a>
+    <h2 data-i18n="dash.notauth.title">Требуется вход</h2>
+    <p data-i18n="dash.notauth.desc">Для доступа к личному кабинету необходимо войти в систему.</p>
+    <a href="/?login=1" data-i18n="dash.notauth.btn">Войти в систему →</a>
   </div>
 </div>
 
@@ -434,50 +462,59 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t1);font-size:15px
     <div class="sb-brand-logo">R</div>
     <div>
       <div class="sb-brand-name">RDM КГТУ</div>
-      <div class="sb-brand-sub">Личный кабинет</div>
+      <div class="sb-brand-sub" data-i18n="dash.brand.sub">Личный кабинет</div>
     </div>
   </div>
 
   <div class="sb-user" id="sb-user">
     <div class="sb-avatar" id="sb-avatar">??</div>
-    <div class="sb-uname" id="sb-uname">Загрузка...</div>
+    <div class="sb-uname" id="sb-uname">—</div>
     <div class="sb-uemail" id="sb-uemail">—</div>
-    <div class="sb-role" id="sb-role">Исследователь</div>
+    <div class="sb-role" id="sb-role"></div>
+    <div class="lang-switcher">
+      <button class="lang-btn" data-lang="ru" onclick="RDM_applyLang('ru')">RU</button>
+      <button class="lang-btn" data-lang="ky" onclick="RDM_applyLang('ky')">KY</button>
+      <button class="lang-btn" data-lang="en" onclick="RDM_applyLang('en')">EN</button>
+    </div>
   </div>
 
   <nav class="sb-nav">
-    <div class="sb-nav-section">Навигация</div>
+    <div class="sb-nav-section" data-i18n="dash.nav.section">Навигация</div>
     <button class="nav-item active" data-tab="overview" onclick="switchTab('overview',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-      Обзор
+      <span data-i18n="dash.tab.overview">Обзор</span>
     </button>
     <button class="nav-item" data-tab="datasets" onclick="switchTab('datasets',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.657-4.03 3-9 3s-9-1.343-9-3"/><path d="M3 5v14c0 1.657 4.03 3 9 3s9-1.343 9-3V5"/></svg>
-      Мои наборы данных
+      <span data-i18n="dash.tab.datasets">Мои наборы данных</span>
       <span class="badge" id="ds-count-badge" style="display:none">0</span>
+    </button>
+    <button class="nav-item" data-tab="dmp" onclick="switchTab('dmp',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <span data-i18n="dash.tab.dmp">План управления данными</span>
     </button>
     <button class="nav-item" data-tab="settings" onclick="switchTab('settings',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      Настройки
+      <span data-i18n="dash.tab.settings">Настройки</span>
     </button>
     <button class="nav-item" data-tab="keys" onclick="switchTab('keys',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-      API ключи
+      <span data-i18n="dash.tab.keys">API ключи</span>
     </button>
   </nav>
 
   <div class="sb-footer">
     <a class="sb-back" href="/">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-      На главную
+      <span data-i18n="dash.back.home">На главную</span>
     </a>
     <button class="sb-theme-btn" onclick="toggleTheme()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-      <span id="theme-label">Тёмная тема</span>
+      <span id="theme-label" data-i18n="dash.theme.dark">Тёмная тема</span>
     </button>
     <button class="nav-item btn-danger" style="border:none;background:transparent;color:#dc2626;width:100%;justify-content:flex-start;padding:10px 14px;gap:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--sans);border-radius:10px;transition:.15s" onclick="doLogout()" onmouseover="this.style.background='rgba(220,38,38,.08)'" onmouseout="this.style.background='transparent'">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-      Выйти
+      <span data-i18n="dash.logout">Выйти</span>
     </button>
   </div>
 </aside>
@@ -487,7 +524,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t1);font-size:15px
   <button class="mobile-menu-btn" onclick="openSidebar()">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
   </button>
-  <span class="mobile-topbar-title" id="mobile-title">Обзор</span>
+  <span class="mobile-topbar-title" id="mobile-title" data-i18n="dash.tab.overview">Обзор</span>
   <div class="mobile-avatar" id="mobile-avatar">??</div>
 </div>
 
@@ -498,41 +535,41 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t1);font-size:15px
   <!-- ── OVERVIEW TAB ──────────────────────────────────────────────────── -->
   <div class="tab active" id="tab-overview">
     <div class="page-header">
-      <h1 id="welcome-title">Добро пожаловать</h1>
-      <p id="welcome-sub">Управление исследовательскими данными КГТУ</p>
+      <h1 id="welcome-title" data-i18n="dash.welcome">Добро пожаловать</h1>
+      <p id="welcome-sub" data-i18n="dash.welcome.sub">Управление исследовательскими данными КГТУ</p>
     </div>
 
     <div class="stats-grid" id="overview-stats">
-      <div class="stat-card"><div class="stat-icon blue">📦</div><div class="stat-n" id="ov-total">—</div><div class="stat-l">Наборов данных</div></div>
-      <div class="stat-card"><div class="stat-icon green">✅</div><div class="stat-n" id="ov-pub">—</div><div class="stat-l">Опубликовано</div></div>
-      <div class="stat-card"><div class="stat-icon amber">⬇️</div><div class="stat-n" id="ov-dl">—</div><div class="stat-l">Скачиваний</div></div>
-      <div class="stat-card"><div class="stat-icon purple">👁</div><div class="stat-n" id="ov-views">—</div><div class="stat-l">Просмотров</div></div>
-      <div class="stat-card"><div class="stat-icon blue">📊</div><div class="stat-n" id="ov-fair">—</div><div class="stat-l">Средний FAIR</div></div>
+      <div class="stat-card"><div class="stat-icon blue">📦</div><div class="stat-n" id="ov-total">—</div><div class="stat-l" data-i18n="dash.stat.total">Наборов данных</div></div>
+      <div class="stat-card"><div class="stat-icon green">✅</div><div class="stat-n" id="ov-pub">—</div><div class="stat-l" data-i18n="dash.stat.pub">Опубликовано</div></div>
+      <div class="stat-card"><div class="stat-icon amber">⬇️</div><div class="stat-n" id="ov-dl">—</div><div class="stat-l" data-i18n="dash.stat.dl">Скачиваний</div></div>
+      <div class="stat-card"><div class="stat-icon purple">👁</div><div class="stat-n" id="ov-views">—</div><div class="stat-l" data-i18n="dash.stat.views">Просмотров</div></div>
+      <div class="stat-card"><div class="stat-icon blue">📊</div><div class="stat-n" id="ov-fair">—</div><div class="stat-l" data-i18n="dash.stat.fair">Средний FAIR</div></div>
     </div>
 
     <div class="two-col">
       <div class="card">
         <div class="card-title">
-          📋 Последние наборы данных
-          <span onclick="switchTab('datasets',document.querySelector('[data-tab=datasets]'))" style="cursor:pointer;color:var(--F)">Все →</span>
+          <span data-i18n="dash.recent.title">📋 Последние наборы данных</span>
+          <span onclick="switchTab('datasets',document.querySelector('[data-tab=datasets]'))" style="cursor:pointer;color:var(--F)" data-i18n="dash.recent.all">Все →</span>
         </div>
-        <div id="ov-ds-list"><div class="empty-state"><div class="empty-state-icon">📂</div><p>Нет наборов данных</p></div></div>
+        <div id="ov-ds-list"><div class="empty-state"><div class="empty-state-icon">📂</div><p data-i18n="dash.empty.ds">Нет наборов данных</p></div></div>
       </div>
       <div class="card">
-        <div class="card-title">📊 Средний FAIR-профиль</div>
+        <div class="card-title" data-i18n="dash.fair.title">📊 Средний FAIR-профиль</div>
         <div id="ov-fair-bars">
-          <div style="color:var(--t3);font-size:13px;text-align:center;padding:20px 0">Нет данных</div>
+          <div style="color:var(--t3);font-size:13px;text-align:center;padding:20px 0" data-i18n="dash.empty.fair">Нет данных</div>
         </div>
         <div style="margin-top:20px;padding-top:16px;border-top:1.5px solid var(--line)">
-          <div class="card-title" style="margin-bottom:12px">⚡ Быстрые действия</div>
+          <div class="card-title" style="margin-bottom:12px" data-i18n="dash.quick.title">⚡ Быстрые действия</div>
           <div style="display:flex;flex-direction:column;gap:8px">
-            <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="switchTab('datasets',document.querySelector('[data-tab=datasets]'))">
+            <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="switchTab('datasets',document.querySelector('[data-tab=datasets]'))" data-i18n="dash.quick.add">
               + Загрузить набор данных
             </button>
-            <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="switchTab('keys',document.querySelector('[data-tab=keys]'))">
+            <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="switchTab('keys',document.querySelector('[data-tab=keys]'))" data-i18n="dash.quick.key">
               🔑 Создать API ключ
             </button>
-            <a class="btn btn-outline" style="width:100%;justify-content:center;text-decoration:none" href="/api-docs.html" target="_blank">
+            <a class="btn btn-outline" style="width:100%;justify-content:center;text-decoration:none" href="/api-docs.html" target="_blank" data-i18n="dash.quick.docs">
               📖 Документация API
             </a>
           </div>
@@ -544,20 +581,20 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t1);font-size:15px
   <!-- ── DATASETS TAB ──────────────────────────────────────────────────── -->
   <div class="tab" id="tab-datasets">
     <div class="page-header">
-      <h1>Мои наборы данных</h1>
-      <p>Управление вашими исследовательскими данными</p>
+      <h1 data-i18n="dash.ds.title">Мои наборы данных</h1>
+      <p data-i18n="dash.ds.sub">Управление вашими исследовательскими данными</p>
     </div>
     <div class="ds-toolbar">
-      <input class="ds-search" id="ds-search" type="text" placeholder="🔍  Поиск по названию..." oninput="filterDatasets()">
+      <input class="ds-search" id="ds-search" type="text" oninput="filterDatasets()" data-i18n-ph="dash.ds.search.ph">
       <select class="ds-filter" id="ds-status-filter" onchange="filterDatasets()">
-        <option value="">Все статусы</option>
-        <option value="published">Опубликованные</option>
-        <option value="draft">Черновики</option>
-        <option value="rejected">Отклонённые</option>
+        <option value="" data-i18n="dash.ds.status.all">Все статусы</option>
+        <option value="published" data-i18n="dash.ds.status.pub">Опубликованные</option>
+        <option value="draft" data-i18n="dash.ds.status.draft">Черновики</option>
+        <option value="rejected" data-i18n="dash.ds.status.rej">Отклонённые</option>
       </select>
       <button class="btn btn-primary" onclick="openAddModal()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Добавить набор
+        <span data-i18n="dash.ds.add">Добавить набор</span>
       </button>
     </div>
     <div id="ds-list-container">
@@ -565,32 +602,72 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t1);font-size:15px
     </div>
   </div>
 
+  <!-- ── DMP TAB ─────────────────────────────────────────────────────── -->
+  <div class="tab" id="tab-dmp">
+    <div class="page-header">
+      <h1 data-i18n="dmp.title">План управления данными (DMP)</h1>
+      <p data-i18n="dmp.sub">Опишите план управления данными для вашего исследования.</p>
+    </div>
+    <div class="settings-card">
+      <div class="form-group">
+        <label class="form-label" data-i18n="dmp.lbl.data">Описание данных</label>
+        <textarea class="form-input" id="dmp-data" rows="3" data-i18n-ph="dmp.ph.data"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" data-i18n="dmp.lbl.storage">Хранение и защита</label>
+          <textarea class="form-input" id="dmp-storage" rows="2" data-i18n-ph="dmp.ph.storage"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="dmp.lbl.access">Контроль доступа</label>
+          <textarea class="form-input" id="dmp-access" rows="2" data-i18n-ph="dmp.ph.access"></textarea>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" data-i18n="dmp.lbl.retention">Срок хранения</label>
+          <input class="form-input" id="dmp-retention" type="text" data-i18n-ph="dmp.ph.retention">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="dmp.lbl.funder">Финансирование</label>
+          <input class="form-input" id="dmp-funder" type="text" data-i18n-ph="dmp.ph.funder">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-i18n="dmp.lbl.sharing">План публикации</label>
+        <textarea class="form-input" id="dmp-sharing" rows="2" data-i18n-ph="dmp.ph.sharing"></textarea>
+      </div>
+      <div class="form-msg" id="dmp-msg"></div>
+      <button class="btn btn-primary" onclick="saveDmp()" data-i18n="dmp.save.btn">Сохранить DMP</button>
+    </div>
+  </div>
+
   <!-- ── SETTINGS TAB ──────────────────────────────────────────────────── -->
   <div class="tab" id="tab-settings">
     <div class="page-header">
-      <h1>Настройки</h1>
-      <p>Управление профилем и безопасностью</p>
+      <h1 data-i18n="dash.settings.title">Настройки</h1>
+      <p data-i18n="dash.settings.sub">Управление профилем и безопасностью</p>
     </div>
 
     <div class="settings-section">
       <div class="settings-card">
         <div class="settings-title">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          Личные данные
+          <span data-i18n="dash.profile.title">Личные данные</span>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">Полное имя</label>
-            <input class="form-input" id="s-name" type="text" placeholder="Ваше имя">
+            <label class="form-label" data-i18n="dash.profile.name">Полное имя</label>
+            <input class="form-input" id="s-name" type="text" data-i18n-ph="dash.profile.name.ph">
           </div>
           <div class="form-group">
-            <label class="form-label">Email</label>
+            <label class="form-label" data-i18n="dash.profile.email">Email</label>
             <input class="form-input" id="s-email" type="email" placeholder="email@kstu.kg">
           </div>
         </div>
         <div class="form-msg" id="s-profile-msg"></div>
         <div style="display:flex;gap:10px;margin-top:4px">
-          <button class="btn btn-primary" onclick="saveProfile()">Сохранить изменения</button>
+          <button class="btn btn-primary" onclick="saveProfile()" data-i18n="dash.profile.save">Сохранить изменения</button>
         </div>
       </div>
     </div>
@@ -599,24 +676,24 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t1);font-size:15px
       <div class="settings-card">
         <div class="settings-title">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          Безопасность — смена пароля
+          <span data-i18n="dash.pwd.title">Безопасность — смена пароля</span>
         </div>
         <div class="form-group">
-          <label class="form-label">Текущий пароль</label>
-          <input class="form-input" id="s-cur" type="password" placeholder="Введите текущий пароль">
+          <label class="form-label" data-i18n="dash.pwd.cur">Текущий пароль</label>
+          <input class="form-input" id="s-cur" type="password" data-i18n-ph="dash.pwd.cur.ph">
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">Новый пароль</label>
-            <input class="form-input" id="s-new" type="password" placeholder="Минимум 6 символов">
+            <label class="form-label" data-i18n="dash.pwd.new">Новый пароль</label>
+            <input class="form-input" id="s-new" type="password" data-i18n-ph="dash.pwd.new.ph">
           </div>
           <div class="form-group">
-            <label class="form-label">Подтвердите пароль</label>
-            <input class="form-input" id="s-conf" type="password" placeholder="Повторите новый пароль">
+            <label class="form-label" data-i18n="dash.pwd.conf">Подтвердите пароль</label>
+            <input class="form-input" id="s-conf" type="password" data-i18n-ph="dash.pwd.conf.ph">
           </div>
         </div>
         <div class="form-msg" id="s-pass-msg"></div>
-        <button class="btn btn-primary" onclick="savePassword()">Изменить пароль</button>
+        <button class="btn btn-primary" onclick="savePassword()" data-i18n="dash.pwd.btn">Изменить пароль</button>
       </div>
     </div>
 
@@ -624,12 +701,12 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t1);font-size:15px
       <div class="settings-card">
         <div class="settings-title" style="color:#dc2626;border-bottom-color:rgba(220,38,38,.15)">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          Опасная зона
+          <span data-i18n="dash.danger.title">Опасная зона</span>
         </div>
-        <p style="font-size:13px;color:var(--t2);margin-bottom:16px;line-height:1.6">После выхода вам потребуется повторно войти в систему. Все несохранённые изменения будут потеряны.</p>
+        <p style="font-size:13px;color:var(--t2);margin-bottom:16px;line-height:1.6" data-i18n="dash.danger.desc">После выхода вам потребуется повторно войти в систему.</p>
         <button class="btn btn-danger" onclick="doLogout()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-          Выйти из аккаунта
+          <span data-i18n="dash.logout.btn">Выйти из аккаунта</span>
         </button>
       </div>
     </div>
@@ -638,34 +715,33 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t1);font-size:15px
   <!-- ── API KEYS TAB ──────────────────────────────────────────────────── -->
   <div class="tab" id="tab-keys">
     <div class="page-header">
-      <h1>API ключи</h1>
-      <p>Ключи для программного доступа к данным</p>
+      <h1 data-i18n="dash.keys.title">API ключи</h1>
+      <p data-i18n="dash.keys.sub">Ключи для программного доступа к данным</p>
     </div>
     <div class="two-col" style="align-items:start">
       <div class="settings-card">
         <div class="settings-title">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Создать новый ключ
+          <span data-i18n="dash.keys.new.title">Создать новый ключ</span>
         </div>
         <div class="form-group">
-          <label class="form-label">Название ключа</label>
-          <input class="form-input" id="k-name" type="text" placeholder="Например: jupyter-notebook">
+          <label class="form-label" data-i18n="dash.keys.name">Название ключа</label>
+          <input class="form-input" id="k-name" type="text" data-i18n-ph="dash.keys.name.ph">
         </div>
         <div class="key-new-box" id="k-new-box">
           <span id="k-new-val"></span>
-          <button class="key-new-copy" onclick="copyKey()">Копировать</button>
+          <button class="key-new-copy" onclick="copyKey()" data-i18n="dash.keys.copy">Копировать</button>
         </div>
         <div class="form-msg" id="k-msg"></div>
-        <button class="btn btn-primary" onclick="createApiKey()" style="margin-top:14px">Создать ключ</button>
-        <p style="font-size:11px;color:var(--t3);margin-top:12px;line-height:1.6">
+        <button class="btn btn-primary" onclick="createApiKey()" style="margin-top:14px" data-i18n="dash.keys.create">Создать ключ</button>
+        <p style="font-size:11px;color:var(--t3);margin-top:12px;line-height:1.6" data-i18n="dash.keys.note" data-i18n-html>
           Ключ отображается только один раз. Скопируйте и сохраните его в безопасном месте.
-          Используйте в заголовке: <code style="font-family:var(--mono);background:var(--bg3);padding:1px 5px;border-radius:4px">Authorization: Bearer &lt;ключ&gt;</code>
         </p>
       </div>
       <div>
         <div class="card">
-          <div class="card-title">🔑 Активные ключи</div>
-          <div id="k-list"><div class="empty-state"><div class="empty-state-icon">🔑</div><p>Нет API ключей</p></div></div>
+          <div class="card-title" data-i18n="dash.keys.active">🔑 Активные ключи</div>
+          <div id="k-list"><div class="empty-state"><div class="empty-state-icon">🔑</div><p data-i18n="dash.keys.empty">Нет API ключей</p></div></div>
         </div>
       </div>
     </div>
@@ -678,29 +754,33 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t1);font-size:15px
 <div class="modal-overlay" id="editModal">
   <div class="modal-box">
     <div class="modal-header">
-      <div class="modal-title" id="edit-modal-title">Редактировать набор данных</div>
+      <div class="modal-title" id="edit-modal-title" data-i18n="dash.edit.title">Редактировать набор данных</div>
       <button class="modal-close" onclick="closeEditModal()">✕</button>
     </div>
     <input type="hidden" id="edit-id">
     <div class="modal-form-group">
-      <label class="modal-label">Название *</label>
-      <input class="modal-input" id="edit-title" type="text" placeholder="Название набора данных">
+      <label class="modal-label" data-i18n="dash.lbl.title">Название *</label>
+      <input class="modal-input" id="edit-title" type="text" data-i18n-ph="dash.ph.title">
     </div>
     <div class="modal-form-group">
-      <label class="modal-label">Автор / Организация</label>
-      <input class="modal-input" id="edit-author" type="text" placeholder="Имя автора">
+      <label class="modal-label" data-i18n="dash.lbl.author">Автор / Организация</label>
+      <input class="modal-input" id="edit-author" type="text" data-i18n-ph="dash.ph.author">
     </div>
     <div class="modal-form-group">
-      <label class="modal-label">Описание *</label>
-      <textarea class="modal-textarea" id="edit-desc" placeholder="Подробное описание набора данных..."></textarea>
+      <label class="modal-label" data-i18n="dash.lbl.orcid">ORCID (опционально)</label>
+      <input class="modal-input" id="edit-orcid" type="text" placeholder="0000-0000-0000-000X">
+    </div>
+    <div class="modal-form-group">
+      <label class="modal-label" data-i18n="dash.lbl.desc">Описание *</label>
+      <textarea class="modal-textarea" id="edit-desc" data-i18n-ph="dash.ph.desc"></textarea>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
       <div class="modal-form-group">
-        <label class="modal-label">Ключевые слова</label>
-        <input class="modal-input" id="edit-kw" type="text" placeholder="слово1, слово2">
+        <label class="modal-label" data-i18n="dash.lbl.kw">Ключевые слова</label>
+        <input class="modal-input" id="edit-kw" type="text" data-i18n-ph="dash.ph.kw">
       </div>
       <div class="modal-form-group">
-        <label class="modal-label">Лицензия</label>
+        <label class="modal-label" data-i18n="dash.lbl.lic">Лицензия</label>
         <select class="modal-select" id="edit-lic">
           <option value="CC-BY-4.0">CC-BY 4.0</option>
           <option value="CC-BY-NC-SA-4.0">CC-BY-NC-SA 4.0</option>
@@ -712,8 +792,8 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t1);font-size:15px
     </div>
     <div class="modal-err" id="edit-err"></div>
     <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeEditModal()">Отмена</button>
-      <button class="btn btn-primary" onclick="doEdit()">Сохранить</button>
+      <button class="btn btn-outline" onclick="closeEditModal()" data-i18n="dash.cancel">Отмена</button>
+      <button class="btn btn-primary" onclick="doEdit()" data-i18n="dash.save">Сохранить</button>
     </div>
   </div>
 </div>
@@ -722,28 +802,32 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t1);font-size:15px
 <div class="modal-overlay" id="addModal">
   <div class="modal-box">
     <div class="modal-header">
-      <div class="modal-title">Новый набор данных</div>
+      <div class="modal-title" data-i18n="dash.add.title">Новый набор данных</div>
       <button class="modal-close" onclick="closeAddModal()">✕</button>
     </div>
     <div class="modal-form-group">
-      <label class="modal-label">Название *</label>
-      <input class="modal-input" id="add-title" type="text" placeholder="Название набора данных">
+      <label class="modal-label" data-i18n="dash.lbl.title">Название *</label>
+      <input class="modal-input" id="add-title" type="text" data-i18n-ph="dash.ph.title">
     </div>
     <div class="modal-form-group">
-      <label class="modal-label">Автор</label>
-      <input class="modal-input" id="add-author" type="text" placeholder="Имя автора">
+      <label class="modal-label" data-i18n="dash.lbl.author">Автор</label>
+      <input class="modal-input" id="add-author" type="text" data-i18n-ph="dash.ph.author">
     </div>
     <div class="modal-form-group">
-      <label class="modal-label">Описание *</label>
-      <textarea class="modal-textarea" id="add-desc" placeholder="Подробное описание..."></textarea>
+      <label class="modal-label" data-i18n="dash.lbl.orcid">ORCID (опционально)</label>
+      <input class="modal-input" id="add-orcid" type="text" placeholder="0000-0000-0000-000X">
+    </div>
+    <div class="modal-form-group">
+      <label class="modal-label" data-i18n="dash.lbl.desc">Описание *</label>
+      <textarea class="modal-textarea" id="add-desc" data-i18n-ph="dash.ph.desc"></textarea>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
       <div class="modal-form-group">
-        <label class="modal-label">Ключевые слова</label>
-        <input class="modal-input" id="add-kw" type="text" placeholder="слово1, слово2">
+        <label class="modal-label" data-i18n="dash.lbl.kw">Ключевые слова</label>
+        <input class="modal-input" id="add-kw" type="text" data-i18n-ph="dash.ph.kw">
       </div>
       <div class="modal-form-group">
-        <label class="modal-label">Лицензия</label>
+        <label class="modal-label" data-i18n="dash.lbl.lic">Лицензия</label>
         <select class="modal-select" id="add-lic">
           <option value="CC-BY-4.0">CC-BY 4.0</option>
           <option value="CC-BY-NC-SA-4.0">CC-BY-NC-SA 4.0</option>
@@ -753,10 +837,25 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t1);font-size:15px
         </select>
       </div>
     </div>
+
+    <!-- File drop zone -->
+    <div class="modal-form-group">
+      <label class="modal-label" data-i18n="dash.lbl.file">Файл данных (опционально)</label>
+      <div class="drop-zone" id="dropZone" onclick="document.getElementById('addFileInput').click()">
+        <div class="drop-zone-icon">📤</div>
+        <div class="drop-zone-text" data-i18n="dash.drop.text">Перетащите файл сюда или нажмите для выбора</div>
+        <div class="drop-zone-hint" data-i18n="dash.drop.hint">CSV, JSON, NetCDF, Parquet · до 100 МБ</div>
+      </div>
+      <input type="file" id="addFileInput" style="display:none" onchange="handleFileSelect(event)">
+      <div id="dropFileInfo" style="display:none"></div>
+      <div class="upload-progress" id="uploadProgress"><div class="upload-progress-bar" id="uploadProgressBar"></div></div>
+      <div class="preview-box" id="previewBox"></div>
+    </div>
+
     <div class="modal-err" id="add-err"></div>
     <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeAddModal()">Отмена</button>
-      <button class="btn btn-primary" onclick="doAdd()">Создать черновик</button>
+      <button class="btn btn-outline" onclick="closeAddModal()" data-i18n="dash.cancel">Отмена</button>
+      <button class="btn btn-primary" onclick="doAdd()" data-i18n="dash.add.btn">Создать черновик</button>
     </div>
   </div>
 </div>
@@ -765,11 +864,11 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t1);font-size:15px
 <div class="confirm-overlay" id="confirmOverlay">
   <div class="confirm-box">
     <div class="confirm-icon" id="confirm-icon">⚠️</div>
-    <div class="confirm-title" id="confirm-title">Подтвердите действие</div>
-    <div class="confirm-msg" id="confirm-msg">Вы уверены?</div>
+    <div class="confirm-title" id="confirm-title">—</div>
+    <div class="confirm-msg" id="confirm-msg">—</div>
     <div class="confirm-actions">
-      <button class="btn btn-outline" onclick="resolveConfirm(false)">Отмена</button>
-      <button class="btn btn-danger" id="confirm-ok-btn" onclick="resolveConfirm(true)">Подтвердить</button>
+      <button class="btn btn-outline" onclick="resolveConfirm(false)" data-i18n="dash.cancel">Отмена</button>
+      <button class="btn btn-danger" id="confirm-ok-btn" onclick="resolveConfirm(true)" data-i18n="dash.confirm">Подтвердить</button>
     </div>
   </div>
 </div>
@@ -777,10 +876,508 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t1);font-size:15px
 <!-- Toasts -->
 <div id="toast"></div>
 
+<script src="/js/page-i18n.js?v=3"></script>
 <script>
 'use strict';
 const API = '';
 const TOKEN_KEY = 'rdm-pub-token';
+
+// ── Translations (RU / KY / EN) ────────────────────────────────────────────────
+window.RDM_PAGE_T = {
+  ru: {
+    'page.title':       'Личный кабинет — RDM КГТУ',
+    'dash.loading':     'Загрузка...',
+    'dash.notauth.title':'Требуется вход',
+    'dash.notauth.desc':'Для доступа к личному кабинету необходимо войти в систему.',
+    'dash.notauth.btn': 'Войти в систему →',
+    'dash.brand.sub':   'Личный кабинет',
+    'dash.nav.section': 'Навигация',
+    'dash.tab.overview':'Обзор',
+    'dash.tab.datasets':'Мои наборы данных',
+    'dash.tab.dmp':     'План управления данными',
+    'dash.tab.settings':'Настройки',
+    'dash.tab.keys':    'API ключи',
+    'dash.back.home':   'На главную',
+    'dash.theme.dark':  'Тёмная тема',
+    'dash.theme.light': 'Светлая тема',
+    'dash.logout':      'Выйти',
+    'dash.logout.btn':  'Выйти из аккаунта',
+    'dash.welcome':     'Добро пожаловать',
+    'dash.welcome.sub': 'Управление исследовательскими данными КГТУ',
+    'dash.stat.total':  'Наборов данных',
+    'dash.stat.pub':    'Опубликовано',
+    'dash.stat.dl':     'Скачиваний',
+    'dash.stat.views':  'Просмотров',
+    'dash.stat.fair':   'Средний FAIR',
+    'dash.recent.title':'📋 Последние наборы данных',
+    'dash.recent.all':  'Все →',
+    'dash.empty.ds':    'Нет наборов данных',
+    'dash.fair.title':  '📊 Средний FAIR-профиль',
+    'dash.empty.fair':  'Нет данных',
+    'dash.quick.title': '⚡ Быстрые действия',
+    'dash.quick.add':   '+ Загрузить набор данных',
+    'dash.quick.key':   '🔑 Создать API ключ',
+    'dash.quick.docs':  '📖 Документация API',
+    'dash.ds.title':    'Мои наборы данных',
+    'dash.ds.sub':      'Управление вашими исследовательскими данными',
+    'dash.ds.search.ph':'🔍  Поиск по названию...',
+    'dash.ds.status.all':'Все статусы',
+    'dash.ds.status.pub':'Опубликованные',
+    'dash.ds.status.draft':'Черновики',
+    'dash.ds.status.rej':'Отклонённые',
+    'dash.ds.add':      'Добавить набор',
+    'dash.empty.search':'Наборов не найдено',
+    'dash.empty.search.hint':'Попробуйте изменить параметры поиска',
+    'dash.settings.title':'Настройки',
+    'dash.settings.sub':'Управление профилем и безопасностью',
+    'dash.profile.title':'Личные данные',
+    'dash.profile.name':'Полное имя',
+    'dash.profile.name.ph':'Ваше имя',
+    'dash.profile.email':'Email',
+    'dash.profile.save':'Сохранить изменения',
+    'dash.pwd.title':   'Безопасность — смена пароля',
+    'dash.pwd.cur':     'Текущий пароль',
+    'dash.pwd.cur.ph':  'Введите текущий пароль',
+    'dash.pwd.new':     'Новый пароль',
+    'dash.pwd.new.ph':  'Минимум 6 символов',
+    'dash.pwd.conf':    'Подтвердите пароль',
+    'dash.pwd.conf.ph': 'Повторите новый пароль',
+    'dash.pwd.btn':     'Изменить пароль',
+    'dash.danger.title':'Опасная зона',
+    'dash.danger.desc': 'После выхода вам потребуется повторно войти в систему. Все несохранённые изменения будут потеряны.',
+    'dash.keys.title':  'API ключи',
+    'dash.keys.sub':    'Ключи для программного доступа к данным',
+    'dash.keys.new.title':'Создать новый ключ',
+    'dash.keys.name':   'Название ключа',
+    'dash.keys.name.ph':'Например: jupyter-notebook',
+    'dash.keys.copy':   'Копировать',
+    'dash.keys.create': 'Создать ключ',
+    'dash.keys.note':   'Ключ отображается только один раз. Скопируйте и сохраните его в безопасном месте. Используйте в заголовке: <code style="font-family:var(--mono);background:var(--bg3);padding:1px 5px;border-radius:4px">Authorization: Bearer &lt;ключ&gt;</code>',
+    'dash.keys.active': '🔑 Активные ключи',
+    'dash.keys.empty':  'Нет API ключей',
+    'dash.keys.revoke': 'Отозвать',
+    'dash.keys.created':'Создан',
+    'dash.keys.used':   'Использован',
+    'dash.keys.unused': 'Не использован',
+    'dash.edit.title':  'Редактировать набор данных',
+    'dash.add.title':   'Новый набор данных',
+    'dash.add.btn':     'Создать черновик',
+    'dash.lbl.title':   'Название *',
+    'dash.lbl.author':  'Автор / Организация',
+    'dash.lbl.orcid':   'ORCID (опционально)',
+    'dash.lbl.desc':    'Описание *',
+    'dash.lbl.kw':      'Ключевые слова',
+    'dash.lbl.lic':     'Лицензия',
+    'dash.lbl.file':    'Файл данных (опционально)',
+    'dash.ph.title':    'Название набора данных',
+    'dash.ph.author':   'Имя автора',
+    'dash.ph.desc':     'Подробное описание...',
+    'dash.ph.kw':       'слово1, слово2',
+    'dash.drop.text':   'Перетащите файл сюда или нажмите для выбора',
+    'dash.drop.hint':   'CSV, JSON, NetCDF, Parquet · до 100 МБ',
+    'dash.cancel':      'Отмена',
+    'dash.save':        'Сохранить',
+    'dash.confirm':     'Подтвердить',
+    'dmp.title':        'План управления данными (DMP)',
+    'dmp.sub':          'Опишите план управления данными для вашего исследования.',
+    'dmp.lbl.data':     'Описание данных',
+    'dmp.ph.data':      'Какие данные будут собираться? Каков объём? Методы сбора?',
+    'dmp.lbl.storage':  'Хранение и защита',
+    'dmp.ph.storage':   'Где будут храниться данные? Как защищены от потери?',
+    'dmp.lbl.access':   'Контроль доступа',
+    'dmp.ph.access':    'Кто будет иметь доступ?',
+    'dmp.lbl.retention':'Срок хранения',
+    'dmp.ph.retention': 'Например: 10 лет после завершения проекта',
+    'dmp.lbl.sharing':  'План публикации',
+    'dmp.ph.sharing':   'Планируется ли открытая публикация? В каком репозитории?',
+    'dmp.lbl.funder':   'Финансирование',
+    'dmp.ph.funder':    'Например: ФФН Кыргызстана, грант №2024-01',
+    'dmp.save.btn':     'Сохранить DMP',
+    'dmp.saved':        'План управления данными сохранён',
+    // statuses & actions
+    'status.published': '● Опубл.',
+    'status.draft':     '◐ Черновик',
+    'status.rejected':  '✕ Отклонён',
+    'access.open':      'Открытый',
+    'access.restricted':'Ограниченный',
+    'role.admin':       'Администратор',
+    'role.researcher':  'Исследователь',
+    'role.since':       'с',
+    'btn.edit':         '✏️ Редактировать',
+    'btn.publish':      '🚀 Опубликовать',
+    'btn.unpublish':    '📤 Снять с публикации',
+    'btn.resubmit':     '↺ Переподать',
+    'btn.delete':       '🗑 Удалить',
+    'btn.view':         '👁 Просмотр',
+    'ds.no.desc':       'Описание не указано',
+    'ds.dl.short':      'скач.',
+    'ds.views.short':   'просм.',
+    'ds.reject.reason': 'Причина отклонения',
+    // confirms
+    'confirm.publish.t':'Опубликовать набор данных?',
+    'confirm.publish.m':'После публикации набор данных станет доступен всем пользователям.',
+    'confirm.unpublish.t':'Снять с публикации?',
+    'confirm.unpublish.m':'Набор данных будет переведён в статус черновика и скрыт из каталога.',
+    'confirm.delete.t': 'Удалить набор данных?',
+    'confirm.delete.m': 'Это действие нельзя отменить. Набор будет удалён безвозвратно.',
+    'confirm.revoke.t': 'Отозвать API ключ?',
+    'confirm.revoke.m': 'Ключ будет деактивирован и больше не будет работать.',
+    'confirm.logout.t': 'Выйти из аккаунта?',
+    'confirm.logout.m': 'Вы будете перенаправлены на главную страницу.',
+    // toasts
+    'toast.published':  'Набор данных опубликован',
+    'toast.unpublished':'Набор скрыт из каталога',
+    'toast.deleted':    'Набор данных удалён',
+    'toast.draft':      'Набор возвращён в черновики',
+    'toast.saved':      'Изменения сохранены',
+    'toast.draft.created':'Черновик создан!',
+    'toast.profile.ok': '✓ Данные успешно обновлены',
+    'toast.pwd.ok':     '✓ Пароль успешно изменён',
+    'toast.key.created':'✓ Ключ создан! Скопируйте его — он больше не будет показан.',
+    'toast.key.copied': 'Ключ скопирован',
+    'toast.key.revoked':'Ключ отозван',
+    'toast.upload.ok':  'Файл загружен',
+    'toast.upload.err': 'Ошибка загрузки файла',
+    'err.required':     'Заполните обязательные поля',
+    'err.fill.all':     'Заполните все поля',
+    'err.pwd.mismatch': 'Пароли не совпадают',
+    'err.pwd.short':    'Минимум 6 символов',
+    'err.network':      'Нет соединения',
+    'err.generic':      'Ошибка',
+    'err.key.name':     'Введите название ключа',
+    'err.orcid':        'Некорректный ORCID',
+    'err.file.size':    'Файл слишком большой (макс. 100 МБ)',
+    'preview.title':    'Предпросмотр',
+    'preview.rows':     'строк',
+  },
+  ky: {
+    'page.title':       'Жеке кабинет — RDM КМТУ',
+    'dash.loading':     'Жүктөлүүдө...',
+    'dash.notauth.title':'Кирүү талап кылынат',
+    'dash.notauth.desc':'Жеке кабинетке кирүү үчүн системага кириңиз.',
+    'dash.notauth.btn': 'Системага кирүү →',
+    'dash.brand.sub':   'Жеке кабинет',
+    'dash.nav.section': 'Багыттоо',
+    'dash.tab.overview':'Башкы панел',
+    'dash.tab.datasets':'Менин маалымат жыйындыктарым',
+    'dash.tab.dmp':     'Маалыматтарды башкаруу планы',
+    'dash.tab.settings':'Жөндөөлөр',
+    'dash.tab.keys':    'API ачкычтар',
+    'dash.back.home':   'Башкы бетке',
+    'dash.theme.dark':  'Караңгы тема',
+    'dash.theme.light': 'Жарык тема',
+    'dash.logout':      'Чыгуу',
+    'dash.logout.btn':  'Аккаунттан чыгуу',
+    'dash.welcome':     'Кош келиңиз',
+    'dash.welcome.sub': 'КМТУ илимий маалыматтарын башкаруу',
+    'dash.stat.total':  'Маалымат жыйындыктары',
+    'dash.stat.pub':    'Жарыяланган',
+    'dash.stat.dl':     'Жүктөп алуулар',
+    'dash.stat.views':  'Көрүүлөр',
+    'dash.stat.fair':   'Орточо FAIR',
+    'dash.recent.title':'📋 Акыркы маалымат жыйындыктары',
+    'dash.recent.all':  'Бардыгы →',
+    'dash.empty.ds':    'Маалымат жыйындыктары жок',
+    'dash.fair.title':  '📊 Орточо FAIR-профиль',
+    'dash.empty.fair':  'Маалымат жок',
+    'dash.quick.title': '⚡ Тез аракеттер',
+    'dash.quick.add':   '+ Маалымат жыйынтыгын жүктөө',
+    'dash.quick.key':   '🔑 API ачкычын түзүү',
+    'dash.quick.docs':  '📖 API документациясы',
+    'dash.ds.title':    'Менин маалымат жыйындыктарым',
+    'dash.ds.sub':      'Илимий маалыматтарыңызды башкаруу',
+    'dash.ds.search.ph':'🔍  Аталышы боюнча издөө...',
+    'dash.ds.status.all':'Бардык статустар',
+    'dash.ds.status.pub':'Жарыяланган',
+    'dash.ds.status.draft':'Долбоорлор',
+    'dash.ds.status.rej':'Четке кагылган',
+    'dash.ds.add':      'Жыйындык кошуу',
+    'dash.empty.search':'Жыйындыктар табылган жок',
+    'dash.empty.search.hint':'Издөө параметрлерин өзгөртүп көрүңүз',
+    'dash.settings.title':'Жөндөөлөр',
+    'dash.settings.sub':'Профилди жана коопсуздукту башкаруу',
+    'dash.profile.title':'Жеке маалыматтар',
+    'dash.profile.name':'Толук аты-жөнү',
+    'dash.profile.name.ph':'Сиздин атыңыз',
+    'dash.profile.email':'Email',
+    'dash.profile.save':'Өзгөртүүлөрдү сактоо',
+    'dash.pwd.title':   'Коопсуздук — сырсөздү өзгөртүү',
+    'dash.pwd.cur':     'Учурдагы сырсөз',
+    'dash.pwd.cur.ph':  'Учурдагы сырсөздү киргизиңиз',
+    'dash.pwd.new':     'Жаңы сырсөз',
+    'dash.pwd.new.ph':  'Минимум 6 символ',
+    'dash.pwd.conf':    'Сырсөздү ырастоо',
+    'dash.pwd.conf.ph': 'Жаңы сырсөздү кайталаңыз',
+    'dash.pwd.btn':     'Сырсөздү өзгөртүү',
+    'dash.danger.title':'Кооптуу аймак',
+    'dash.danger.desc': 'Чыккандан кийин системага кайра кирүү керек болот. Сакталбаган өзгөртүүлөр жоголот.',
+    'dash.keys.title':  'API ачкычтар',
+    'dash.keys.sub':    'Маалыматтарга программалык жеткиликтүүлүк үчүн ачкычтар',
+    'dash.keys.new.title':'Жаңы ачкыч түзүү',
+    'dash.keys.name':   'Ачкычтын аталышы',
+    'dash.keys.name.ph':'Мис.: jupyter-notebook',
+    'dash.keys.copy':   'Көчүрүү',
+    'dash.keys.create': 'Ачкыч түзүү',
+    'dash.keys.note':   'Ачкыч бир гана жолу көрсөтүлөт. Көчүрүп, коопсуз жерде сактаңыз.',
+    'dash.keys.active': '🔑 Активдүү ачкычтар',
+    'dash.keys.empty':  'API ачкычтар жок',
+    'dash.keys.revoke': 'Алып салуу',
+    'dash.keys.created':'Түзүлдү',
+    'dash.keys.used':   'Колдонулду',
+    'dash.keys.unused': 'Колдонулган эмес',
+    'dash.edit.title':  'Маалымат жыйынтыгын өзгөртүү',
+    'dash.add.title':   'Жаңы маалымат жыйынтыгы',
+    'dash.add.btn':     'Долбоор түзүү',
+    'dash.lbl.title':   'Аталышы *',
+    'dash.lbl.author':  'Автор / Уюм',
+    'dash.lbl.orcid':   'ORCID (милдеттүү эмес)',
+    'dash.lbl.desc':    'Сүрөттөмө *',
+    'dash.lbl.kw':      'Ачкыч сөздөр',
+    'dash.lbl.lic':     'Лицензия',
+    'dash.lbl.file':    'Маалымат файлы (милдеттүү эмес)',
+    'dash.ph.title':    'Маалымат жыйынтыгынын аталышы',
+    'dash.ph.author':   'Автордун аты',
+    'dash.ph.desc':     'Толук сүрөттөмө...',
+    'dash.ph.kw':       'сөз1, сөз2',
+    'dash.drop.text':   'Файлды бул жерге сүйрөңүз же басып тандаңыз',
+    'dash.drop.hint':   'CSV, JSON, NetCDF, Parquet · 100 МБга чейин',
+    'dash.cancel':      'Жокко чыгаруу',
+    'dash.save':        'Сактоо',
+    'dash.confirm':     'Ырастоо',
+    'dmp.title':        'Маалыматтарды башкаруу планы (МБП)',
+    'dmp.sub':          'Изилдөөңүз үчүн маалыматтарды башкаруу планын сүрөттөңүз.',
+    'dmp.lbl.data':     'Маалыматтардын сүрөттөмөсү',
+    'dmp.ph.data':      'Кандай маалыматтар чогултулат? Көлөмү? Чогулту ыкмалары?',
+    'dmp.lbl.storage':  'Сактоо жана коргоо',
+    'dmp.ph.storage':   'Маалыматтар кайда сакталат? Жоготуудан кантип корголот?',
+    'dmp.lbl.access':   'Жеткиликтүүлүктү көзөмөлдөө',
+    'dmp.ph.access':    'Кимдер жеткиликтүүлүккө ээ болот?',
+    'dmp.lbl.retention':'Сактоо мөөнөтү',
+    'dmp.ph.retention': 'Мис.: долбоор аяктагандан кийин 10 жыл',
+    'dmp.lbl.sharing':  'Жарыялоо планы',
+    'dmp.ph.sharing':   'Ачык жарыялоо пландалганбы?',
+    'dmp.lbl.funder':   'Каржылоо',
+    'dmp.ph.funder':    'Мис.: Кыргызстандын ФФН, грант №2024-01',
+    'dmp.save.btn':     'МБПны сактоо',
+    'dmp.saved':        'Маалыматтарды башкаруу планы сакталды',
+    'status.published': '● Жар-н.',
+    'status.draft':     '◐ Долбоор',
+    'status.rejected':  '✕ Кагылган',
+    'access.open':      'Ачык',
+    'access.restricted':'Чектелген',
+    'role.admin':       'Администратор',
+    'role.researcher':  'Изилдөөчү',
+    'role.since':       '',
+    'btn.edit':         '✏️ Өзгөртүү',
+    'btn.publish':      '🚀 Жарыялоо',
+    'btn.unpublish':    '📤 Жарыялоодон алуу',
+    'btn.resubmit':     '↺ Кайра жөнөтүү',
+    'btn.delete':       '🗑 Жок кылуу',
+    'btn.view':         '👁 Көрүү',
+    'ds.no.desc':       'Сүрөттөмө көрсөтүлгөн эмес',
+    'ds.dl.short':      'жүкт.',
+    'ds.views.short':   'көрүү',
+    'ds.reject.reason': 'Четке кагуу себеби',
+    'confirm.publish.t':'Маалымат жыйындыгын жарыялайсызбы?',
+    'confirm.publish.m':'Жарыялангандан кийин бардык колдонуучуларга жеткиликтүү болот.',
+    'confirm.unpublish.t':'Жарыялоодон алуу?',
+    'confirm.unpublish.m':'Маалымат жыйындыгы долбоор статусуна которулат.',
+    'confirm.delete.t': 'Маалымат жыйындыгын жок кылабызбы?',
+    'confirm.delete.m': 'Бул аракетти кайтаруу мүмкүн эмес.',
+    'confirm.revoke.t': 'API ачкычын алып салабызбы?',
+    'confirm.revoke.m': 'Ачкыч өчүрүлүп, мындан ары иштебейт.',
+    'confirm.logout.t': 'Аккаунттан чыгасызбы?',
+    'confirm.logout.m': 'Башкы бетке багытталасыз.',
+    'toast.published':  'Маалымат жыйындыгы жарыяланды',
+    'toast.unpublished':'Каталогдон жашырылды',
+    'toast.deleted':    'Маалымат жыйындыгы жок кылынды',
+    'toast.draft':      'Жыйындык долбоорго кайтарылды',
+    'toast.saved':      'Өзгөртүүлөр сакталды',
+    'toast.draft.created':'Долбоор түзүлдү!',
+    'toast.profile.ok': '✓ Маалыматтар ийгиликтүү жаңыртылды',
+    'toast.pwd.ok':     '✓ Сырсөз ийгиликтүү өзгөртүлдү',
+    'toast.key.created':'✓ Ачкыч түзүлдү! Көчүрүп алыңыз — кайра көрсөтүлбөйт.',
+    'toast.key.copied': 'Ачкыч көчүрүлдү',
+    'toast.key.revoked':'Ачкыч алынды',
+    'toast.upload.ok':  'Файл жүктөлдү',
+    'toast.upload.err': 'Файл жүктөө катасы',
+    'err.required':     'Милдеттүү талааларды толтуруңуз',
+    'err.fill.all':     'Бардык талааларды толтуруңуз',
+    'err.pwd.mismatch': 'Сырсөздөр дал келбейт',
+    'err.pwd.short':    'Минимум 6 символ',
+    'err.network':      'Туташуу жок',
+    'err.generic':      'Ката',
+    'err.key.name':     'Ачкычтын аталышын киргизиңиз',
+    'err.orcid':        'Туура эмес ORCID',
+    'err.file.size':    'Файл өтө чоң (макс. 100 МБ)',
+    'preview.title':    'Алдын ала көрүү',
+    'preview.rows':     'сап',
+  },
+  en: {
+    'page.title':       'Dashboard — RDM KSTU',
+    'dash.loading':     'Loading...',
+    'dash.notauth.title':'Login required',
+    'dash.notauth.desc':'You must sign in to access the dashboard.',
+    'dash.notauth.btn': 'Sign in →',
+    'dash.brand.sub':   'Dashboard',
+    'dash.nav.section': 'Navigation',
+    'dash.tab.overview':'Overview',
+    'dash.tab.datasets':'My Datasets',
+    'dash.tab.dmp':     'Data Management Plan',
+    'dash.tab.settings':'Settings',
+    'dash.tab.keys':    'API Keys',
+    'dash.back.home':   'Back to home',
+    'dash.theme.dark':  'Dark theme',
+    'dash.theme.light': 'Light theme',
+    'dash.logout':      'Log out',
+    'dash.logout.btn':  'Log out of account',
+    'dash.welcome':     'Welcome',
+    'dash.welcome.sub': 'KSTU Research Data Management',
+    'dash.stat.total':  'Datasets',
+    'dash.stat.pub':    'Published',
+    'dash.stat.dl':     'Downloads',
+    'dash.stat.views':  'Views',
+    'dash.stat.fair':   'Average FAIR',
+    'dash.recent.title':'📋 Recent datasets',
+    'dash.recent.all':  'All →',
+    'dash.empty.ds':    'No datasets',
+    'dash.fair.title':  '📊 Average FAIR profile',
+    'dash.empty.fair':  'No data',
+    'dash.quick.title': '⚡ Quick actions',
+    'dash.quick.add':   '+ Upload dataset',
+    'dash.quick.key':   '🔑 Create API key',
+    'dash.quick.docs':  '📖 API documentation',
+    'dash.ds.title':    'My datasets',
+    'dash.ds.sub':      'Manage your research data',
+    'dash.ds.search.ph':'🔍  Search by title...',
+    'dash.ds.status.all':'All statuses',
+    'dash.ds.status.pub':'Published',
+    'dash.ds.status.draft':'Drafts',
+    'dash.ds.status.rej':'Rejected',
+    'dash.ds.add':      'Add dataset',
+    'dash.empty.search':'No datasets found',
+    'dash.empty.search.hint':'Try changing the search parameters',
+    'dash.settings.title':'Settings',
+    'dash.settings.sub':'Manage profile and security',
+    'dash.profile.title':'Personal data',
+    'dash.profile.name':'Full name',
+    'dash.profile.name.ph':'Your name',
+    'dash.profile.email':'Email',
+    'dash.profile.save':'Save changes',
+    'dash.pwd.title':   'Security — change password',
+    'dash.pwd.cur':     'Current password',
+    'dash.pwd.cur.ph':  'Enter current password',
+    'dash.pwd.new':     'New password',
+    'dash.pwd.new.ph':  'Minimum 6 characters',
+    'dash.pwd.conf':    'Confirm password',
+    'dash.pwd.conf.ph': 'Repeat new password',
+    'dash.pwd.btn':     'Change password',
+    'dash.danger.title':'Danger zone',
+    'dash.danger.desc': 'After logging out you will need to sign in again. Unsaved changes will be lost.',
+    'dash.keys.title':  'API keys',
+    'dash.keys.sub':    'Keys for programmatic data access',
+    'dash.keys.new.title':'Create new key',
+    'dash.keys.name':   'Key name',
+    'dash.keys.name.ph':'E.g.: jupyter-notebook',
+    'dash.keys.copy':   'Copy',
+    'dash.keys.create': 'Create key',
+    'dash.keys.note':   'The key is shown only once. Copy and store it safely. Use in header: <code style="font-family:var(--mono);background:var(--bg3);padding:1px 5px;border-radius:4px">Authorization: Bearer &lt;key&gt;</code>',
+    'dash.keys.active': '🔑 Active keys',
+    'dash.keys.empty':  'No API keys',
+    'dash.keys.revoke': 'Revoke',
+    'dash.keys.created':'Created',
+    'dash.keys.used':   'Last used',
+    'dash.keys.unused': 'Never used',
+    'dash.edit.title':  'Edit dataset',
+    'dash.add.title':   'New dataset',
+    'dash.add.btn':     'Create draft',
+    'dash.lbl.title':   'Title *',
+    'dash.lbl.author':  'Author / Organisation',
+    'dash.lbl.orcid':   'ORCID (optional)',
+    'dash.lbl.desc':    'Description *',
+    'dash.lbl.kw':      'Keywords',
+    'dash.lbl.lic':     'Licence',
+    'dash.lbl.file':    'Data file (optional)',
+    'dash.ph.title':    'Dataset title',
+    'dash.ph.author':   'Author name',
+    'dash.ph.desc':     'Detailed description...',
+    'dash.ph.kw':       'keyword1, keyword2',
+    'dash.drop.text':   'Drag a file here or click to choose',
+    'dash.drop.hint':   'CSV, JSON, NetCDF, Parquet · up to 100 MB',
+    'dash.cancel':      'Cancel',
+    'dash.save':        'Save',
+    'dash.confirm':     'Confirm',
+    'dmp.title':        'Data Management Plan (DMP)',
+    'dmp.sub':          'Describe the data management plan for your research.',
+    'dmp.lbl.data':     'Data description',
+    'dmp.ph.data':      'What data will be collected? Volume? Collection methods?',
+    'dmp.lbl.storage':  'Storage & protection',
+    'dmp.ph.storage':   'Where will data be stored? How protected from loss?',
+    'dmp.lbl.access':   'Access control',
+    'dmp.ph.access':    'Who will have access?',
+    'dmp.lbl.retention':'Retention period',
+    'dmp.ph.retention': 'E.g.: 10 years after project completion',
+    'dmp.lbl.sharing':  'Publication plan',
+    'dmp.ph.sharing':   'Open publication planned? In which repository?',
+    'dmp.lbl.funder':   'Funding',
+    'dmp.ph.funder':    'E.g.: EU Horizon Europe, grant No. 2024-01',
+    'dmp.save.btn':     'Save DMP',
+    'dmp.saved':        'Data management plan saved',
+    'status.published': '● Pub.',
+    'status.draft':     '◐ Draft',
+    'status.rejected':  '✕ Rejected',
+    'access.open':      'Open',
+    'access.restricted':'Restricted',
+    'role.admin':       'Administrator',
+    'role.researcher':  'Researcher',
+    'role.since':       'since',
+    'btn.edit':         '✏️ Edit',
+    'btn.publish':      '🚀 Publish',
+    'btn.unpublish':    '📤 Unpublish',
+    'btn.resubmit':     '↺ Resubmit',
+    'btn.delete':       '🗑 Delete',
+    'btn.view':         '👁 View',
+    'ds.no.desc':       'Description not provided',
+    'ds.dl.short':      'dl',
+    'ds.views.short':   'views',
+    'ds.reject.reason': 'Rejection reason',
+    'confirm.publish.t':'Publish dataset?',
+    'confirm.publish.m':'After publishing, the dataset will become available to all users.',
+    'confirm.unpublish.t':'Unpublish?',
+    'confirm.unpublish.m':'The dataset will return to draft status and be hidden from the catalog.',
+    'confirm.delete.t': 'Delete dataset?',
+    'confirm.delete.m': 'This action cannot be undone.',
+    'confirm.revoke.t': 'Revoke API key?',
+    'confirm.revoke.m': 'The key will be deactivated and stop working.',
+    'confirm.logout.t': 'Log out?',
+    'confirm.logout.m': 'You will be redirected to the home page.',
+    'toast.published':  'Dataset published',
+    'toast.unpublished':'Dataset removed from catalog',
+    'toast.deleted':    'Dataset deleted',
+    'toast.draft':      'Dataset returned to drafts',
+    'toast.saved':      'Changes saved',
+    'toast.draft.created':'Draft created!',
+    'toast.profile.ok': '✓ Profile updated',
+    'toast.pwd.ok':     '✓ Password changed',
+    'toast.key.created':'✓ Key created! Copy it now — it will not be shown again.',
+    'toast.key.copied': 'Key copied',
+    'toast.key.revoked':'Key revoked',
+    'toast.upload.ok':  'File uploaded',
+    'toast.upload.err': 'Upload error',
+    'err.required':     'Fill in required fields',
+    'err.fill.all':     'Fill in all fields',
+    'err.pwd.mismatch': 'Passwords do not match',
+    'err.pwd.short':    'Minimum 6 characters',
+    'err.network':      'No connection',
+    'err.generic':      'Error',
+    'err.key.name':     'Enter a key name',
+    'err.orcid':        'Invalid ORCID',
+    'err.file.size':    'File too large (max 100 MB)',
+    'preview.title':    'Preview',
+    'preview.rows':     'rows',
+  },
+};
+const tt = (key) => window.RDM_t ? window.RDM_t(key) : key;
 
 let token = sessionStorage.getItem(TOKEN_KEY);
 let currentUser = null;
@@ -790,6 +1387,8 @@ let allDatasets = [];
 async function init() {
   const savedTheme = localStorage.getItem('rdm-theme') || 'light';
   applyTheme(savedTheme);
+  // Init i18n first so loading text appears in user's language
+  if (window.RDM_initLang) window.RDM_initLang();
 
   if (!token) { showNotAuth(); return; }
   try {
@@ -803,6 +1402,31 @@ async function init() {
   document.getElementById('loading-screen').classList.add('hidden');
 }
 
+// Re-render dynamic content when language changes
+window.onLangChange = function () {
+  if (currentUser) renderSidebar();
+  if (allDatasets && allDatasets.length) {
+    renderDatasets(filterCurrent());
+    loadOverview();
+  }
+  // Update theme label
+  const themeLbl = document.getElementById('theme-label');
+  if (themeLbl) {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    themeLbl.textContent = isDark ? tt('dash.theme.light') : tt('dash.theme.dark');
+  }
+};
+
+function filterCurrent() {
+  const q      = (document.getElementById('ds-search')?.value || '').toLowerCase();
+  const status = document.getElementById('ds-status-filter')?.value || '';
+  return allDatasets.filter(d => {
+    const matchQ = !q || d.title.toLowerCase().includes(q) || (d.description || '').toLowerCase().includes(q);
+    const matchS = !status || d.status === status;
+    return matchQ && matchS;
+  });
+}
+
 function showNotAuth() {
   document.getElementById('loading-screen').classList.add('hidden');
   document.getElementById('not-auth').style.display = 'flex';
@@ -811,7 +1435,8 @@ function showNotAuth() {
 // ── Theme ─────────────────────────────────────────────────────────────────────
 function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
-  document.getElementById('theme-label').textContent = theme === 'dark' ? 'Светлая тема' : 'Тёмная тема';
+  const el = document.getElementById('theme-label');
+  if (el) el.textContent = theme === 'dark' ? tt('dash.theme.light') : tt('dash.theme.dark');
 }
 function toggleTheme() {
   const cur = document.documentElement.getAttribute('data-theme') || 'light';
@@ -823,29 +1448,31 @@ function toggleTheme() {
 // ── Sidebar ───────────────────────────────────────────────────────────────────
 function renderSidebar() {
   const initials = currentUser.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-  const roleLabel = currentUser.role === 'admin' ? 'Администратор' : 'Исследователь';
+  const roleLabel = currentUser.role === 'admin' ? tt('role.admin') : tt('role.researcher');
   const since = currentUser.created ? currentUser.created.slice(0, 4) : '—';
   document.getElementById('sb-avatar').textContent = initials;
   document.getElementById('sb-uname').textContent = currentUser.name;
   document.getElementById('sb-uemail').textContent = currentUser.email;
-  document.getElementById('sb-role').textContent = roleLabel + ' · с ' + since;
+  const sinceWord = tt('role.since');
+  document.getElementById('sb-role').textContent = roleLabel + ' · ' + (sinceWord ? sinceWord + ' ' : '') + since;
   document.getElementById('mobile-avatar').textContent = initials;
-  document.getElementById('welcome-title').textContent = 'Добро пожаловать, ' + currentUser.name.split(' ')[0];
+  document.getElementById('welcome-title').textContent = tt('dash.welcome') + ', ' + currentUser.name.split(' ')[0];
 }
 
 // ── Tab switching ─────────────────────────────────────────────────────────────
-const tabTitles = { overview: 'Обзор', datasets: 'Мои наборы', settings: 'Настройки', keys: 'API ключи' };
 function switchTab(id, btn) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(tEl => tEl.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
   const tab = document.getElementById('tab-' + id);
   if (tab) tab.classList.add('active');
   if (btn) btn.classList.add('active');
-  document.getElementById('mobile-title').textContent = tabTitles[id] || id;
+  const tabKey = { overview: 'dash.tab.overview', datasets: 'dash.tab.datasets', dmp: 'dash.tab.dmp', settings: 'dash.tab.settings', keys: 'dash.tab.keys' }[id];
+  document.getElementById('mobile-title').textContent = tabKey ? tt(tabKey) : id;
   closeSidebar();
   if (id === 'datasets') loadDatasets();
   if (id === 'settings') prefillSettings();
   if (id === 'keys') loadKeys();
+  if (id === 'dmp') loadDmp();
 }
 
 // ── Mobile sidebar ────────────────────────────────────────────────────────────
@@ -895,9 +1522,8 @@ async function loadOverview() {
     if (!recent.length) {
       listEl.innerHTML = `<div class="empty-state">
         <div class="empty-state-icon">📂</div>
-        <h3>Нет наборов данных</h3>
-        <p>Загрузите первый набор данных и начните делиться результатами исследований</p>
-        <button class="btn btn-primary" onclick="switchTab('datasets',document.querySelector('[data-tab=datasets]'))">+ Добавить набор</button>
+        <h3>${tt('dash.empty.ds')}</h3>
+        <button class="btn btn-primary" onclick="switchTab('datasets',document.querySelector('[data-tab=datasets]'))">${tt('dash.ds.add')}</button>
       </div>`;
     } else {
       listEl.innerHTML = recent.map(d => `
@@ -949,29 +1575,20 @@ async function loadDatasets() {
     renderDatasets(datasets);
   } catch {
     document.getElementById('ds-list-container').innerHTML =
-      '<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>Ошибка загрузки данных</p></div>';
+      `<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>${tt('err.network')}</p></div>`;
   }
 }
 
-function filterDatasets() {
-  const q      = (document.getElementById('ds-search').value || '').toLowerCase();
-  const status = document.getElementById('ds-status-filter').value;
-  const filtered = allDatasets.filter(d => {
-    const matchQ = !q || d.title.toLowerCase().includes(q) || (d.description || '').toLowerCase().includes(q);
-    const matchS = !status || d.status === status;
-    return matchQ && matchS;
-  });
-  renderDatasets(filtered);
-}
+function filterDatasets() { renderDatasets(filterCurrent()); }
 
 function renderDatasets(datasets) {
   const el = document.getElementById('ds-list-container');
   if (!datasets.length) {
     el.innerHTML = `<div class="empty-state">
       <div class="empty-state-icon">📭</div>
-      <h3>Наборов не найдено</h3>
-      <p>Попробуйте изменить параметры поиска или добавьте первый набор данных</p>
-      <button class="btn btn-primary" onclick="openAddModal()">+ Добавить набор</button>
+      <h3>${tt('dash.empty.search')}</h3>
+      <p>${tt('dash.empty.search.hint')}</p>
+      <button class="btn btn-primary" onclick="openAddModal()">${tt('dash.ds.add')}</button>
     </div>`;
     return;
   }
@@ -988,24 +1605,24 @@ function renderDatasets(datasets) {
         </div>
         <span class="ds-badge ${d.status}">${statusLabel(d.status)}</span>
       </div>
-      ${isRej && d.rejectComment ? `<div class="ds-reject-note">💬 Причина отклонения: ${esc(d.rejectComment)}</div>` : ''}
-      <div class="ds-card-body">${esc(d.description || 'Описание не указано')}</div>
+      ${isRej && d.rejectComment ? `<div class="ds-reject-note">💬 ${tt('ds.reject.reason')}: ${esc(d.rejectComment)}</div>` : ''}
+      <div class="ds-card-body">${esc(d.description || tt('ds.no.desc'))}</div>
       <div class="ds-card-row">
         <div class="ds-card-stat"><span>📦</span><strong>${d.license || '—'}</strong></div>
-        <div class="ds-card-stat"><span>🔓</span><strong>${d.access === 'open' ? 'Открытый' : 'Ограниченный'}</strong></div>
-        <div class="ds-card-stat"><span>⬇️</span><strong>${d.downloads}</strong> скач.</div>
-        <div class="ds-card-stat"><span>👁</span><strong>${d.views}</strong> просм.</div>
+        <div class="ds-card-stat"><span>🔓</span><strong>${d.access === 'open' ? tt('access.open') : tt('access.restricted')}</strong></div>
+        <div class="ds-card-stat"><span>⬇️</span><strong>${d.downloads}</strong> ${tt('ds.dl.short')}</div>
+        <div class="ds-card-stat"><span>👁</span><strong>${d.views}</strong> ${tt('ds.views.short')}</div>
         <div class="ds-card-stat"><span>📊</span>FAIR <strong>${fairAvg}%</strong></div>
         <div class="ds-card-stat"><span>📅</span>${(d.updated || d.created || '').slice(0,10)}</div>
       </div>
       ${kws.length ? `<div class="ds-card-kw">${kws.map(k => `<span class="kw-tag">${esc(k)}</span>`).join('')}</div>` : ''}
       <div class="ds-card-actions">
-        <button class="btn btn-outline btn-sm" onclick="openEditModal(${d.id})">✏️ Редактировать</button>
-        ${d.status === 'draft' ? `<button class="btn btn-success btn-sm" onclick="publishDs(${d.id})">🚀 Опубликовать</button>` : ''}
-        ${d.status === 'published' ? `<button class="btn btn-outline btn-sm" onclick="unpublishDs(${d.id})">📤 Снять с публикации</button>` : ''}
-        ${isRej ? `<button class="btn btn-outline btn-sm" onclick="resubmitDs(${d.id})">↺ Переподать</button>` : ''}
-        ${d.status === 'draft' ? `<button class="btn btn-danger btn-sm" onclick="confirmDeleteDs(${d.id})">🗑 Удалить</button>` : ''}
-        <button class="btn btn-outline btn-sm" onclick="goToDataset(${d.id})" style="margin-left:auto">👁 Просмотр</button>
+        <button class="btn btn-outline btn-sm" onclick="openEditModal(${d.id})">${tt('btn.edit')}</button>
+        ${d.status === 'draft' ? `<button class="btn btn-success btn-sm" onclick="publishDs(${d.id})">${tt('btn.publish')}</button>` : ''}
+        ${d.status === 'published' ? `<button class="btn btn-outline btn-sm" onclick="unpublishDs(${d.id})">${tt('btn.unpublish')}</button>` : ''}
+        ${isRej ? `<button class="btn btn-outline btn-sm" onclick="resubmitDs(${d.id})">${tt('btn.resubmit')}</button>` : ''}
+        ${d.status === 'draft' ? `<button class="btn btn-danger btn-sm" onclick="confirmDeleteDs(${d.id})">${tt('btn.delete')}</button>` : ''}
+        <button class="btn btn-outline btn-sm" onclick="goToDataset(${d.id})" style="margin-left:auto">${tt('btn.view')}</button>
       </div>
     </div>`;
   }).join('');
@@ -1016,23 +1633,23 @@ function goToDataset(id) {
 }
 
 async function publishDs(id) {
-  const ok = await confirm2('Опубликовать набор данных?', 'После публикации набор данных станет доступен всем пользователям.', '🚀', false);
+  const ok = await confirm2(tt('confirm.publish.t'), tt('confirm.publish.m'), '🚀', false);
   if (!ok) return;
   try {
     const r = await fetch(API + `/api/my/datasets/${id}/publish`, { method: 'POST', headers: authHeaders() });
-    if (r.ok) { showToast('Набор данных опубликован', 'success'); loadDatasets(); loadOverview(); }
-    else { const d = await r.json(); showToast(d.error || 'Ошибка', 'error'); }
-  } catch { showToast('Нет соединения', 'error'); }
+    if (r.ok) { showToast(tt('toast.published'), 'success'); loadDatasets(); loadOverview(); }
+    else { const d = await r.json(); showToast(d.error || tt('err.generic'), 'error'); }
+  } catch { showToast(tt('err.network'), 'error'); }
 }
 
 async function unpublishDs(id) {
-  const ok = await confirm2('Снять с публикации?', 'Набор данных будет переведён в статус черновика и скрыт из каталога.', '📤', false);
+  const ok = await confirm2(tt('confirm.unpublish.t'), tt('confirm.unpublish.m'), '📤', false);
   if (!ok) return;
   try {
     const r = await fetch(API + `/api/my/datasets/${id}/unpublish`, { method: 'POST', headers: authHeaders() });
-    if (r.ok) { showToast('Набор скрыт из каталога', 'success'); loadDatasets(); loadOverview(); }
-    else { const d = await r.json(); showToast(d.error || 'Ошибка', 'error'); }
-  } catch { showToast('Нет соединения', 'error'); }
+    if (r.ok) { showToast(tt('toast.unpublished'), 'success'); loadDatasets(); loadOverview(); }
+    else { const d = await r.json(); showToast(d.error || tt('err.generic'), 'error'); }
+  } catch { showToast(tt('err.network'), 'error'); }
 }
 
 async function resubmitDs(id) {
@@ -1041,31 +1658,32 @@ async function resubmitDs(id) {
       method: 'PUT', headers: { ...authHeaders(), 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: 'draft' }),
     });
-    if (r.ok) { showToast('Набор возвращён в черновики', 'success'); loadDatasets(); }
-    else { const d = await r.json(); showToast(d.error || 'Ошибка', 'error'); }
-  } catch { showToast('Нет соединения', 'error'); }
+    if (r.ok) { showToast(tt('toast.draft'), 'success'); loadDatasets(); }
+    else { const d = await r.json(); showToast(d.error || tt('err.generic'), 'error'); }
+  } catch { showToast(tt('err.network'), 'error'); }
 }
 
 async function confirmDeleteDs(id) {
-  const ok = await confirm2('Удалить набор данных?', 'Это действие нельзя отменить. Набор будет удалён безвозвратно.', '🗑', true);
+  const ok = await confirm2(tt('confirm.delete.t'), tt('confirm.delete.m'), '🗑', true);
   if (!ok) return;
   try {
     const r = await fetch(API + `/api/my/datasets/${id}`, { method: 'DELETE', headers: authHeaders() });
-    if (r.ok) { showToast('Набор данных удалён', 'success'); loadDatasets(); loadOverview(); }
-    else { const d = await r.json(); showToast(d.error || 'Ошибка', 'error'); }
-  } catch { showToast('Нет соединения', 'error'); }
+    if (r.ok) { showToast(tt('toast.deleted'), 'success'); loadDatasets(); loadOverview(); }
+    else { const d = await r.json(); showToast(d.error || tt('err.generic'), 'error'); }
+  } catch { showToast(tt('err.network'), 'error'); }
 }
 
 // ── Edit Modal ─────────────────────────────────────────────────────────────────
 function openEditModal(id) {
   document.getElementById('edit-id').value = id;
-  document.getElementById('edit-modal-title').textContent = 'Редактировать набор данных';
+  document.getElementById('edit-modal-title').textContent = tt('dash.edit.title');
   document.getElementById('edit-err').classList.remove('show');
   document.getElementById('editModal').classList.add('open');
   const ds = allDatasets.find(d => d.id === id);
   if (ds) {
     document.getElementById('edit-title').value  = ds.title || '';
     document.getElementById('edit-author').value = ds.creator?.name || '';
+    document.getElementById('edit-orcid').value  = ds.creator?.orcid || '';
     document.getElementById('edit-desc').value   = ds.description || '';
     document.getElementById('edit-kw').value     = (ds.keywords || []).join(', ');
     document.getElementById('edit-lic').value    = ds.license || 'CC-BY-4.0';
@@ -1078,11 +1696,14 @@ async function doEdit() {
   const title = document.getElementById('edit-title').value.trim();
   const desc  = document.getElementById('edit-desc').value.trim();
   const errEl = document.getElementById('edit-err');
-  if (!title || !desc) { errEl.textContent = 'Заполните обязательные поля'; errEl.classList.add('show'); return; }
+  if (!title || !desc) { errEl.textContent = tt('err.required'); errEl.classList.add('show'); return; }
   errEl.classList.remove('show');
   const body = {
     title, description: desc,
-    creator:  { name: document.getElementById('edit-author').value.trim() },
+    creator:  {
+      name:  document.getElementById('edit-author').value.trim(),
+      orcid: document.getElementById('edit-orcid').value.trim() || null,
+    },
     keywords: document.getElementById('edit-kw').value.split(',').map(s => s.trim()).filter(Boolean),
     license:  document.getElementById('edit-lic').value,
   };
@@ -1093,29 +1714,52 @@ async function doEdit() {
       body: JSON.stringify(body),
     });
     const data = await r.json();
-    if (!r.ok) { errEl.textContent = data.error || 'Ошибка'; errEl.classList.add('show'); return; }
+    if (!r.ok) { errEl.textContent = data.error || tt('err.generic'); errEl.classList.add('show'); return; }
     closeEditModal();
-    showToast('Изменения сохранены', 'success');
+    showToast(tt('toast.saved'), 'success');
     loadDatasets(); loadOverview();
-  } catch { errEl.textContent = 'Нет соединения'; errEl.classList.add('show'); }
+  } catch { errEl.textContent = tt('err.network'); errEl.classList.add('show'); }
 }
 
 // ── Add Modal ──────────────────────────────────────────────────────────────────
-function openAddModal() { document.getElementById('addModal').classList.add('open'); }
+let pendingFile = null; // File chosen via drop or file picker, uploaded after dataset created
+
+function openAddModal() {
+  document.getElementById('addModal').classList.add('open');
+  resetAddForm();
+  initDropZone();
+}
 function closeAddModal() { document.getElementById('addModal').classList.remove('open'); }
+
+function resetAddForm() {
+  ['add-title','add-author','add-orcid','add-desc','add-kw'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  document.getElementById('add-err').classList.remove('show');
+  pendingFile = null;
+  document.getElementById('dropFileInfo').style.display = 'none';
+  document.getElementById('dropFileInfo').innerHTML = '';
+  document.getElementById('uploadProgress').classList.remove('active');
+  document.getElementById('uploadProgressBar').style.width = '0%';
+  document.getElementById('previewBox').classList.remove('active');
+  document.getElementById('previewBox').innerHTML = '';
+}
 
 async function doAdd() {
   const title = document.getElementById('add-title').value.trim();
   const desc  = document.getElementById('add-desc').value.trim();
+  const orcid = document.getElementById('add-orcid').value.trim();
   const errEl = document.getElementById('add-err');
-  if (!title || !desc) { errEl.textContent = 'Заполните обязательные поля'; errEl.classList.add('show'); return; }
+  if (!title || !desc) { errEl.textContent = tt('err.required'); errEl.classList.add('show'); return; }
   errEl.classList.remove('show');
   const body = {
     title, description: desc,
-    creator:  { name: document.getElementById('add-author').value.trim() || currentUser.name },
+    creator:  {
+      name:  document.getElementById('add-author').value.trim() || currentUser.name,
+      orcid: orcid || null,
+    },
     keywords: document.getElementById('add-kw').value.split(',').map(s => s.trim()).filter(Boolean),
     license:  document.getElementById('add-lic').value,
     access:   'open',
+    format:   pendingFile?.type || 'text/plain',
   };
   try {
     const r = await fetch(API + '/api/datasets', {
@@ -1124,13 +1768,146 @@ async function doAdd() {
       body: JSON.stringify(body),
     });
     const data = await r.json();
-    if (!r.ok) { errEl.textContent = data.error || 'Ошибка'; errEl.classList.add('show'); return; }
+    if (!r.ok) { errEl.textContent = data.error || tt('err.generic'); errEl.classList.add('show'); return; }
+
+    // If a file was selected, upload it
+    if (pendingFile && data.id) {
+      try { await uploadFileWithProgress(data.id, pendingFile); }
+      catch (e) { showToast(tt('toast.upload.err'), 'error'); }
+    }
+
     closeAddModal();
-    ['add-title','add-author','add-desc','add-kw'].forEach(id => { document.getElementById(id).value = ''; });
-    showToast('Черновик создан!', 'success');
+    showToast(tt('toast.draft.created'), 'success');
     loadDatasets(); loadOverview();
     switchTab('datasets', document.querySelector('[data-tab=datasets]'));
-  } catch { errEl.textContent = 'Нет соединения'; errEl.classList.add('show'); }
+  } catch { errEl.textContent = tt('err.network'); errEl.classList.add('show'); }
+}
+
+// ── Drop zone / file upload ──────────────────────────────────────────────────
+function initDropZone() {
+  const dz = document.getElementById('dropZone');
+  if (!dz || dz._wired) return;
+  dz._wired = true;
+  ['dragenter','dragover'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('dragover'); }));
+  ['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('dragover'); }));
+  dz.addEventListener('drop', e => {
+    const f = e.dataTransfer?.files?.[0];
+    if (f) handleFile(f);
+  });
+}
+
+function handleFileSelect(e) {
+  const f = e.target.files?.[0];
+  if (f) handleFile(f);
+}
+
+function handleFile(file) {
+  const MAX = 100 * 1024 * 1024;
+  if (file.size > MAX) { showToast(tt('err.file.size'), 'error'); return; }
+  pendingFile = file;
+  const sizeStr = file.size > 1024 * 1024
+    ? (file.size / 1024 / 1024).toFixed(1) + ' MB'
+    : (file.size / 1024).toFixed(1) + ' KB';
+  const info = document.getElementById('dropFileInfo');
+  info.style.display = 'block';
+  info.innerHTML = `
+    <div class="drop-file">
+      <span style="font-size:18px">📄</span>
+      <span class="drop-file-name">${esc(file.name)}</span>
+      <span class="drop-file-size">${sizeStr}</span>
+      <button class="drop-file-rm" onclick="clearPendingFile()" title="Remove">✕</button>
+    </div>`;
+  // Preview for CSV/JSON
+  previewFile(file);
+}
+
+function clearPendingFile() {
+  pendingFile = null;
+  document.getElementById('dropFileInfo').style.display = 'none';
+  document.getElementById('dropFileInfo').innerHTML = '';
+  document.getElementById('previewBox').classList.remove('active');
+  document.getElementById('previewBox').innerHTML = '';
+  document.getElementById('addFileInput').value = '';
+}
+
+function previewFile(file) {
+  const box = document.getElementById('previewBox');
+  const name = file.name.toLowerCase();
+  const isCsv = name.endsWith('.csv') || name.endsWith('.tsv') || file.type.includes('csv');
+  const isJson = name.endsWith('.json') || file.type.includes('json');
+  if (!isCsv && !isJson) { box.classList.remove('active'); return; }
+  const slice = file.slice(0, 64 * 1024); // First 64KB
+  const reader = new FileReader();
+  reader.onload = () => {
+    const text = reader.result;
+    if (isCsv) renderCsvPreview(text, name.endsWith('.tsv') ? '\t' : ',');
+    else if (isJson) renderJsonPreview(text);
+  };
+  reader.readAsText(slice);
+}
+
+function renderCsvPreview(text, sep) {
+  const box = document.getElementById('previewBox');
+  const lines = text.split(/\r?\n/).filter(Boolean).slice(0, 11);
+  if (!lines.length) { box.classList.remove('active'); return; }
+  const parse = (line) => {
+    const out = []; let cur = ''; let inQ = false;
+    for (const c of line) {
+      if (c === '"') inQ = !inQ;
+      else if (c === sep && !inQ) { out.push(cur); cur = ''; }
+      else cur += c;
+    }
+    out.push(cur); return out;
+  };
+  const header = parse(lines[0]);
+  const rows = lines.slice(1, 11).map(parse);
+  box.classList.add('active');
+  box.innerHTML = `
+    <div style="margin-bottom:6px;font-weight:700;color:var(--t1)">${tt('preview.title')} (${rows.length} ${tt('preview.rows')})</div>
+    <table>
+      <thead><tr>${header.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead>
+      <tbody>${rows.map(r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody>
+    </table>`;
+}
+
+function renderJsonPreview(text) {
+  const box = document.getElementById('previewBox');
+  try {
+    const data = JSON.parse(text);
+    let preview;
+    if (Array.isArray(data)) preview = JSON.stringify(data.slice(0, 5), null, 2);
+    else preview = JSON.stringify(data, null, 2).slice(0, 1500);
+    box.classList.add('active');
+    box.innerHTML = `<div style="margin-bottom:6px;font-weight:700;color:var(--t1)">${tt('preview.title')} (JSON)</div><pre style="white-space:pre-wrap;margin:0">${esc(preview)}</pre>`;
+  } catch (e) {
+    // Partial JSON — show raw
+    box.classList.add('active');
+    box.innerHTML = `<pre style="white-space:pre-wrap;margin:0">${esc(text.slice(0, 800))}…</pre>`;
+  }
+}
+
+function uploadFileWithProgress(datasetId, file) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    const progress = document.getElementById('uploadProgress');
+    const bar = document.getElementById('uploadProgressBar');
+    progress.classList.add('active');
+    bar.style.width = '0%';
+    xhr.upload.addEventListener('progress', e => {
+      if (e.lengthComputable) bar.style.width = Math.round(e.loaded / e.total * 100) + '%';
+    });
+    xhr.addEventListener('load', () => {
+      progress.classList.remove('active');
+      if (xhr.status >= 200 && xhr.status < 300) { showToast(tt('toast.upload.ok'), 'success'); resolve(); }
+      else reject(new Error('HTTP ' + xhr.status));
+    });
+    xhr.addEventListener('error', () => { progress.classList.remove('active'); reject(new Error('network')); });
+    xhr.open('POST', `${API}/api/datasets/${datasetId}/file`);
+    xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+    xhr.setRequestHeader('X-Filename', encodeURIComponent(file.name));
+    xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
+    xhr.send(file);
+  });
 }
 
 // ── Settings ───────────────────────────────────────────────────────────────────
@@ -1149,7 +1926,7 @@ async function saveProfile() {
   const name  = document.getElementById('s-name').value.trim();
   const email = document.getElementById('s-email').value.trim();
   const msgEl = document.getElementById('s-profile-msg');
-  if (!name || !email) { msgEl.textContent = 'Заполните все поля'; msgEl.className = 'form-msg err'; return; }
+  if (!name || !email) { msgEl.textContent = tt('err.fill.all'); msgEl.className = 'form-msg err'; return; }
   try {
     const r = await fetch(API + '/api/me', {
       method: 'PUT',
@@ -1157,13 +1934,13 @@ async function saveProfile() {
       body: JSON.stringify({ name, email }),
     });
     const data = await r.json();
-    if (!r.ok) { msgEl.textContent = data.error || 'Ошибка'; msgEl.className = 'form-msg err'; return; }
+    if (!r.ok) { msgEl.textContent = data.error || tt('err.generic'); msgEl.className = 'form-msg err'; return; }
     currentUser = { ...currentUser, name: data.name, email: data.email };
     renderSidebar();
-    msgEl.textContent = '✓ Данные успешно обновлены';
+    msgEl.textContent = tt('toast.profile.ok');
     msgEl.className = 'form-msg ok';
     setTimeout(() => { msgEl.className = 'form-msg'; }, 4000);
-  } catch { msgEl.textContent = 'Нет соединения'; msgEl.className = 'form-msg err'; }
+  } catch { msgEl.textContent = tt('err.network'); msgEl.className = 'form-msg err'; }
 }
 
 async function savePassword() {
@@ -1171,9 +1948,9 @@ async function savePassword() {
   const nw   = document.getElementById('s-new').value;
   const conf = document.getElementById('s-conf').value;
   const msgEl = document.getElementById('s-pass-msg');
-  if (!cur || !nw || !conf) { msgEl.textContent = 'Заполните все поля'; msgEl.className = 'form-msg err'; return; }
-  if (nw !== conf) { msgEl.textContent = 'Пароли не совпадают'; msgEl.className = 'form-msg err'; return; }
-  if (nw.length < 6) { msgEl.textContent = 'Минимум 6 символов'; msgEl.className = 'form-msg err'; return; }
+  if (!cur || !nw || !conf) { msgEl.textContent = tt('err.fill.all'); msgEl.className = 'form-msg err'; return; }
+  if (nw !== conf) { msgEl.textContent = tt('err.pwd.mismatch'); msgEl.className = 'form-msg err'; return; }
+  if (nw.length < 6) { msgEl.textContent = tt('err.pwd.short'); msgEl.className = 'form-msg err'; return; }
   try {
     const r = await fetch(API + '/api/me/password', {
       method: 'PUT',
@@ -1181,12 +1958,51 @@ async function savePassword() {
       body: JSON.stringify({ currentPassword: cur, newPassword: nw }),
     });
     const data = await r.json();
-    if (!r.ok) { msgEl.textContent = data.error || 'Ошибка'; msgEl.className = 'form-msg err'; return; }
+    if (!r.ok) { msgEl.textContent = data.error || tt('err.generic'); msgEl.className = 'form-msg err'; return; }
     ['s-cur','s-new','s-conf'].forEach(id => { document.getElementById(id).value = ''; });
-    msgEl.textContent = '✓ Пароль успешно изменён';
+    msgEl.textContent = tt('toast.pwd.ok');
     msgEl.className = 'form-msg ok';
     setTimeout(() => { msgEl.className = 'form-msg'; }, 4000);
-  } catch { msgEl.textContent = 'Нет соединения'; msgEl.className = 'form-msg err'; }
+  } catch { msgEl.textContent = tt('err.network'); msgEl.className = 'form-msg err'; }
+}
+
+// ── DMP ────────────────────────────────────────────────────────────────────────
+async function loadDmp() {
+  try {
+    const r = await fetch(API + '/api/my/dmp', { headers: authHeaders() });
+    if (!r.ok) return;
+    const d = await r.json();
+    document.getElementById('dmp-data').value      = d.dataDescription || '';
+    document.getElementById('dmp-storage').value   = d.storagePlan || '';
+    document.getElementById('dmp-access').value    = d.accessControl || '';
+    document.getElementById('dmp-retention').value = d.retentionPeriod || '';
+    document.getElementById('dmp-sharing').value   = d.sharingPlan || '';
+    document.getElementById('dmp-funder').value    = d.funder || '';
+  } catch { /* silent */ }
+}
+
+async function saveDmp() {
+  const body = {
+    dataDescription: document.getElementById('dmp-data').value.trim(),
+    storagePlan:     document.getElementById('dmp-storage').value.trim(),
+    accessControl:   document.getElementById('dmp-access').value.trim(),
+    retentionPeriod: document.getElementById('dmp-retention').value.trim(),
+    sharingPlan:     document.getElementById('dmp-sharing').value.trim(),
+    funder:          document.getElementById('dmp-funder').value.trim(),
+  };
+  const msgEl = document.getElementById('dmp-msg');
+  try {
+    const r = await fetch(API + '/api/my/dmp', {
+      method: 'POST',
+      headers: { ...authHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    if (!r.ok) { msgEl.textContent = tt('err.generic'); msgEl.className = 'form-msg err'; return; }
+    msgEl.textContent = tt('dmp.saved');
+    msgEl.className = 'form-msg ok';
+    setTimeout(() => { msgEl.className = 'form-msg'; }, 4000);
+    showToast(tt('dmp.saved'), 'success');
+  } catch { msgEl.textContent = tt('err.network'); msgEl.className = 'form-msg err'; }
 }
 
 // ── API Keys ───────────────────────────────────────────────────────────────────
@@ -1200,8 +2016,7 @@ async function loadKeys() {
     if (!keys.length) {
       el.innerHTML = `<div class="empty-state">
         <div class="empty-state-icon">🔑</div>
-        <h3>Нет API ключей</h3>
-        <p>Создайте ключ для программного доступа к данным</p>
+        <h3>${tt('dash.keys.empty')}</h3>
       </div>`;
       return;
     }
@@ -1211,14 +2026,14 @@ async function loadKeys() {
         <div class="key-info">
           <div class="key-name">${esc(k.name)}</div>
           <div class="key-meta">
-            Создан: ${(k.created || '').slice(0,10)}
-            ${k.lastUsed ? ' · Использован: ' + k.lastUsed.slice(0,10) : ' · Не использован'}
+            ${tt('dash.keys.created')}: ${(k.created || '').slice(0,10)}
+            ${k.lastUsed ? ' · ' + tt('dash.keys.used') + ': ' + k.lastUsed.slice(0,10) : ' · ' + tt('dash.keys.unused')}
           </div>
         </div>
-        <button class="btn btn-danger btn-sm" onclick="revokeKey(${k.id})">Отозвать</button>
+        <button class="btn btn-danger btn-sm" onclick="revokeKey(${k.id})">${tt('dash.keys.revoke')}</button>
       </div>`).join('');
   } catch {
-    el.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>Ошибка загрузки</p></div>';
+    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>${tt('err.generic')}</p></div>`;
   }
 }
 
@@ -1228,7 +2043,7 @@ async function createApiKey() {
   const boxEl  = document.getElementById('k-new-box');
   const valEl  = document.getElementById('k-new-val');
   const name = nameEl.value.trim();
-  if (!name) { msgEl.textContent = 'Введите название ключа'; msgEl.className = 'form-msg err'; return; }
+  if (!name) { msgEl.textContent = tt('err.key.name'); msgEl.className = 'form-msg err'; return; }
   try {
     const r = await fetch(API + '/api/keys', {
       method: 'POST',
@@ -1236,33 +2051,33 @@ async function createApiKey() {
       body: JSON.stringify({ name }),
     });
     const data = await r.json();
-    if (!r.ok) { msgEl.textContent = data.error || 'Ошибка'; msgEl.className = 'form-msg err'; return; }
+    if (!r.ok) { msgEl.textContent = data.error || tt('err.generic'); msgEl.className = 'form-msg err'; return; }
     valEl.textContent = data.key;
     boxEl.style.display = 'block';
-    msgEl.textContent = '✓ Ключ создан! Скопируйте его — он больше не будет показан.';
+    msgEl.textContent = tt('toast.key.created');
     msgEl.className = 'form-msg ok';
     nameEl.value = '';
     loadKeys();
-  } catch { msgEl.textContent = 'Нет соединения'; msgEl.className = 'form-msg err'; }
+  } catch { msgEl.textContent = tt('err.network'); msgEl.className = 'form-msg err'; }
 }
 
 function copyKey() {
   const key = document.getElementById('k-new-val').textContent;
-  navigator.clipboard.writeText(key).then(() => showToast('Ключ скопирован', 'success'));
+  navigator.clipboard.writeText(key).then(() => showToast(tt('toast.key.copied'), 'success'));
 }
 
 async function revokeKey(id) {
-  const ok = await confirm2('Отозвать API ключ?', 'Ключ будет деактивирован и больше не будет работать.', '🗑', true);
+  const ok = await confirm2(tt('confirm.revoke.t'), tt('confirm.revoke.m'), '🗑', true);
   if (!ok) return;
   try {
     const r = await fetch(API + `/api/keys/${id}`, { method: 'DELETE', headers: authHeaders() });
-    if (r.ok) { showToast('Ключ отозван', 'success'); loadKeys(); }
-  } catch { showToast('Ошибка', 'error'); }
+    if (r.ok) { showToast(tt('toast.key.revoked'), 'success'); loadKeys(); }
+  } catch { showToast(tt('err.generic'), 'error'); }
 }
 
 // ── Logout ─────────────────────────────────────────────────────────────────────
 async function doLogout() {
-  const ok = await confirm2('Выйти из аккаунта?', 'Вы будете перенаправлены на главную страницу.', '👋', false);
+  const ok = await confirm2(tt('confirm.logout.t'), tt('confirm.logout.m'), '👋', false);
   if (!ok) return;
   try {
     await fetch(API + '/api/logout', { method: 'POST', headers: authHeaders() });
@@ -1280,7 +2095,8 @@ function esc(s) {
   return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 function statusLabel(s) {
-  return { published: '● Опубл.', draft: '◐ Черновик', rejected: '✕ Отклонён' }[s] || s;
+  const key = { published: 'status.published', draft: 'status.draft', rejected: 'status.rejected' }[s];
+  return key ? tt(key) : s;
 }
 
 // ── Toast ──────────────────────────────────────────────────────────────────────
@@ -1301,7 +2117,7 @@ function confirm2(title, msg, icon = '⚠️', isDanger = true) {
     document.getElementById('confirm-msg').textContent   = msg;
     const btn = document.getElementById('confirm-ok-btn');
     btn.className = isDanger ? 'btn btn-danger' : 'btn btn-primary';
-    btn.textContent = 'Подтвердить';
+    btn.textContent = tt('dash.confirm');
     document.getElementById('confirmOverlay').classList.add('open');
     _resolveConfirm = resolve;
   });

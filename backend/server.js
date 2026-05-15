@@ -10,17 +10,26 @@ const ADM_DIR = path.join(__dirname, '..', 'admin');
 const { MIME, cors, sendJSON } = require('./utils');
 const { addLog, getSession }   = require('./db');
 
-// ── Rate limiter ─────────────────────────────────────────────────────────────
-const rl = new Map();
-function checkRateLimit(ip, max, windowMs) {
-  const now = Date.now();
-  const w = rl.get(ip) || { count: 0, resetAt: now + windowMs };
-  if (now > w.resetAt) { w.count = 0; w.resetAt = now + windowMs; }
-  w.count++;
-  rl.set(ip, w);
-  return w.count <= max;
+// Rate limiter is in utils.js for reuse from routes
+const { checkRateLimit } = require('./utils');
+
+// ── Security headers ─────────────────────────────────────────────────────────
+function setSecurityHeaders(res, isHTML) {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('Referrer-Policy', 'no-referrer-when-downgrade');
+  res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+  if (isHTML) {
+    res.setHeader('Content-Security-Policy',
+      "default-src 'self'; " +
+      "script-src 'self' 'unsafe-inline'; " +
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+      "img-src 'self' data: blob: https:; " +
+      "font-src 'self' data: https://fonts.gstatic.com; " +
+      "connect-src 'self'; " +
+      "frame-ancestors 'self'");
+  }
 }
-setInterval(() => { const now = Date.now(); for (const [k, v] of rl) { if (now > v.resetAt) rl.delete(k); } }, 5 * 60_000);
 
 // ── Router ───────────────────────────────────────────────────────────────────
 const routes = [];
@@ -42,9 +51,11 @@ const server = http.createServer(async (req, res) => {
   const isApi = pathname.startsWith('/api/') || pathname.startsWith('/admin/api/') || pathname === '/oai';
 
   if (isApi) {
+    setSecurityHeaders(res, false);
     const ip  = req.socket?.remoteAddress || 'unknown';
-    const max = pathname.includes('/login') ? 20 : 120;
-    if (!checkRateLimit(ip, max, 60_000)) {
+    const isLogin = pathname.includes('/login') || pathname === '/api/register';
+    const max = isLogin ? 10 : 120;
+    if (!checkRateLimit(`ip:${ip}:${pathname}`, max, 60_000)) {
       sendJSON(res, 429, { error: 'Too many requests', retryAfter: 60 });
       return;
     }
@@ -96,15 +107,19 @@ const server = http.createServer(async (req, res) => {
 
 function serveFile(res, fp, fallback) {
   const mime = MIME[path.extname(fp).toLowerCase()] || 'application/octet-stream';
+  const isHTML = mime.startsWith('text/html');
   fs.readFile(fp, (err, data) => {
     if (err) {
       fs.readFile(fallback, (err2, data2) => {
         if (err2) { cors(res); res.writeHead(404); res.end('404'); }
-        else       { cors(res); res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' }); res.end(data2); }
+        else { cors(res); setSecurityHeaders(res, true); res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' }); res.end(data2); }
       });
     } else {
       cors(res);
-      res.writeHead(200, { 'Content-Type': mime, 'Cache-Control': 'max-age=600' });
+      setSecurityHeaders(res, isHTML);
+      // HTML pages: no cache (so users always get fresh UI). Assets: 5 min.
+      const cache = isHTML ? 'no-cache, no-store, must-revalidate' : 'max-age=300';
+      res.writeHead(200, { 'Content-Type': mime, 'Cache-Control': cache });
       res.end(data);
     }
   });

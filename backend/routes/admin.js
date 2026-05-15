@@ -1,7 +1,7 @@
 'use strict';
 const db = require('../db');
 const { auth } = require('../auth');
-const { sha256, genToken, sendJSON, readBody } = require('../utils');
+const { sha256, genToken, sendJSON, readBody, hashPassword, verifyPassword, isLegacyHash, checkRateLimit } = require('../utils');
 
 module.exports = function registerAdminRoutes(route) {
 
@@ -9,9 +9,14 @@ module.exports = function registerAdminRoutes(route) {
 
   route('POST', '/admin/api/login', async (req, res) => {
     const { email, password } = await readBody(req).catch(() => ({}));
+    if (!email) return sendJSON(res, 422, { error: 'email required' });
+    if (!checkRateLimit(`adminLogin:${String(email).toLowerCase()}`, 5, 15 * 60_000)) {
+      return sendJSON(res, 429, { error: 'Слишком много попыток. Подождите 15 минут.', retryAfter: 900 });
+    }
     const user = db.findUserByEmail(email);
-    if (!user || !user.active || user.role !== 'admin' || user.passwordHash !== sha256(password || ''))
-      return sendJSON(res, 401, { error: 'Invalid admin credentials' });
+    const ok = user && user.active && user.role === 'admin' && verifyPassword(password || '', user.passwordHash);
+    if (!ok) return sendJSON(res, 401, { error: 'Invalid admin credentials' });
+    if (isLegacyHash(user.passwordHash)) db.updateUser(user.id, { passwordHash: hashPassword(password) });
     const token = genToken(), refreshToken = genToken();
     db.setSession(token,        { userId: user.id, exp: Date.now() + 8 * 3600 * 1000, role: 'admin' });
     db.setSession(refreshToken, { userId: user.id, exp: Date.now() + 7 * 24 * 3600 * 1000, role: 'admin', type: 'refresh' });
@@ -112,7 +117,7 @@ module.exports = function registerAdminRoutes(route) {
     if (db.findUserByEmail(body.email)) return sendJSON(res, 409, { error: 'Email already exists' });
     const user = db.createUser({
       name: body.name, email: body.email, role: body.role || 'researcher',
-      passwordHash: sha256(body.password), active: true, created: new Date().toISOString(),
+      passwordHash: hashPassword(body.password), active: true, created: new Date().toISOString(),
     });
     sendJSON(res, 201, { ...user, passwordHash: undefined });
   });
@@ -123,7 +128,7 @@ module.exports = function registerAdminRoutes(route) {
     if (!body) return sendJSON(res, 400, { error: 'Bad request' });
     const id = parseInt(p[1]);
     if (!db.findUserById(id)) return sendJSON(res, 404, { error: 'Not found' });
-    if (body.password) { body.passwordHash = sha256(body.password); delete body.password; }
+    if (body.password) { body.passwordHash = hashPassword(body.password); delete body.password; }
     const user = db.updateUser(id, body);
     sendJSON(res, 200, { ...user, passwordHash: undefined });
   });
@@ -167,6 +172,66 @@ module.exports = function registerAdminRoutes(route) {
     const lim = parseInt(q.limit) || 100;
     const logs = db.getLogs(lim);
     sendJSON(res, 200, { total: logs.length, logs });
+  });
+
+  route('GET', '/admin/api/logs/export', (req, res) => {
+    if (!auth(req, 'admin')) return sendJSON(res, 401, { error: 'Unauthorized' });
+    const logs = db.getLogs(500);
+    const rows = ['id,timestamp,method,path,status,ms,user_id'];
+    for (const l of logs) {
+      const path = String(l.path || '').replace(/"/g, '""');
+      rows.push([l.id, l.ts, l.method || '', `"${path}"`, l.status || '', l.ms || '', l.user_id || ''].join(','));
+    }
+    const { cors } = require('../utils');
+    cors(res);
+    res.writeHead(200, { 'Content-Type': 'text/csv;charset=utf-8', 'Content-Disposition': 'attachment;filename="rdm-logs.csv"' });
+    res.end(rows.join('\n') + '\n');
+  });
+
+  // ── Bulk operations ───────────────────────────────────────────────────────
+
+  route('POST', '/admin/api/datasets/bulk', async (req, res) => {
+    if (!auth(req, 'admin')) return sendJSON(res, 401, { error: 'Unauthorized' });
+    const body = await readBody(req).catch(() => null);
+    if (!body || !Array.isArray(body.ids) || !body.action) {
+      return sendJSON(res, 422, { error: 'ids[] and action required' });
+    }
+    const now = new Date().toISOString();
+    const results = { ok: 0, fail: 0, errors: [] };
+    for (const id of body.ids) {
+      try {
+        const ds = db.getDataset(parseInt(id));
+        if (!ds) { results.fail++; results.errors.push({ id, error: 'not found' }); continue; }
+        if (body.action === 'publish')   db.updateDataset(id, { status: 'published', updated: now });
+        else if (body.action === 'unpublish') db.updateDataset(id, { status: 'draft', updated: now });
+        else if (body.action === 'delete')    db.deleteDataset(id);
+        else { results.fail++; results.errors.push({ id, error: 'unknown action' }); continue; }
+        results.ok++;
+      } catch (e) { results.fail++; results.errors.push({ id, error: e.message }); }
+    }
+    sendJSON(res, 200, results);
+  });
+
+  route('POST', '/admin/api/users/bulk', async (req, res) => {
+    if (!auth(req, 'admin')) return sendJSON(res, 401, { error: 'Unauthorized' });
+    const body = await readBody(req).catch(() => null);
+    if (!body || !Array.isArray(body.ids) || !body.action) {
+      return sendJSON(res, 422, { error: 'ids[] and action required' });
+    }
+    const results = { ok: 0, fail: 0, errors: [] };
+    for (const id of body.ids) {
+      try {
+        if (parseInt(id) === 1) { results.fail++; results.errors.push({ id, error: 'root admin' }); continue; }
+        const u = db.findUserById(parseInt(id));
+        if (!u) { results.fail++; results.errors.push({ id, error: 'not found' }); continue; }
+        if (body.action === 'activate')   db.updateUser(id, { active: true });
+        else if (body.action === 'deactivate') db.updateUser(id, { active: false });
+        else if (body.action === 'delete')     db.deleteUser(id);
+        else { results.fail++; results.errors.push({ id, error: 'unknown action' }); continue; }
+        results.ok++;
+      } catch (e) { results.fail++; results.errors.push({ id, error: e.message }); }
+    }
+    sendJSON(res, 200, results);
   });
 
 };

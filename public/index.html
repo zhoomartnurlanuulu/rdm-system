@@ -171,22 +171,22 @@
 <!-- HERO -->
 <section id="hero">
   <div class="hero-inner">
-    <div class="hero-badge">КГТУ — Исследовательские данные</div>
-    <h1 class="hero-title">
+    <div class="hero-badge" data-i18n="hero.badge">КГТУ — Исследовательские данные</div>
+    <h1 class="hero-title" data-i18n="hero.title" data-i18n-html>
       Платформа управления<br><em>научными данными</em>
     </h1>
-    <p class="hero-sub">
+    <p class="hero-sub" data-i18n="hero.sub">
       Храните, публикуйте и делитесь исследовательскими данными КГТУ. FAIR-принципы, автоматические DOI, версионирование и открытый доступ.
     </p>
     <div class="hero-actions">
-      <a class="btn-primary" href="#catalog">Открыть каталог данных →</a>
-      <button class="btn-outline" onclick="openRegister()">Создать аккаунт</button>
+      <a class="btn-primary" href="#catalog" data-i18n="hero.btn.catalog">Открыть каталог данных →</a>
+      <button class="btn-outline" onclick="openRegister()" data-i18n="hero.btn.reg">Создать аккаунт</button>
     </div>
     <div class="hero-stats reveal">
-      <div class="hs-cell"><div class="hs-num" id="st-total">–</div><div class="hs-lbl">Наборов данных</div></div>
-      <div class="hs-cell"><div class="hs-num" id="st-dl">–</div><div class="hs-lbl">Скачиваний</div></div>
-      <div class="hs-cell"><div class="hs-num" id="st-open">–</div><div class="hs-lbl">Открытый доступ</div></div>
-      <div class="hs-cell"><div class="hs-num" id="st-fair">–</div><div class="hs-lbl">Средний FAIR-балл</div></div>
+      <div class="hs-cell"><div class="hs-num" id="st-total">–</div><div class="hs-lbl" data-i18n="hero.lbl.total">Наборов данных</div></div>
+      <div class="hs-cell"><div class="hs-num" id="st-dl">–</div><div class="hs-lbl" data-i18n="hero.lbl.dl">Скачиваний</div></div>
+      <div class="hs-cell"><div class="hs-num" id="st-open">–</div><div class="hs-lbl" data-i18n="hero.lbl.open">Открытый доступ</div></div>
+      <div class="hs-cell"><div class="hs-num" id="st-fair">–</div><div class="hs-lbl" data-i18n="hero.lbl.fair">Средний FAIR-балл</div></div>
     </div>
   </div>
 </section>
@@ -200,12 +200,12 @@
         <h3 data-i18n="why.h3">Воспроизводимость как основа науки</h3>
         <p data-i18n="why.p1">Исследования всё больше опираются на данные. Без профессионального управления данные теряются, результаты невозможно воспроизвести, а вложенные инвестиции пропадают впустую.</p>
         <div class="why-quote">
-          <div class="q-text">"Growth in a Time of Debt" — ошибка в Excel, где пропустили 5 строк, изменила выводы с −0.1% до +2.2% роста ВВП.</div>
-          <div class="q-src">Reinhart & Rogoff, 2010 — классический пример нарушения воспроизводимости</div>
+          <div class="q-text" data-i18n="why.q1.text">"Growth in a Time of Debt" — ошибка в Excel, где пропустили 5 строк, изменила выводы с −0.1% до +2.2% роста ВВП.</div>
+          <div class="q-src" data-i18n="why.q1.src">Reinhart & Rogoff, 2010 — классический пример нарушения воспроизводимости</div>
         </div>
         <div class="why-quote" style="border-color:var(--F)">
-          <div class="q-text">"Данные — это новая нефть, но только если правильно управлять ими."</div>
-          <div class="q-src">The Economist, May 6, 2017</div>
+          <div class="q-text" data-i18n="why.q2.text">"Данные — это новая нефть, но только если правильно управлять ими."</div>
+          <div class="q-src" data-i18n="why.q2.src">The Economist, May 6, 2017</div>
         </div>
         <p style="color:var(--t2);line-height:1.8" data-i18n="why.p2">Цель системы — снять нагрузку с исследователей и обеспечить доверенную среду для сбора, хранения, анализа и публикации данных.</p>
       </div>
@@ -523,18 +523,18 @@
     <!-- Repositum -->
     <div class="comp-panel active" id="comp-0">
       <div class="comp-info">
-        <h3>Repositum — Публикационная база данных</h3>
-        <div class="comp-tech">DSpace + DOI Service · ПРОДАКШН</div>
-        <p>Репозиторий научных публикаций университета. Основан на платформе DSpace — ведущей open-source системе для институциональных репозиториев, используемой более чем 2000 организациями по всему миру.</p>
+        <h3 data-i18n="comp.c1.title">Repositum — Публикационная база данных</h3>
+        <div class="comp-tech" data-i18n="comp.c1.tech">DSpace + DOI Service · ПРОДАКШН</div>
+        <p data-i18n="comp.c1.desc">Репозиторий научных публикаций университета. Основан на платформе DSpace — ведущей open-source системе для институциональных репозиториев, используемой более чем 2000 организациями по всему миру.</p>
         <ul class="comp-features">
-          <li>Хранение статей, тезисов, книг, диссертаций</li>
-          <li>Присвоение постоянных идентификаторов DOI</li>
-          <li>Интеграция с австрийским DOI Service (адаптируется для КГТУ)</li>
-          <li>OAI-PMH для агрегации метаданных</li>
-          <li>Полнотекстовый поиск по всему репозиторию</li>
-          <li>ORCID-интеграция для авторов</li>
+          <li data-i18n="comp.c1.f1">Хранение статей, тезисов, книг, диссертаций</li>
+          <li data-i18n="comp.c1.f2">Присвоение постоянных идентификаторов DOI</li>
+          <li data-i18n="comp.c1.f3">Интеграция с австрийским DOI Service (адаптируется для КГТУ)</li>
+          <li data-i18n="comp.c1.f4">OAI-PMH для агрегации метаданных</li>
+          <li data-i18n="comp.c1.f5">Полнотекстовый поиск по всему репозиторию</li>
+          <li data-i18n="comp.c1.f6">ORCID-интеграция для авторов</li>
         </ul>
-        <span class="comp-status-badge status-prod">● Продакшн</span>
+        <span class="comp-status-badge status-prod" data-i18n="comp.status.prod">● Продакшн</span>
       </div>
       <div>
         <div class="comp-code">
@@ -562,18 +562,18 @@
     <!-- GitLab -->
     <div class="comp-panel" id="comp-1">
       <div class="comp-info">
-        <h3>GitLab — Репозиторий исходного кода</h3>
-        <div class="comp-tech">GitLab CE · ПРОДАКШН</div>
-        <p>Корпоративный GitLab для хранения исходного кода исследований, скриптов обработки данных, пайплайнов воспроизводимости. Исходный код — это тоже исследовательские данные.</p>
+        <h3 data-i18n="comp.c2.title">GitLab — Репозиторий исходного кода</h3>
+        <div class="comp-tech" data-i18n="comp.c2.tech">GitLab CE · ПРОДАКШН</div>
+        <p data-i18n="comp.c2.desc">Корпоративный GitLab для хранения исходного кода исследований, скриптов обработки данных, пайплайнов воспроизводимости. Исходный код — это тоже исследовательские данные.</p>
         <ul class="comp-features">
-          <li>Git-репозитории для кода и конфигураций</li>
-          <li>CI/CD пайплайны для автоматического тестирования</li>
-          <li>Issues и Merge Requests для совместной работы</li>
-          <li>Связь коммитов с наборами данных (DOI в коммит-сообщениях)</li>
-          <li>Notebooks и Jupyter-файлы в репозитории</li>
-          <li>Container Registry для Docker-образов</li>
+          <li data-i18n="comp.c2.f1">Git-репозитории для кода и конфигураций</li>
+          <li data-i18n="comp.c2.f2">CI/CD пайплайны для автоматического тестирования</li>
+          <li data-i18n="comp.c2.f3">Issues и Merge Requests для совместной работы</li>
+          <li data-i18n="comp.c2.f4">Связь коммитов с наборами данных (DOI в коммит-сообщениях)</li>
+          <li data-i18n="comp.c2.f5">Notebooks и Jupyter-файлы в репозитории</li>
+          <li data-i18n="comp.c2.f6">Container Registry для Docker-образов</li>
         </ul>
-        <span class="comp-status-badge status-prod">● Продакшн</span>
+        <span class="comp-status-badge status-prod" data-i18n="comp.status.prod">● Продакшн</span>
       </div>
       <div>
         <div class="comp-code">
@@ -611,19 +611,19 @@
     <!-- Invenio -->
     <div class="comp-panel" id="comp-2">
       <div class="comp-info">
-        <h3>TU-RDM / Invenio — Файловый репозиторий данных</h3>
-        <div class="comp-tech">Invenio RDM · ПРОДАКШН · &gt;300 датасетов</div>
-        <p>Репозиторий для файловых данных: CSV, Excel, JSON, аудио, видео, изображения, геоданные. Каждый датасет получает DOI, лицензию и машиночитаемые метаданные.</p>
+        <h3 data-i18n="comp.c3.title">TU-RDM / Invenio — Файловый репозиторий данных</h3>
+        <div class="comp-tech" data-i18n="comp.c3.tech" data-i18n-html>Invenio RDM · ПРОДАКШН · &gt;300 датасетов</div>
+        <p data-i18n="comp.c3.desc">Репозиторий для файловых данных: CSV, Excel, JSON, аудио, видео, изображения, геоданные. Каждый датасет получает DOI, лицензию и машиночитаемые метаданные.</p>
         <ul class="comp-features">
-          <li>Загрузка файлов любых форматов (CSV, JSON, Excel, GeoTIFF...)</li>
-          <li>Автоматическое присвоение DOI через DataCite</li>
-          <li>Поддержка лицензий CC-BY, CC-BY-NC-SA, CC0</li>
-          <li>Версионирование датасетов</li>
-          <li>JSON-метаданные по schema.org для машинного чтения</li>
-          <li>REST API для программного доступа</li>
+          <li data-i18n="comp.c3.f1">Загрузка файлов любых форматов (CSV, JSON, Excel, GeoTIFF...)</li>
+          <li data-i18n="comp.c3.f2">Автоматическое присвоение DOI через DataCite</li>
+          <li data-i18n="comp.c3.f3">Поддержка лицензий CC-BY, CC-BY-NC-SA, CC0</li>
+          <li data-i18n="comp.c3.f4">Версионирование датасетов</li>
+          <li data-i18n="comp.c3.f5">JSON-метаданные по schema.org для машинного чтения</li>
+          <li data-i18n="comp.c3.f6">REST API для программного доступа</li>
         </ul>
         <div style="margin-top:8px">
-          <span class="comp-status-badge status-prod">● Продакшн</span>
+          <span class="comp-status-badge status-prod" data-i18n="comp.status.prod">● Продакшн</span>
         </div>
         <div style="margin-top:12px;font-size:12px;color:var(--t3);font-family:var(--mono)">
           Пример DOI: 10.48436/nw2xc-41j75<br>
@@ -659,19 +659,19 @@
     <!-- DBRepo -->
     <div class="comp-panel" id="comp-3">
       <div class="comp-info">
-        <h3>DBRepo — Репозиторий структурированных данных</h3>
-        <div class="comp-tech">MariaDB + Kubernetes + Docker · ПРОДАКШН</div>
-        <p>Репозиторий для структурированных данных в реляционных базах данных. Ключевая инновация — версионирование данных и цитирование произвольных подмножеств (Query Store + DOI).</p>
+        <h3 data-i18n="comp.c4.title">DBRepo — Репозиторий структурированных данных</h3>
+        <div class="comp-tech" data-i18n="comp.c4.tech">MariaDB + Kubernetes + Docker · ПРОДАКШН</div>
+        <p data-i18n="comp.c4.desc">Репозиторий для структурированных данных в реляционных базах данных. Ключевая инновация — версионирование данных и цитирование произвольных подмножеств (Query Store + DOI).</p>
         <ul class="comp-features">
-          <li>Хранение структурированных данных без дампов/экспортов</li>
-          <li>Версионирование каждой записи (valid_from / valid_to)</li>
-          <li>Цитирование произвольных запросов через Query Store + DOI</li>
-          <li>REST API, Java API, Python API, JDBC</li>
-          <li>Message Queue (AMQP/MQTT) для IoT и потоковых данных</li>
-          <li>Семантическое картирование через Wikidata + OWL онтологии</li>
-          <li>Grafana-дашборды (автоматически генерируемые)</li>
+          <li data-i18n="comp.c4.f1">Хранение структурированных данных без дампов/экспортов</li>
+          <li data-i18n="comp.c4.f2">Версионирование каждой записи (valid_from / valid_to)</li>
+          <li data-i18n="comp.c4.f3">Цитирование произвольных запросов через Query Store + DOI</li>
+          <li data-i18n="comp.c4.f4">REST API, Java API, Python API, JDBC</li>
+          <li data-i18n="comp.c4.f5">Message Queue (AMQP/MQTT) для IoT и потоковых данных</li>
+          <li data-i18n="comp.c4.f6">Семантическое картирование через Wikidata + OWL онтологии</li>
+          <li data-i18n="comp.c4.f7">Grafana-дашборды (автоматически генерируемые)</li>
         </ul>
-        <span class="comp-status-badge status-prod">● Продакшн</span>
+        <span class="comp-status-badge status-prod" data-i18n="comp.status.prod">● Продакшн</span>
       </div>
       <div>
         <div class="comp-code">
@@ -710,18 +710,18 @@
     <!-- DAMAP -->
     <div class="comp-panel" id="comp-4">
       <div class="comp-info">
-        <h3>DAMAP — Планирование управления данными</h3>
-        <div class="comp-tech">Java Spring Boot + React · ПРОДАКШН</div>
-        <p>Инструмент для создания машиночитаемых планов управления данными (maDMP). Автоматически предзаполняет данные из информационных систем университета, экспортирует для фондов Horizon Europe и Science Europe.</p>
+        <h3 data-i18n="comp.c5.title">DAMAP — Планирование управления данными</h3>
+        <div class="comp-tech" data-i18n="comp.c5.tech">Java Spring Boot + React · ПРОДАКШН</div>
+        <p data-i18n="comp.c5.desc">Инструмент для создания машиночитаемых планов управления данными (maDMP). Автоматически предзаполняет данные из информационных систем университета, экспортирует для фондов Horizon Europe и Science Europe.</p>
         <ul class="comp-features">
-          <li>Пошаговое создание DMP по Science Europe Practical Guide</li>
-          <li>Предзаполнение из HR-базы, проектной БД, оргструктуры</li>
-          <li>Single Sign-On интеграция</li>
-          <li>Экспорт в Word для Horizon Europe, Science Europe</li>
-          <li>Машиночитаемый формат (maDMP) для автоматизации</li>
-          <li>Кастомизируемый внешний вид (логотипы, цвета)</li>
+          <li data-i18n="comp.c5.f1">Пошаговое создание DMP по Science Europe Practical Guide</li>
+          <li data-i18n="comp.c5.f2">Предзаполнение из HR-базы, проектной БД, оргструктуры</li>
+          <li data-i18n="comp.c5.f3">Single Sign-On интеграция</li>
+          <li data-i18n="comp.c5.f4">Экспорт в Word для Horizon Europe, Science Europe</li>
+          <li data-i18n="comp.c5.f5">Машиночитаемый формат (maDMP) для автоматизации</li>
+          <li data-i18n="comp.c5.f6">Кастомизируемый внешний вид (логотипы, цвета)</li>
         </ul>
-        <span class="comp-status-badge status-prod">● Продакшн</span>
+        <span class="comp-status-badge status-prod" data-i18n="comp.status.prod">● Продакшн</span>
       </div>
       <div>
         <div class="comp-code">
@@ -760,18 +760,18 @@
     <!-- JupyterHub -->
     <div class="comp-panel" id="comp-5">
       <div class="comp-info">
-        <h3>JupyterHub — Вычислительная платформа</h3>
-        <div class="comp-tech">JupyterHub + Kubernetes + OpenStack · ТЕСТИРОВАНИЕ</div>
-        <p>Интегрированная платформа для вычислений непосредственно рядом с данными. Исследователи работают в Jupyter Notebooks, напрямую подключаясь к репозиториям DBRepo и Invenio.</p>
+        <h3 data-i18n="comp.c6.title">JupyterHub — Вычислительная платформа</h3>
+        <div class="comp-tech" data-i18n="comp.c6.tech">JupyterHub + Kubernetes + OpenStack · ТЕСТИРОВАНИЕ</div>
+        <p data-i18n="comp.c6.desc">Интегрированная платформа для вычислений непосредственно рядом с данными. Исследователи работают в Jupyter Notebooks, напрямую подключаясь к репозиториям DBRepo и Invenio.</p>
         <ul class="comp-features">
-          <li>JupyterHub на Kubernetes для масштабируемости</li>
-          <li>OpenStack Private Cloud для изоляции</li>
-          <li>Шаблонные ноутбуки для подключения к DBRepo</li>
-          <li>Предустановленные библиотеки (pandas, numpy, matplotlib)</li>
-          <li>Совместная работа и разделение ноутбуков</li>
-          <li>Интеграция с GitLab для версионирования ноутбуков</li>
+          <li data-i18n="comp.c6.f1">JupyterHub на Kubernetes для масштабируемости</li>
+          <li data-i18n="comp.c6.f2">OpenStack Private Cloud для изоляции</li>
+          <li data-i18n="comp.c6.f3">Шаблонные ноутбуки для подключения к DBRepo</li>
+          <li data-i18n="comp.c6.f4">Предустановленные библиотеки (pandas, numpy, matplotlib)</li>
+          <li data-i18n="comp.c6.f5">Совместная работа и разделение ноутбуков</li>
+          <li data-i18n="comp.c6.f6">Интеграция с GitLab для версионирования ноутбуков</li>
         </ul>
-        <span class="comp-status-badge status-test">◐ Тестирование</span>
+        <span class="comp-status-badge status-test" data-i18n="comp.status.test">◐ Тестирование</span>
       </div>
       <div>
         <div class="comp-code">
@@ -809,18 +809,18 @@ results.to_csv(<span class="str">"analysis_results.csv"</span>)
     <!-- OSSDIP -->
     <div class="comp-panel" id="comp-6">
       <div class="comp-info">
-        <h3>OSSDIP — Безопасный доступ к чувствительным данным</h3>
-        <div class="comp-tech">VNC + VM + Мониторинг · ПИЛОТ</div>
-        <p>Инновационная концепция "Data Visiting" вместо "Data Sharing" для чувствительных и конфиденциальных данных. Исследователь приходит к данным, а не данные к исследователю.</p>
+        <h3 data-i18n="comp.c7.title">OSSDIP — Безопасный доступ к чувствительным данным</h3>
+        <div class="comp-tech" data-i18n="comp.c7.tech">VNC + VM + Мониторинг · ПИЛОТ</div>
+        <p data-i18n="comp.c7.desc">Инновационная концепция "Data Visiting" вместо "Data Sharing" для чувствительных и конфиденциальных данных. Исследователь приходит к данным, а не данные к исследователю.</p>
         <ul class="comp-features">
-          <li>Data Visiting: доступ без физического копирования данных</li>
-          <li>Временная виртуальная машина для каждого сеанса</li>
-          <li>Владелец данных контролирует: кому, когда, какое подмножество</li>
-          <li>Полный мониторинг всех действий в сессии</li>
-          <li>VNC-подключение к защищённой VM</li>
-          <li>Автоматическое уничтожение VM после сессии</li>
+          <li data-i18n="comp.c7.f1">Data Visiting: доступ без физического копирования данных</li>
+          <li data-i18n="comp.c7.f2">Временная виртуальная машина для каждого сеанса</li>
+          <li data-i18n="comp.c7.f3">Владелец данных контролирует: кому, когда, какое подмножество</li>
+          <li data-i18n="comp.c7.f4">Полный мониторинг всех действий в сессии</li>
+          <li data-i18n="comp.c7.f5">VNC-подключение к защищённой VM</li>
+          <li data-i18n="comp.c7.f6">Автоматическое уничтожение VM после сессии</li>
         </ul>
-        <span class="comp-status-badge status-pilot">◌ Пилот</span>
+        <span class="comp-status-badge status-pilot" data-i18n="comp.status.pilot">◌ Пилот</span>
       </div>
       <div>
         <div class="comp-code">
@@ -864,24 +864,24 @@ print(session.vnc_connection)
     <div class="api-layout reveal">
       <div class="api-endpoints">
         <div class="api-group-title" data-i18n="api.group.public">Каталог данных (публичные)</div>
-        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/datasets</span><span class="api-edesc">Список опубликованных датасетов · пагинация, фильтры, полнотекстовый поиск</span></div>
-        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/datasets/{id}</span><span class="api-edesc">Метаданные конкретного датасета</span></div>
-        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/datasets/{id}/download</span><span class="api-edesc">Скачать файл датасета</span></div>
-        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/datasets/{id}/metadata</span><span class="api-edesc">JSON-LD метаданные (schema.org · DataCite)</span></div>
-        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/datasets/{id}/fair</span><span class="api-edesc">FAIR-оценка F/A/I/R + рекомендации по улучшению</span></div>
-        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/stats</span><span class="api-edesc">Статистика платформы (датасеты, скачивания, FAIR)</span></div>
+        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/datasets</span><span class="api-edesc" data-i18n="api.e1">Список опубликованных датасетов · пагинация, фильтры, полнотекстовый поиск</span></div>
+        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/datasets/{id}</span><span class="api-edesc" data-i18n="api.e2">Метаданные конкретного датасета</span></div>
+        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/datasets/{id}/download</span><span class="api-edesc" data-i18n="api.e3">Скачать файл датасета</span></div>
+        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/datasets/{id}/metadata</span><span class="api-edesc" data-i18n="api.e4">JSON-LD метаданные (schema.org · DataCite)</span></div>
+        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/datasets/{id}/fair</span><span class="api-edesc" data-i18n="api.e5">FAIR-оценка F/A/I/R + рекомендации по улучшению</span></div>
+        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/stats</span><span class="api-edesc" data-i18n="api.e6">Статистика платформы (датасеты, скачивания, FAIR)</span></div>
         <div class="api-group-title" style="margin-top:18px" data-i18n="api.group.manage">Управление (требует auth)</div>
-        <div class="api-ep"><span class="api-method post">POST</span><span class="api-path">/api/datasets</span><span class="api-edesc">Создать черновик датасета</span></div>
-        <div class="api-ep"><span class="api-method put">PUT</span><span class="api-path">/api/my/datasets/{id}</span><span class="api-edesc">Обновить метаданные</span></div>
-        <div class="api-ep"><span class="api-method post">POST</span><span class="api-path">/api/my/datasets/{id}/publish</span><span class="api-edesc">Опубликовать черновик</span></div>
-        <div class="api-ep"><span class="api-method post">POST</span><span class="api-path">/api/my/datasets/{id}/unpublish</span><span class="api-edesc">Снять с публикации</span></div>
-        <div class="api-ep api-ep-del"><span class="api-method del">DEL</span><span class="api-path">/api/my/datasets/{id}</span><span class="api-edesc">Удалить черновик</span></div>
-        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/my/dmp</span><span class="api-edesc">Получить план управления данными (DMP)</span></div>
-        <div class="api-ep"><span class="api-method post">POST</span><span class="api-path">/api/my/dmp</span><span class="api-edesc">Создать / обновить DMP</span></div>
+        <div class="api-ep"><span class="api-method post">POST</span><span class="api-path">/api/datasets</span><span class="api-edesc" data-i18n="api.e7">Создать черновик датасета</span></div>
+        <div class="api-ep"><span class="api-method put">PUT</span><span class="api-path">/api/my/datasets/{id}</span><span class="api-edesc" data-i18n="api.e8">Обновить метаданные</span></div>
+        <div class="api-ep"><span class="api-method post">POST</span><span class="api-path">/api/my/datasets/{id}/publish</span><span class="api-edesc" data-i18n="api.e9">Опубликовать черновик</span></div>
+        <div class="api-ep"><span class="api-method post">POST</span><span class="api-path">/api/my/datasets/{id}/unpublish</span><span class="api-edesc" data-i18n="api.e10">Снять с публикации</span></div>
+        <div class="api-ep api-ep-del"><span class="api-method del">DEL</span><span class="api-path">/api/my/datasets/{id}</span><span class="api-edesc" data-i18n="api.e11">Удалить черновик</span></div>
+        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/my/dmp</span><span class="api-edesc" data-i18n="api.e12">Получить план управления данными (DMP)</span></div>
+        <div class="api-ep"><span class="api-method post">POST</span><span class="api-path">/api/my/dmp</span><span class="api-edesc" data-i18n="api.e13">Создать / обновить DMP</span></div>
         <div class="api-group-title" style="margin-top:18px" data-i18n="api.group.auth">Аутентификация</div>
-        <div class="api-ep"><span class="api-method post">POST</span><span class="api-path">/api/login</span><span class="api-edesc">Получить Bearer-токен сессии (8 часов)</span></div>
-        <div class="api-ep"><span class="api-method post">POST</span><span class="api-path">/api/register</span><span class="api-edesc">Регистрация нового аккаунта</span></div>
-        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/keys</span><span class="api-edesc">Список API-ключей · POST для создания · DELETE для отзыва</span></div>
+        <div class="api-ep"><span class="api-method post">POST</span><span class="api-path">/api/login</span><span class="api-edesc" data-i18n="api.e14">Получить Bearer-токен сессии (8 часов)</span></div>
+        <div class="api-ep"><span class="api-method post">POST</span><span class="api-path">/api/register</span><span class="api-edesc" data-i18n="api.e15">Регистрация нового аккаунта</span></div>
+        <div class="api-ep"><span class="api-method get">GET</span><span class="api-path">/api/keys</span><span class="api-edesc" data-i18n="api.e16">Список API-ключей · POST для создания · DELETE для отзыва</span></div>
       </div>
       <div class="api-example">
         <div class="api-ex-title" data-i18n="api.ex.title">Пример — Python</div>
@@ -941,14 +941,24 @@ print(fair[<span class="str">'fair'</span>])  <span class="cm"># {'F':75,'A':80,
       </select>
       <select class="cat-select" id="catLicense">
         <option value="" data-i18n="cat.lic.all">Все лицензии</option>
-        <option value="CC-BY-4.0">CC-BY-4.0</option>
-        <option value="CC-BY-NC-SA-4.0">CC-BY-NC-SA-4.0</option>
-        <option value="CC0-1.0">CC0-1.0</option>
+      </select>
+      <select class="cat-select" id="catFormat">
+        <option value="" data-i18n="cat.fmt.all">Все форматы</option>
+      </select>
+      <select class="cat-select" id="catSort">
+        <option value="newest"    data-i18n="cat.sort.newest">Сначала новые</option>
+        <option value="updated"   data-i18n="cat.sort.updated">Недавно обновлённые</option>
+        <option value="downloads" data-i18n="cat.sort.downloads">Популярные</option>
+        <option value="views"     data-i18n="cat.sort.views">Часто просматриваемые</option>
+        <option value="fair"      data-i18n="cat.sort.fair">Высокий FAIR</option>
+        <option value="title"     data-i18n="cat.sort.title">По алфавиту</option>
+        <option value="oldest"    data-i18n="cat.sort.oldest">Сначала старые</option>
       </select>
       <span class="cat-total" id="catTotal"></span>
+      <button class="small-btn" id="resetFilters" onclick="resetCatFilters()" data-i18n="cat.reset">Сбросить</button>
       <button class="small-btn" id="submitBtn" onclick="openSubmit()" style="display:none" data-i18n="cat.add">+ Добавить</button>
     </div>
-    <div class="ds-grid reveal" id="dsGrid"><div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--t3);font-family:var(--mono)">Загрузка...</div></div>
+    <div class="ds-grid reveal" id="dsGrid"></div>
     <div class="cat-pagination" id="catPag"></div>
   </div>
 </section>
@@ -963,91 +973,91 @@ print(fair[<span class="str">'fair'</span>])  <span class="cm"># {'F':75,'A':80,
     </div>
     <div class="roadmap-grid reveal">
       <div class="rm-card">
-        <div class="rm-num">ЭТАП 01</div>
-        <div class="rm-weeks">Нед. 1–2</div>
-        <div class="rm-stage">Анализ и планирование</div>
+        <div class="rm-num" data-i18n="rm.s1.num">ЭТАП 01</div>
+        <div class="rm-weeks" data-i18n="rm.s1.weeks">Нед. 1–2</div>
+        <div class="rm-stage" data-i18n="rm.s1.stage">Анализ и планирование</div>
         <ul class="rm-items">
-          <li>Интервью с исследователями</li>
-          <li>Определение типов данных</li>
-          <li>Выявление болевых точек</li>
-          <li>Выбор приоритетных компонентов</li>
+          <li data-i18n="rm.s1.i1">Интервью с исследователями</li>
+          <li data-i18n="rm.s1.i2">Определение типов данных</li>
+          <li data-i18n="rm.s1.i3">Выявление болевых точек</li>
+          <li data-i18n="rm.s1.i4">Выбор приоритетных компонентов</li>
         </ul>
       </div>
       <div class="rm-card">
-        <div class="rm-num">ЭТАП 02</div>
-        <div class="rm-weeks">Нед. 3–4</div>
-        <div class="rm-stage">Проектирование архитектуры</div>
+        <div class="rm-num" data-i18n="rm.s2.num">ЭТАП 02</div>
+        <div class="rm-weeks" data-i18n="rm.s2.weeks">Нед. 3–4</div>
+        <div class="rm-stage" data-i18n="rm.s2.stage">Проектирование архитектуры</div>
         <ul class="rm-items">
-          <li>Микросервисная архитектура</li>
-          <li>API спецификации (OpenAPI)</li>
-          <li>Схема БД с версионированием</li>
-          <li>Выбор технологического стека</li>
+          <li data-i18n="rm.s2.i1">Микросервисная архитектура</li>
+          <li data-i18n="rm.s2.i2">API спецификации (OpenAPI)</li>
+          <li data-i18n="rm.s2.i3">Схема БД с версионированием</li>
+          <li data-i18n="rm.s2.i4">Выбор технологического стека</li>
         </ul>
       </div>
       <div class="rm-card">
-        <div class="rm-num">ЭТАП 03</div>
-        <div class="rm-weeks">Нед. 5–8</div>
-        <div class="rm-stage">Разработка ядра</div>
+        <div class="rm-num" data-i18n="rm.s3.num">ЭТАП 03</div>
+        <div class="rm-weeks" data-i18n="rm.s3.weeks">Нед. 5–8</div>
+        <div class="rm-stage" data-i18n="rm.s3.stage">Разработка ядра</div>
         <ul class="rm-items">
-          <li>Базовое API (FastAPI / Spring Boot)</li>
-          <li>Версионирование записей</li>
-          <li>Загрузка и хранение данных</li>
-          <li>PostgreSQL + MariaDB + MinIO</li>
+          <li data-i18n="rm.s3.i1">Базовое API (FastAPI / Spring Boot)</li>
+          <li data-i18n="rm.s3.i2">Версионирование записей</li>
+          <li data-i18n="rm.s3.i3">Загрузка и хранение данных</li>
+          <li data-i18n="rm.s3.i4">PostgreSQL + MariaDB + MinIO</li>
         </ul>
       </div>
       <div class="rm-card">
-        <div class="rm-num">ЭТАП 04</div>
-        <div class="rm-weeks">Нед. 9–10</div>
-        <div class="rm-stage">FAIR и метаданные</div>
+        <div class="rm-num" data-i18n="rm.s4.num">ЭТАП 04</div>
+        <div class="rm-weeks" data-i18n="rm.s4.weeks">Нед. 9–10</div>
+        <div class="rm-stage" data-i18n="rm.s4.stage">FAIR и метаданные</div>
         <ul class="rm-items">
-          <li>Семантическое аннотирование</li>
-          <li>Регистрация DOI (DataCite)</li>
-          <li>schema.org метаданные</li>
-          <li>Wikidata / OWL интеграция</li>
+          <li data-i18n="rm.s4.i1">Семантическое аннотирование</li>
+          <li data-i18n="rm.s4.i2">Регистрация DOI (DataCite)</li>
+          <li data-i18n="rm.s4.i3">schema.org метаданные</li>
+          <li data-i18n="rm.s4.i4">Wikidata / OWL интеграция</li>
         </ul>
       </div>
       <div class="rm-card">
-        <div class="rm-num">ЭТАП 05</div>
-        <div class="rm-weeks">Нед. 11–12</div>
-        <div class="rm-stage">Пользовательский интерфейс</div>
+        <div class="rm-num" data-i18n="rm.s5.num">ЭТАП 05</div>
+        <div class="rm-weeks" data-i18n="rm.s5.weeks">Нед. 11–12</div>
+        <div class="rm-stage" data-i18n="rm.s5.stage">Пользовательский интерфейс</div>
         <ul class="rm-items">
-          <li>Web-интерфейс (React)</li>
-          <li>Каталог и поиск</li>
-          <li>Grafana дашборды</li>
-          <li>Admin Panel</li>
+          <li data-i18n="rm.s5.i1">Web-интерфейс (React)</li>
+          <li data-i18n="rm.s5.i2">Каталог и поиск</li>
+          <li data-i18n="rm.s5.i3">Grafana дашборды</li>
+          <li data-i18n="rm.s5.i4">Admin Panel</li>
         </ul>
       </div>
       <div class="rm-card">
-        <div class="rm-num">ЭТАП 06</div>
-        <div class="rm-weeks">Нед. 13–14</div>
-        <div class="rm-stage">Интеграция</div>
+        <div class="rm-num" data-i18n="rm.s6.num">ЭТАП 06</div>
+        <div class="rm-weeks" data-i18n="rm.s6.weeks">Нед. 13–14</div>
+        <div class="rm-stage" data-i18n="rm.s6.stage">Интеграция</div>
         <ul class="rm-items">
-          <li>JupyterHub интеграция</li>
-          <li>SSO (Keycloak / OAuth2)</li>
-          <li>RabbitMQ для IoT-данных</li>
-          <li>Экспорт в различные форматы</li>
+          <li data-i18n="rm.s6.i1">JupyterHub интеграция</li>
+          <li data-i18n="rm.s6.i2">SSO (Keycloak / OAuth2)</li>
+          <li data-i18n="rm.s6.i3">RabbitMQ для IoT-данных</li>
+          <li data-i18n="rm.s6.i4">Экспорт в различные форматы</li>
         </ul>
       </div>
       <div class="rm-card">
-        <div class="rm-num">ЭТАП 07</div>
-        <div class="rm-weeks">Нед. 15–16</div>
-        <div class="rm-stage">Тестирование и документация</div>
+        <div class="rm-num" data-i18n="rm.s7.num">ЭТАП 07</div>
+        <div class="rm-weeks" data-i18n="rm.s7.weeks">Нед. 15–16</div>
+        <div class="rm-stage" data-i18n="rm.s7.stage">Тестирование и документация</div>
         <ul class="rm-items">
-          <li>Тестирование с пользователями</li>
-          <li>Обратная связь</li>
-          <li>Исправление ошибок</li>
-          <li>Документация и туториалы</li>
+          <li data-i18n="rm.s7.i1">Тестирование с пользователями</li>
+          <li data-i18n="rm.s7.i2">Обратная связь</li>
+          <li data-i18n="rm.s7.i3">Исправление ошибок</li>
+          <li data-i18n="rm.s7.i4">Документация и туториалы</li>
         </ul>
       </div>
       <div class="rm-card">
-        <div class="rm-num">ЭТАП 08</div>
-        <div class="rm-weeks">После</div>
-        <div class="rm-stage">Сертификация и рост</div>
+        <div class="rm-num" data-i18n="rm.s8.num">ЭТАП 08</div>
+        <div class="rm-weeks" data-i18n="rm.s8.weeks">После</div>
+        <div class="rm-stage" data-i18n="rm.s8.stage">Сертификация и рост</div>
         <ul class="rm-items">
-          <li>Подготовка к Core Trust Seal</li>
-          <li>Digital Object Management</li>
-          <li>Persistent Identifiers</li>
-          <li>HPC интеграция</li>
+          <li data-i18n="rm.s8.i1">Подготовка к Core Trust Seal</li>
+          <li data-i18n="rm.s8.i2">Digital Object Management</li>
+          <li data-i18n="rm.s8.i3">Persistent Identifiers</li>
+          <li data-i18n="rm.s8.i4">HPC интеграция</li>
         </ul>
       </div>
     </div>
@@ -1065,35 +1075,35 @@ print(fair[<span class="str">'fair'</span>])  <span class="cm"># {'F':75,'A':80,
     <div class="drivers-grid reveal">
       <div class="drv-card">
         <div class="drv-icon">🔬</div>
-        <div class="drv-title">Исследователи</div>
+        <div class="drv-title" data-i18n="drv.c1.title">Исследователи</div>
         <ul class="drv-items">
-          <li>Эффективные, высококачественные исследования</li>
-          <li>Соответствие требованиям фондов и издателей</li>
-          <li>Аутсорсинг непрофильных задач экспертам</li>
-          <li>Цитируемость данных и увеличение импакта</li>
-          <li>Повторное использование данных коллег</li>
+          <li data-i18n="drv.c1.i1">Эффективные, высококачественные исследования</li>
+          <li data-i18n="drv.c1.i2">Соответствие требованиям фондов и издателей</li>
+          <li data-i18n="drv.c1.i3">Аутсорсинг непрофильных задач экспертам</li>
+          <li data-i18n="drv.c1.i4">Цитируемость данных и увеличение импакта</li>
+          <li data-i18n="drv.c1.i5">Повторное использование данных коллег</li>
         </ul>
       </div>
       <div class="drv-card">
         <div class="drv-icon">💰</div>
-        <div class="drv-title">Финансирующие организации</div>
+        <div class="drv-title" data-i18n="drv.c2.title">Финансирующие организации</div>
         <ul class="drv-items">
-          <li>Защита инвестиций в сбор и обработку данных</li>
-          <li>Данные как основа будущих исследований</li>
-          <li>Обеспечение повторного использования</li>
-          <li>Прозрачность использования грантов</li>
-          <li>Соответствие open data требованиям (Horizon Europe)</li>
+          <li data-i18n="drv.c2.i1">Защита инвестиций в сбор и обработку данных</li>
+          <li data-i18n="drv.c2.i2">Данные как основа будущих исследований</li>
+          <li data-i18n="drv.c2.i3">Обеспечение повторного использования</li>
+          <li data-i18n="drv.c2.i4">Прозрачность использования грантов</li>
+          <li data-i18n="drv.c2.i5">Соответствие open data требованиям (Horizon Europe)</li>
         </ul>
       </div>
       <div class="drv-card">
         <div class="drv-icon">🏛️</div>
-        <div class="drv-title">Университет (КГТУ)</div>
+        <div class="drv-title" data-i18n="drv.c3.title">Университет (КГТУ)</div>
         <ul class="drv-items">
-          <li>Знание об исследованиях и данных организации</li>
-          <li>Соответствие требованиям GDPR и законодательства</li>
-          <li>Профессиональная высококачественная среда</li>
-          <li>Репутация и доверие к результатам</li>
-          <li>Привлечение дополнительных проектов и грантов</li>
+          <li data-i18n="drv.c3.i1">Знание об исследованиях и данных организации</li>
+          <li data-i18n="drv.c3.i2">Соответствие требованиям GDPR и законодательства</li>
+          <li data-i18n="drv.c3.i3">Профессиональная высококачественная среда</li>
+          <li data-i18n="drv.c3.i4">Репутация и доверие к результатам</li>
+          <li data-i18n="drv.c3.i5">Привлечение дополнительных проектов и грантов</li>
         </ul>
       </div>
     </div>
@@ -1166,11 +1176,11 @@ print(fair[<span class="str">'fair'</span>])  <span class="cm"># {'F':75,'A':80,
 <div id="stats-bar">
   <div class="wrap">
     <div class="stats-grid">
-      <div class="stat-item"><div class="stat-num" id="sb-ds">–</div><div class="stat-lbl">Датасетов</div></div>
-      <div class="stat-item"><div class="stat-num" id="sb-dl">–</div><div class="stat-lbl">Скачиваний</div></div>
-      <div class="stat-item"><div class="stat-num" id="sb-views">–</div><div class="stat-lbl">Просмотров</div></div>
-      <div class="stat-item"><div class="stat-num">7</div><div class="stat-lbl">Компонентов</div></div>
-      <div class="stat-item"><div class="stat-num">FAIR</div><div class="stat-lbl">Совместимость</div></div>
+      <div class="stat-item"><div class="stat-num" id="sb-ds">–</div><div class="stat-lbl" data-i18n="sb.ds">Датасетов</div></div>
+      <div class="stat-item"><div class="stat-num" id="sb-dl">–</div><div class="stat-lbl" data-i18n="sb.dl">Скачиваний</div></div>
+      <div class="stat-item"><div class="stat-num" id="sb-views">–</div><div class="stat-lbl" data-i18n="sb.views">Просмотров</div></div>
+      <div class="stat-item"><div class="stat-num">7</div><div class="stat-lbl" data-i18n="sb.components">Компонентов</div></div>
+      <div class="stat-item"><div class="stat-num">FAIR</div><div class="stat-lbl" data-i18n="sb.fair.compat">Совместимость</div></div>
     </div>
   </div>
 </div>
@@ -1180,36 +1190,36 @@ print(fair[<span class="str">'fair'</span>])  <span class="cm"># {'F':75,'A':80,
   <div class="wrap">
     <div class="about-grid">
       <div>
-        <span class="sec-tag">О системе</span>
-        <h2 class="about-title">RDM КГТУ — по модели TU Wien</h2>
-        <p class="about-text">Система разработана на основе опыта Венского технического университета (TU Wien), который с 2018 года создавал профессиональную RDM-инфраструктуру. В 2024 году в TU Wien насчитывается более 300 датасетов в репозитории Invenio и работает Центр управления исследовательскими данными (ZFDM).</p>
-        <p class="about-text">Ключевой принцип: ни одна система не удовлетворяет всем требованиям. Поэтому используется композиция специализированных сервисов, интегрированных через API Gateway.</p>
+        <span class="sec-tag" data-i18n="about.tag">О системе</span>
+        <h2 class="about-title" data-i18n="about.title">RDM КГТУ — по модели TU Wien</h2>
+        <p class="about-text" data-i18n="about.p1">Система разработана на основе опыта Венского технического университета (TU Wien), который с 2018 года создавал профессиональную RDM-инфраструктуру. В 2024 году в TU Wien насчитывается более 300 датасетов в репозитории Invenio и работает Центр управления исследовательскими данными (ZFDM).</p>
+        <p class="about-text" data-i18n="about.p2">Ключевой принцип: ни одна система не удовлетворяет всем требованиям. Поэтому используется композиция специализированных сервисов, интегрированных через API Gateway.</p>
         <div class="lessons">
-          <h4>Ключевые уроки из подхода TU Wien</h4>
+          <h4 data-i18n="about.lessons.title">Ключевые уроки из подхода TU Wien</h4>
           <div class="lesson-grid">
             <div class="lesson-item">
               <div class="lesson-num">01</div>
-              <div class="lesson-text">Используйте композицию сервисов, а не один монолит</div>
+              <div class="lesson-text" data-i18n="about.l1">Используйте композицию сервисов, а не один монолит</div>
             </div>
             <div class="lesson-item">
               <div class="lesson-num">02</div>
-              <div class="lesson-text">Начинайте с малого и постепенно усложняйте</div>
+              <div class="lesson-text" data-i18n="about.l2">Начинайте с малого и постепенно усложняйте</div>
             </div>
             <div class="lesson-item">
               <div class="lesson-num">03</div>
-              <div class="lesson-text">Вовлекайте исследователей на всех этапах</div>
+              <div class="lesson-text" data-i18n="about.l3">Вовлекайте исследователей на всех этапах</div>
             </div>
             <div class="lesson-item">
               <div class="lesson-num">04</div>
-              <div class="lesson-text">Автоматизация критична для принятия системы</div>
+              <div class="lesson-text" data-i18n="about.l4">Автоматизация критична для принятия системы</div>
             </div>
             <div class="lesson-item">
               <div class="lesson-num">05</div>
-              <div class="lesson-text">Доверие строится на прозрачности и индикаторах качества</div>
+              <div class="lesson-text" data-i18n="about.l5">Доверие строится на прозрачности и индикаторах качества</div>
             </div>
             <div class="lesson-item">
               <div class="lesson-num">06</div>
-              <div class="lesson-text">Политика и оргподдержка так же важны, как технологии</div>
+              <div class="lesson-text" data-i18n="about.l6">Политика и оргподдержка так же важны, как технологии</div>
             </div>
           </div>
         </div>
@@ -1217,28 +1227,28 @@ print(fair[<span class="str">'fair'</span>])  <span class="cm"># {'F':75,'A':80,
       <div>
         <div class="about-links">
           <div class="al-item">
-            <div class="al-label">Источник системы</div>
+            <div class="al-label" data-i18n="about.r1.lbl">Источник системы</div>
             <div class="al-value">TU Wien RDM Infrastructure</div>
             <div class="al-meta">Andreas Rauber et al. — Vienna University of Technology</div>
           </div>
           <div class="al-item">
-            <div class="al-label">Принципы</div>
+            <div class="al-label" data-i18n="about.r2.lbl">Принципы</div>
             <div class="al-value">FAIR Data Principles</div>
             <div class="al-meta">Wilkinson et al., Nature Scientific Data, 2016</div>
           </div>
           <div class="al-item">
-            <div class="al-label">Сертификация</div>
-            <div class="al-value">Core Trust Seal (цель)</div>
+            <div class="al-label" data-i18n="about.r3.lbl">Сертификация</div>
+            <div class="al-value" data-i18n="about.r3.val">Core Trust Seal (цель)</div>
             <div class="al-meta">coretrustseal.org</div>
           </div>
           <div class="al-item">
-            <div class="al-label">Облако</div>
+            <div class="al-label" data-i18n="about.r4.lbl">Облако</div>
             <div class="al-value">EOSC — European Open Science Cloud</div>
-            <div class="al-meta">Совместимость с европейской инфраструктурой</div>
+            <div class="al-meta" data-i18n="about.r4.meta">Совместимость с европейской инфраструктурой</div>
           </div>
           <div class="al-item">
-            <div class="al-label">Национальный уровень</div>
-            <div class="al-value">FAIR Data Austria (пример)</div>
+            <div class="al-label" data-i18n="about.r5.lbl">Национальный уровень</div>
+            <div class="al-value" data-i18n="about.r5.val">FAIR Data Austria (пример)</div>
             <div class="al-meta">forschungsdaten.at/en/fair-data-austria/</div>
           </div>
         </div>
@@ -1253,10 +1263,10 @@ print(fair[<span class="str">'fair'</span>])  <span class="cm"># {'F':75,'A':80,
     <div class="footer-inner">
       <div>
         <div class="footer-brand"><span>RDM</span> КГТУ</div>
-        <div class="footer-brand-sub">Система управления научными данными<br>Кыргызского государственного технического университета.<br>По модели TU Wien.</div>
+        <div class="footer-brand-sub" data-i18n="footer.brand.sub" data-i18n-html>Система управления научными данными<br>Кыргызского государственного технического университета.<br>По модели TU Wien.</div>
       </div>
       <div class="footer-col">
-        <h5>Компоненты</h5>
+        <h5 data-i18n="footer.col1.title">Компоненты</h5>
         <a href="#components" onclick="showComp(0)">Repositum (DSpace)</a>
         <a href="#components" onclick="showComp(1)">GitLab</a>
         <a href="#components" onclick="showComp(2)">Invenio Data</a>
@@ -1266,17 +1276,17 @@ print(fair[<span class="str">'fair'</span>])  <span class="cm"># {'F':75,'A':80,
         <a href="#components" onclick="showComp(6)">OSSDIP</a>
       </div>
       <div class="footer-col">
-        <h5>Ресурсы</h5>
-        <a href="#lifecycle">Жизненный цикл</a>
-        <a href="#fair">FAIR принципы</a>
+        <h5 data-i18n="footer.col2.title">Ресурсы</h5>
+        <a href="#lifecycle" data-i18n="nav.lifecycle">Жизненный цикл</a>
+        <a href="#fair" data-i18n="footer.fair">FAIR принципы</a>
         <a href="#api-ref">REST API</a>
-        <a href="#catalog">Каталог данных</a>
-        <a href="#standards">Стандарты</a>
-        <a href="#roadmap">Дорожная карта</a>
-        <a href="#about">О системе</a>
+        <a href="#catalog" data-i18n="footer.catalog">Каталог данных</a>
+        <a href="#standards" data-i18n="nav.standards">Стандарты</a>
+        <a href="#roadmap" data-i18n="nav.roadmap">Дорожная карта</a>
+        <a href="#about" data-i18n="footer.about">О системе</a>
       </div>
       <div class="footer-col">
-        <h5>Внешние ресурсы</h5>
+        <h5 data-i18n="footer.col3.title">Внешние ресурсы</h5>
         <a href="https://www.tuwien.at/forschung/fides/forschungsdaten" target="_blank" rel="noopener">TU Wien RDM</a>
         <a href="https://www.go-fair.org/fair-principles/" target="_blank" rel="noopener">FAIR Principles</a>
         <a href="https://www.coretrustseal.org" target="_blank" rel="noopener">Core Trust Seal</a>

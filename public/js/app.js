@@ -8,7 +8,7 @@ import { checkSession, renderAuth,
          openLogin, closeLogin, openRegister, closeRegister,
          openSubmit, closeSubmit, doLogin, doRegister, doLogout, doSubmit } from './auth.js';
 
-import { loadDatasets, initSearch, applyFilters, goPage,
+import { loadDatasets, initSearch, applyFilters, goPage, resetCatFilters,
          openDetail, closeDetail, downloadDataset, copyDOI, exportDataset } from './catalog.js';
 
 import { openProfile, closeProfile, switchPfTab,
@@ -25,7 +25,14 @@ import { toggleTheme, initTheme, showToast,
 import { state } from './state.js';
 import { initLang, applyLang } from './i18n.js';
 
-function setLang(lang) { applyLang(lang); }
+function setLang(lang) {
+  applyLang(lang);
+  // Re-render dataset grid so card text picks up new language
+  loadDatasets();
+  // Re-render hero/nav (logged-in personalised hero + login/register buttons).
+  // renderAuth() also re-fetches /api/my/datasets for personal hero stats.
+  renderAuth();
+}
 
 // ── Expose to window (called from HTML onclick attributes) ────────────────────
 Object.assign(window, {
@@ -34,7 +41,7 @@ Object.assign(window, {
   openLogin, closeLogin, openRegister, closeRegister,
   openSubmit, closeSubmit, doLogin, doRegister, doLogout, doSubmit,
   // catalog
-  openDetail, closeDetail, downloadDataset, copyDOI, exportDataset, goPage,
+  openDetail, closeDetail, downloadDataset, copyDOI, exportDataset, goPage, resetCatFilters,
   // profile
   openProfile, closeProfile, switchPfTab, loadProfile,
   saveProfile, savePassword, openEditDs, closeEditDs, doEditDs,
@@ -54,8 +61,12 @@ document.addEventListener('DOMContentLoaded', () => {
   initFAIRAnimation(() => state.allDatasets);
   initSearch();
 
-  checkSession();
-  loadDatasets();
+  // Await session check first so that loadDatasets/fetchHeroStats knows
+  // whether to show global platform stats or personal stats in the hero.
+  (async () => {
+    await checkSession();
+    loadDatasets();
+  })();
 
   // Keyboard shortcuts
   document.addEventListener('keydown', e => {
